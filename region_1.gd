@@ -3,7 +3,6 @@ extends TextureButton
 @onready var region_popup: PopupPanel = $"../RegionPopup"
 @onready var region_popup_label: Label = $"../RegionPopup/RegionPopupLabel"
 
-
 func _on_pressed():
 	region_popup.show() #need to find solution for popup vanishing on button press
 	if randf() < 0.9:
@@ -16,17 +15,13 @@ func _on_pressed():
 
 func _on_mouse_entered(): 
 	region_popup.show()
-	region_popup_label.text = "A standard region full of trash.\n Base resource chance: 90% Junk, 10% Scrap."
+	var text := "A standard region full of trash.\n Base resource chance: 90% Junk, 10% Scrap.\n\n"
+	text += "Total buildings in region: " + str(EarthGlobal.region_builds["1"]) + "/20"
+	region_popup_label.text = text
 
 
 func _on_map_ui_mouse_entered():
 	region_popup.hide()
-
-
-
-
-
-
 
 
 

@@ -1,6 +1,7 @@
 extends Node
 #Resources
-var junk:= 0:
+#var junk:= 0:
+var junk:= 1000: #testing
 	set(new_value):
 		if new_value > junk:
 			var junkConversion = new_value-junk

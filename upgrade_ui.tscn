@@ -116,7 +116,8 @@ anchors_preset = -1
 anchor_right = 0.98
 anchor_bottom = 0.96000004
 offset_left = 4.0
-offset_top = 4.0
+offset_top = 3.0
+offset_bottom = -1.0
 text = "Description:
 # Owned: "
 horizontal_alignment = 1

@@ -31,5 +31,4 @@ func _on_upgrade_2_buy_button_pressed():
 		
 		EarthGlobal.upgrade2Cost *= 2
 		EarthGlobal.upgrade2Amount += 1
-	else: 
-		pass
+		EarthGlobal.addBuilding()
