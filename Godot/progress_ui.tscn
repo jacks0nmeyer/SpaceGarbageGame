@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://b31cvtpmig7ec"]
+
+[ext_resource type="Script" uid="uid://d3p52rgi3wl7f" path="res://progress_ui.gd" id="1_en5sv"]
+
+[node name="ProgressUI" type="Control" unique_id=421246737]
+custom_minimum_size = Vector2(375, 100)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 375.0
+offset_bottom = 100.0
+script = ExtResource("1_en5sv")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=435624034]
+custom_minimum_size = Vector2(375, 100)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=311034851]
+layout_mode = 2
+
+[node name="TrashProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer" unique_id=969464824]
+layout_mode = 2
+size_flags_vertical = 3
+max_value = 1000000.0
+value = 100.0
+
+[node name="PollutionProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer" unique_id=1395475872]
+layout_mode = 2
+size_flags_vertical = 3
+value = 100.0
