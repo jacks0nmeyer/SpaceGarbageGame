@@ -10,8 +10,8 @@ var junk:= 1000: #testing
 		else:
 			junk = new_value
 
-func gotJunk(clickMultiplier):
-	GlobalResources.junk += 1 * junkModifier * globalModifier * clickMultiplier
+func gotJunk(base_value):
+	GlobalResources.junk += base_value * junkModifier * globalModifier
 
 
 var scrap:= 0
