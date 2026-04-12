@@ -11,18 +11,30 @@ config_version=5
 [application]
 
 config/name="SolarSystemCleaner1.0"
-run/main_scene="uid://l0ogvc40ff3p"
+run/main_scene="uid://cwqdac8yngpi8"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
 [autoload]
 
 GlobalResources="*uid://2f0nb0e8s0k5"
 EarthGlobal="*uid://dn28kkmsvskd5"
+GameManager="*uid://b1yalpfu8jobt"
 
 [editor]
 
 version_control/plugin_name="GitPlugin"
 version_control/autoload_on_startup=true
+
+[file_customization]
+
+folder_colors={
+"res://Art/": "red",
+"res://Entities/": "orange",
+"res://Globals/": "yellow",
+"res://Resources/": "green",
+"res://Sound/": "teal",
+"res://UI/": "blue"
+}
 
 [gui]
 

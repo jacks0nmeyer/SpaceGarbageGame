@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://csspqfobi52eo"]
+
+[ext_resource type="Script" uid="uid://be5i41o6pm6qf" path="res://UI/UpgradeUI/upgrade_ui.gd" id="1_j3xiq"]
+[ext_resource type="Script" uid="uid://d36t5l7jdf1ej" path="res://UI/UpgradeUI/upgrade_1_hbox.gd" id="2_hherc"]
+[ext_resource type="Script" uid="uid://b5pamr4www4x2" path="res://UI/UpgradeUI/upgrade_2_hbox.gd" id="3_1wvqi"]
+
+[node name="UpgradeUI" type="Control" unique_id=461547080]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+script = ExtResource("1_j3xiq")
+
+[node name="Upgrades" type="ScrollContainer" parent="." unique_id=1798946804]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scroll_hint_mode = 1
+
+[node name="UpgradeMargins" type="MarginContainer" parent="Upgrades" unique_id=2027812356]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="UpgradeVBox" type="VBoxContainer" parent="Upgrades/UpgradeMargins" unique_id=364326132]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Upgrade1Hbox" type="HBoxContainer" parent="Upgrades/UpgradeMargins/UpgradeVBox" unique_id=1056823691]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+script = ExtResource("2_hherc")
+
+[node name="Upgrade1Name" type="Label" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" unique_id=293849301]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Better Trash Grabber"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Upgrade1Cost" type="Label" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" unique_id=15984472]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "20 Junk"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Upgrade1BuyButton" type="Button" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" unique_id=98196622]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "BUY
+"
+
+[node name="Upgrade2Hbox" type="HBoxContainer" parent="Upgrades/UpgradeMargins/UpgradeVBox" unique_id=801667885]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+script = ExtResource("3_1wvqi")
+
+[node name="Upgrade2Name" type="Label" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" unique_id=294610055]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Cleaning Robot Depot"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Upgrade2Cost" type="Label" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" unique_id=1224090660]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "20 Junk"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Upgrade2BuyButton" type="Button" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" unique_id=631302017]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "BUY
+"
+
+[node name="UpgradePopup" type="PopupPanel" parent="." unique_id=1266951008]
+oversampling_override = 1.0
+position = Vector2i(630, 264)
+size = Vector2i(200, 100)
+visible = true
+
+[node name="UpgradePopupLabel" type="Label" parent="UpgradePopup" unique_id=742393965]
+anchors_preset = -1
+anchor_right = 0.98
+anchor_bottom = 0.96000004
+offset_left = 4.0
+offset_top = 4.0
+text = "Description:
+# Owned: "
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[connection signal="mouse_entered" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox/Upgrade1BuyButton" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" method="_on_upgrade_1_buy_button_mouse_entered"]
+[connection signal="pressed" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox/Upgrade1BuyButton" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade1Hbox" method="_on_upgrade_1_buy_button_pressed"]
+[connection signal="mouse_entered" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" method="_on_mouse_exited"]
+[connection signal="pressed" from="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox/Upgrade2BuyButton" to="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Hbox" method="_on_upgrade_2_buy_button_pressed"]
