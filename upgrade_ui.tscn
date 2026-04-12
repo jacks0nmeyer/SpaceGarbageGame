@@ -123,7 +123,7 @@ text = "BUY
 "
 
 [node name="Upgrade2Timer" type="Timer" parent="Upgrades/UpgradeMargins/UpgradeVBox/Upgrade2Prog/Upgrade2Hbox" unique_id=1358122435]
-wait_time = 0.1
+wait_time = 0.05
 
 [node name="UpgradePopup" type="PopupPanel" parent="." unique_id=1266951008]
 oversampling_override = 1.0

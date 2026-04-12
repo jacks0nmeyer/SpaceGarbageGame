@@ -7,7 +7,7 @@ extends HBoxContainer
 var timerActive := false
 @onready var upgrade_2_timer: Timer = $Upgrade2Timer
 @onready var upgrade_2_prog: ProgressBar = $".."
-var fill_rate = 0.1
+var fill_rate = 0.05
 
 
 func _process(_delta):
