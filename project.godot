@@ -13,7 +13,6 @@ config_version=5
 config/name="SolarSystemCleaner1.0"
 run/main_scene="uid://l0ogvc40ff3p"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
 
 [autoload]
 
@@ -27,7 +26,7 @@ version_control/autoload_on_startup=true
 
 [gui]
 
-theme/custom="uid://cuf4v3lehchva"
+theme/custom_font="uid://b0ndd232ajivl"
 
 [physics]
 
@@ -35,6 +34,7 @@ theme/custom="uid://cuf4v3lehchva"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
