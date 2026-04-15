@@ -24,8 +24,8 @@ func _on_mouse_exited(): #hide upgrade description popup
 func _on_upgrade_1_buy_button_pressed(): 
 	upgrade_popup.show() #button messes with the popup unfavorably
 	
-	if GlobalResources.junk >= EarthGlobal.upgrade1Cost:
-		GlobalResources.junk -= EarthGlobal.upgrade1Cost
+	if GlobalResources.playerResources["junk"] >= EarthGlobal.upgrade1Cost:
+		GlobalResources.playerResources["junk"] -= EarthGlobal.upgrade1Cost
 		EarthGlobal.trashGrabberPower += 1
 		@warning_ignore("narrowing_conversion")
 		EarthGlobal.upgrade1Cost *= 1.5

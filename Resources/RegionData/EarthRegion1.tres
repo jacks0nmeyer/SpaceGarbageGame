@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://depbfwjnlx5fl"]
+
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/resource_entry.gd" id="1_xy24g"]
+[ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_mk2uv"]
+[ext_resource type="Texture2D" uid="uid://c2d62awwtqv2p" path="res://Art/Earth Regions/Region1/EarthRegion1HL.png" id="3_7e3m3"]
+[ext_resource type="Texture2D" uid="uid://gfb7cfrq1i7v" path="res://Art/Earth Regions/Region1/EarthRegion1.png" id="4_48ii6"]
+
+[sub_resource type="Resource" id="Resource_xy24g"]
+script = ExtResource("1_xy24g")
+resource = "Junk"
+chance = 0.9
+metadata/_custom_type_script = "uid://fqpmooiymym6"
+
+[sub_resource type="Resource" id="Resource_mk2uv"]
+script = ExtResource("1_xy24g")
+resource = "Scrap"
+chance = 0.1
+metadata/_custom_type_script = "uid://fqpmooiymym6"
+
+[resource]
+script = ExtResource("2_mk2uv")
+texture_normal = ExtResource("4_48ii6")
+texture_hover = ExtResource("3_7e3m3")
+resourceChances = Array[ExtResource("1_xy24g")]([SubResource("Resource_xy24g"), SubResource("Resource_mk2uv")])
+description = "Resource chance: 90% Junk, 10% Scrap"
+metadata/_custom_type_script = "uid://sqbo7ix4vhsb"

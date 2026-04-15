@@ -1,42 +1,68 @@
 extends Node
+
 #Resources
-var junk:= 0:
-	set(new_value):
-		if new_value > junk:
-			var junkConversion = new_value-junk
-			EarthGlobal.earthTrash -= junkConversion
-			junk = new_value
-		else:
-			junk = new_value
+var playerResources: Dictionary = {
+	"junk": 4950,
+	"scrap": 1490,
+	"plastic": 0,
+	"glass": 0,
+}
 
-func gotJunk(clickMultiplier):
-	GlobalResources.junk += 1 * junkModifier * globalModifier * clickMultiplier
+#Modifiers
+var globalMultiplier:= 1
 
-
-var scrap:= 0
-func gotScrap():
-	GlobalResources.scrap += 1 * scrapModifier * globalModifier
-
-
-var plastic:= 0
-func gotPlastic():
-	GlobalResources.plastic += 1 * plasticModifier * globalModifier
+var multipliers: Dictionary = {
+	"junk": 1,
+	"scrap": 1,
+	"plastic": 1,
+	"glass": 1,
+}
 
 
-var glass:= 0
-func gotGlass():
-	GlobalResources.glass += 1 * glassModifier * globalModifier
+#Player gains a resource
+func gotResource(resource: String, amount: int):
+	var lcResource := resource.to_lower()
+	if playerResources.has(lcResource):
+		playerResources[lcResource] += amount * multipliers.get(lcResource, 1) * globalMultiplier
 
-#modifiers
-var globalModifier:= 1
-var junkModifier:= 1
-var scrapModifier:= 1
-var plasticModifier:= 1
-var glassModifier:= 1
+
+#gets a resource based on the chances of a specific region
+func regionGotResource(region: RegionData, amount: int = 1):
+	var resource : String = region.returnResource()
+	if resource.is_empty():
+		return
+	gotResource(resource, amount)
+
+
+#purchase functions
+func can_afford(cost: Dictionary) -> bool:
+	for resource in cost:
+		if playerResources.get(resource.to_lower(), 0) < cost[resource]:
+			return false
+	return true
+
+
+func purchase(cost: Dictionary) -> bool:
+	if not can_afford(cost):
+		return false
+	for resource in cost:
+		playerResources[resource.to_lower()] -= cost[resource]
+	return true
+
+
+#picks an item based on chances between 0 and 1 
+func weighted_random(weights: Dictionary) -> Variant:
+	var roll := randf()
+	var cumulative := 0.0
+	for item in weights:
+			cumulative += weights[item]
+			if roll < cumulative:
+				return item
+	return weights.keys().back()
 
 
 #Progress
-var totalSystemTrash 
+var totalSystemTrash
 var totalSystemPollution
 
 

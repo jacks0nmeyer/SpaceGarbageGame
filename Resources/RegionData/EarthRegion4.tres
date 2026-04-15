@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://cgtgfelevne34"]
+
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/resource_entry.gd" id="1_5p4nf"]
+[ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_47ajp"]
+[ext_resource type="Texture2D" uid="uid://dakwltfxc60am" path="res://Art/Earth Regions/Region4/EarthRegion4Dis.png" id="3_5p4nf"]
+[ext_resource type="Texture2D" uid="uid://cbrmdxbklsvq8" path="res://Art/Earth Regions/Region4/EarthRegion4HL.png" id="4_dixvj"]
+[ext_resource type="Texture2D" uid="uid://dkv5hb0yk7sc" path="res://Art/Earth Regions/Region4/EarthRegion4.png" id="5_vnmga"]
+
+[resource]
+script = ExtResource("2_47ajp")
+texture_normal = ExtResource("5_vnmga")
+texture_hover = ExtResource("4_dixvj")
+texture_disabled = ExtResource("3_5p4nf")
+description = "Placeholder"
+lockedDescription = "Placeholder"
+locked = true
+metadata/_custom_type_script = "uid://sqbo7ix4vhsb"

@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cm3ons8g0vpvs"]
+
+[ext_resource type="Script" uid="uid://cupw71se8mfbp" path="res://UI/PlanetUIs/RegionLogic/region_lock.gd" id="1_54d4q"]
+[ext_resource type="Texture2D" uid="uid://c1oyd8d2qdcsq" path="res://Art/Misc/Lock.png" id="1_r1yj8"]
+[ext_resource type="Texture2D" uid="uid://c1wq6nbnurdqs" path="res://Art/Misc/LockHL.png" id="2_kfc0l"]
+
+[node name="RegionLock" type="TextureButton" unique_id=1154904966]
+custom_minimum_size = Vector2(80, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("1_r1yj8")
+texture_hover = ExtResource("2_kfc0l")
+script = ExtResource("1_54d4q")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]
