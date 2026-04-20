@@ -26,11 +26,13 @@ metadata/_custom_type_script = "uid://fqpmooiymym6"
 
 [resource]
 script = ExtResource("2_qmlwg")
-texture_normal = ExtResource("5_yfg6c")
-texture_hover = ExtResource("4_ryfej")
-texture_disabled = ExtResource("3_gfq5o")
+name = "EarthRegion2"
 resourceChances = Array[ExtResource("1_gfq5o")]([SubResource("Resource_tv6ve"), SubResource("Resource_tyvks"), SubResource("Resource_ggpym")])
+trash = 200000
 description = "Resource chance: 75% Junk, 20% Scrap, 5% Glass"
 lockedDescription = "This region is locked, pay 5000 Junk to unlock?"
 locked = true
+texture_normal = ExtResource("5_yfg6c")
+texture_hover = ExtResource("4_ryfej")
+texture_disabled = ExtResource("3_gfq5o")
 metadata/_custom_type_script = "uid://sqbo7ix4vhsb"

@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cof621swv3qvt" path="res://Art/TechTree/TechTreeNode.png" id="1_xys07"]
 [ext_resource type="Texture2D" uid="uid://d1ac00yscpy6x" path="res://Art/TechTree/TechTreeNodeHL.png" id="2_el48p"]
 [ext_resource type="Texture2D" uid="uid://bchwkh88v5ja4" path="res://Art/TechTree/TechTreeNodeDis.png" id="3_pmbbt"]
-[ext_resource type="Script" uid="uid://df8l1wc62t4ja" path="res://UI/TechTree/tech_tree_node.gd" id="4_qm6h2"]
+[ext_resource type="Script" uid="uid://df8l1wc62t4ja" path="res://WIP/TechTree/tech_tree_node.gd" id="4_qm6h2"]
 [ext_resource type="Texture2D" uid="uid://dhbrnb8wm751f" path="res://Art/TechTree/TTLevelButton.png" id="5_rliex"]
 [ext_resource type="Texture2D" uid="uid://c5pgx8omyaao8" path="res://Art/TechTree/TTLevelButtonFilled.png" id="6_mi7q4"]
 [ext_resource type="Texture2D" uid="uid://c3yoctrap658i" path="res://Art/TechTree/TTLevelButtonDis.png" id="7_mi7q4"]

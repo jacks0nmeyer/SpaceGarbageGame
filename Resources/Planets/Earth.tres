@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PlanetData" format=3 uid="uid://dtn5yub1otyus"]
+
+[ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="1_t1e64"]
+[ext_resource type="Resource" uid="uid://depbfwjnlx5fl" path="res://Resources/Regions/EarthRegion1.tres" id="2_3b5oi"]
+[ext_resource type="Script" uid="uid://d0kll1plixqtp" path="res://Resources/Scripts/planet_data.gd" id="2_wgmh2"]
+[ext_resource type="Resource" uid="uid://dofilmx2jjdyp" path="res://Resources/Regions/EarthRegion2.tres" id="3_2np2a"]
+[ext_resource type="Resource" uid="uid://dthrfnux8ljo6" path="res://Resources/Regions/EarthRegion3.tres" id="4_v8yay"]
+[ext_resource type="Resource" uid="uid://cgtgfelevne34" path="res://Resources/Regions/EarthRegion4.tres" id="5_gybpx"]
+
+[resource]
+script = ExtResource("2_wgmh2")
+planetName = "Earth"
+regions = Array[ExtResource("1_t1e64")]([ExtResource("2_3b5oi"), ExtResource("3_2np2a"), ExtResource("4_v8yay"), ExtResource("5_gybpx")])
+metadata/_custom_type_script = "uid://d0kll1plixqtp"

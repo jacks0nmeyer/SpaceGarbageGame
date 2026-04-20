@@ -1,16 +1,18 @@
 class_name RobotData
 extends Resource
 
-@export var texture = Texture2D
+@export_group("Textures")
+@export var texture: Texture2D
+@export var UISprite: Texture2D
 
-@export var amount: int
-
+@export_group("PurchaseData")
 @export var description: String
-@export var cost: int
+@export var unlockCost: Array[CostEntry] = []
 @export var costIncrease: float
+@export var amount: int
 
 @export_group ("Stats")
 @export var size: int
-@export var rate: float
+@export var productionRate: float
 @export var resourceReturn: float
 @export var pollutionEffect: int

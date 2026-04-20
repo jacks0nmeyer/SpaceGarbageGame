@@ -2,8 +2,9 @@ extends TextureButton
 class_name Region
 
 @export var region: RegionData
-@onready var region_popup: Panel = %RegionPopup
-@onready var region_popup_label: Label = %RegionPopupLabel
+@export var planet: PlanetData
+@onready var popup: Panel = %"RegionPopup (Temp)"
+@onready var popup_label: Label = %RegionPopupLabel
 
 func _ready(): 
 	texture_normal = region.texture_normal #assigns textures from resource
@@ -32,13 +33,13 @@ func unlock():
 	
 	
 func _on_pressed():
-	GlobalResources.regionGotResource(region)
+	GlobalResources.regionGotResource(region, planet)
 
 
 func _on_mouse_entered(): 
-	region_popup.show()
-	region_popup_label.text = region.description
+	popup.show()
+	popup_label.text = region.description
 
 
 func _on_mouse_exited():
-		region_popup.hide()
+		popup.hide()

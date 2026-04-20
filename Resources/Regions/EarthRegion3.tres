@@ -8,10 +8,12 @@
 
 [resource]
 script = ExtResource("2_15bi2")
-texture_normal = ExtResource("5_m540m")
-texture_hover = ExtResource("3_bitr4")
-texture_disabled = ExtResource("4_rviqn")
+name = "EarthRegion3"
+trash = 300000
 description = "Placeholder"
 lockedDescription = "This region is locked, pay 10,000 Junk and 5,000 Scrap to unlock?"
 locked = true
+texture_normal = ExtResource("5_m540m")
+texture_hover = ExtResource("3_bitr4")
+texture_disabled = ExtResource("4_rviqn")
 metadata/_custom_type_script = "uid://sqbo7ix4vhsb"

@@ -2,10 +2,7 @@ class_name RegionData
 extends Resource
 
 
-@export_group("Textures")
-@export var texture_normal: Texture2D
-@export var texture_hover: Texture2D
-@export var texture_disabled: Texture2D
+@export var name: String
 
 @export_group("Data")
 @export var resourceChances: Array[ResourceEntry] = []
@@ -22,6 +19,11 @@ extends Resource
 @export var description: String
 @export var lockedDescription: String
 @export var locked: bool
+
+@export_group("Textures")
+@export var texture_normal: Texture2D
+@export var texture_hover: Texture2D
+@export var texture_disabled: Texture2D
 
 func returnResource(): #outputs a string based on the region's resource chance
 	if resourceChances.is_empty():

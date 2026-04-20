@@ -2,8 +2,8 @@ extends Node
 
 #Resources
 var playerResources: Dictionary = {
-	"junk": 4950,
-	"scrap": 1490,
+	"junk": 10000,
+	"scrap": 5000,
 	"plastic": 0,
 	"glass": 0,
 }
@@ -24,14 +24,21 @@ func gotResource(resource: String, amount: int):
 	var lcResource := resource.to_lower()
 	if playerResources.has(lcResource):
 		playerResources[lcResource] += amount * multipliers.get(lcResource, 1) * globalMultiplier
+		GlobalSignals.resourcesUpdated.emit(playerResources)
 
 
-#gets a resource based on the chances of a specific region
-func regionGotResource(region: RegionData, amount: int = 1):
+#gets a resource based on the chances of a specific region, also removes trash from that region
+func regionGotResource(region: RegionData, planet: PlanetData, amount: int = 1):
+	if region.trash <= 0:
+		return
 	var resource : String = region.returnResource()
 	if resource.is_empty():
 		return
+	region.trash = max(0, region.trash - amount)
 	gotResource(resource, amount)
+	GlobalSignals.regionTrashUpdated.emit(region)
+	GlobalSignals.planetTrashUpdated.emit(planet)
+	#GlobalSignals.TotalTrashUpdated.emit(getSolarSystemTrash())
 
 
 #purchase functions
@@ -47,7 +54,19 @@ func purchase(cost: Dictionary) -> bool:
 		return false
 	for resource in cost:
 		playerResources[resource.to_lower()] -= cost[resource]
+		GlobalSignals.resourcesUpdated.emit(playerResources)
 	return true
+
+
+#Trash Logic
+var solarSystem: SolarSystemData = preload("res://Resources/SolarSystem/SolarSystem.tres")
+
+func getPlanetTrash(planet: PlanetData) -> int:
+	return planet.getTotalTrash()
+
+
+#func getSolarSystemTrash() -> int:
+	#return solarSystem.getTotalTrash()
 
 
 #picks an item based on chances between 0 and 1 

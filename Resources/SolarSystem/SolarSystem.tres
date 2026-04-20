@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SolarSystemData" format=3 uid="uid://dkyq612gaix1b"]
+
+[ext_resource type="Script" uid="uid://d0kll1plixqtp" path="res://Resources/Scripts/planet_data.gd" id="1_qlduu"]
+[ext_resource type="Resource" uid="uid://dtn5yub1otyus" path="res://Resources/Planets/Earth.tres" id="2_f0ip6"]
+[ext_resource type="Script" uid="uid://er6nyap1una0" path="res://Resources/Scripts/solar_system_data.gd" id="2_yxqya"]
+
+[resource]
+script = ExtResource("2_yxqya")
+planets = Array[ExtResource("1_qlduu")]([ExtResource("2_f0ip6")])
+metadata/_custom_type_script = "uid://er6nyap1una0"

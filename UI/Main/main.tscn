@@ -3,9 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://budhqk323mrf0" path="res://Art/Backgrounds/BackgroundTest.png" id="1_fbkrl"]
 [ext_resource type="Texture2D" uid="uid://clu0gp4dngh5n" path="res://Art/Backgrounds/GlobeTest.png" id="2_ua7df"]
 [ext_resource type="PackedScene" uid="uid://nas23o6yox7c" path="res://UI/PlanetUIs/EarthUI.tscn" id="3_vhxei"]
-[ext_resource type="PackedScene" uid="uid://b31cvtpmig7ec" path="res://UI/ProgressUI/progress_ui.tscn" id="4_uqj38"]
-[ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://UI/ResourceUI/resource_ui.tscn" id="5_rsogr"]
-[ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://UI/UpgradeUI/upgrade_ui.tscn" id="6_w5mr6"]
+[ext_resource type="PackedScene" uid="uid://b31cvtpmig7ec" path="res://WIP/PlanetProgressUI/planet_progress_ui.tscn" id="4_uqj38"]
+[ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -33,21 +32,17 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_ua7df")
 
-[node name="ProgressUI" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
-layout_mode = 1
-
-[node name="ResourceUI" parent="." unique_id=684933601 instance=ExtResource("5_rsogr")]
-layout_mode = 1
-
 [node name="EarthUI" parent="." unique_id=1975476536 instance=ExtResource("3_vhxei")]
 layout_mode = 1
 
-[node name="UpgradeUI" parent="." unique_id=461547080 instance=ExtResource("6_w5mr6")]
-visibility_layer = 9
-z_index = 1
+[node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
 layout_mode = 1
-offset_left = -300.0
+
+[node name="ResourceUI(Temp)" parent="." unique_id=684933601 instance=ExtResource("5_rsogr")]
+layout_mode = 1

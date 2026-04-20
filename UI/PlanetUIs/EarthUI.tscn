@@ -2,15 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://8hscjtcu71mp" path="res://UI/PlanetUIs/RegionLogic/region.tscn" id="2_30wv6"]
 [ext_resource type="Texture2D" uid="uid://gfb7cfrq1i7v" path="res://Art/Earth Regions/Region1/EarthRegion1.png" id="3_pqped"]
-[ext_resource type="Resource" uid="uid://depbfwjnlx5fl" path="res://Resources/RegionData/EarthRegion1.tres" id="4_luohe"]
+[ext_resource type="Resource" uid="uid://dtn5yub1otyus" path="res://Resources/Planets/Earth.tres" id="4_7n5yb"]
+[ext_resource type="Resource" uid="uid://depbfwjnlx5fl" path="res://Resources/Regions/EarthRegion1.tres" id="4_luohe"]
 [ext_resource type="Texture2D" uid="uid://c3s7sefxbd75o" path="res://Art/Earth Regions/Region2/EarthRegion2.png" id="5_343ht"]
-[ext_resource type="Resource" uid="uid://dofilmx2jjdyp" path="res://Resources/RegionData/EarthRegion2.tres" id="6_1xbnw"]
+[ext_resource type="Resource" uid="uid://dofilmx2jjdyp" path="res://Resources/Regions/EarthRegion2.tres" id="6_1xbnw"]
 [ext_resource type="PackedScene" uid="uid://cm3ons8g0vpvs" path="res://UI/PlanetUIs/RegionLogic/region_lock.tscn" id="7_egi46"]
 [ext_resource type="Texture2D" uid="uid://bmfano4vfvs3i" path="res://Art/Earth Regions/Region3/EarthRegion3.png" id="7_luohe"]
-[ext_resource type="Resource" uid="uid://dthrfnux8ljo6" path="res://Resources/RegionData/EarthRegion3.tres" id="8_343ht"]
+[ext_resource type="Resource" uid="uid://dthrfnux8ljo6" path="res://Resources/Regions/EarthRegion3.tres" id="8_343ht"]
 [ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/cost_entry.gd" id="8_sokf5"]
 [ext_resource type="Texture2D" uid="uid://dkv5hb0yk7sc" path="res://Art/Earth Regions/Region4/EarthRegion4.png" id="9_1xbnw"]
-[ext_resource type="Resource" uid="uid://cgtgfelevne34" path="res://Resources/RegionData/EarthRegion4.tres" id="10_58dan"]
+[ext_resource type="Resource" uid="uid://cgtgfelevne34" path="res://Resources/Regions/EarthRegion4.tres" id="10_58dan"]
 
 [sub_resource type="Resource" id="Resource_eb7ci"]
 script = ExtResource("8_sokf5")
@@ -39,7 +40,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="EarthRegion1" parent="." unique_id=2140231024 instance=ExtResource("2_30wv6")]
+[node name="New Junk City" parent="." unique_id=2140231024 instance=ExtResource("2_30wv6")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -47,10 +48,11 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -296.0
-offset_top = -264.0
-offset_bottom = 48.0
+offset_top = -244.0
+offset_bottom = 68.0
 texture_normal = ExtResource("3_pqped")
 region = ExtResource("4_luohe")
+planet = ExtResource("4_7n5yb")
 metadata/_edit_lock_ = true
 
 [node name="EarthRegion2" parent="." unique_id=1921683077 instance=ExtResource("2_30wv6")]
@@ -61,10 +63,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 16.0
-offset_top = -268.0
+offset_top = -248.0
 offset_right = 296.0
+offset_bottom = 20.0
 texture_normal = ExtResource("5_343ht")
 region = ExtResource("6_1xbnw")
+planet = ExtResource("4_7n5yb")
 metadata/_edit_lock_ = true
 
 [node name="Region2Lock" parent="EarthRegion2" unique_id=1154904966 instance=ExtResource("7_egi46")]
@@ -89,11 +93,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -9.0
-offset_top = 20.0
+offset_top = 40.0
 offset_right = 291.0
-offset_bottom = 280.0
+offset_bottom = 300.0
 texture_normal = ExtResource("7_luohe")
 region = ExtResource("8_343ht")
+planet = ExtResource("4_7n5yb")
 metadata/_edit_lock_ = true
 
 [node name="Region3Lock" parent="EarthRegion3" unique_id=892992307 instance=ExtResource("7_egi46")]
@@ -118,11 +123,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -284.0
-offset_top = 56.0
+offset_top = 76.0
 offset_right = 12.0
-offset_bottom = 296.0
+offset_bottom = 316.0
 texture_normal = ExtResource("9_1xbnw")
 region = ExtResource("10_58dan")
+planet = ExtResource("4_7n5yb")
 metadata/_edit_lock_ = true
 
 [node name="Region4Lock" parent="EarthRegion4" unique_id=355271129 instance=ExtResource("7_egi46")]
@@ -138,7 +144,7 @@ offset_right = 32.0
 offset_bottom = 27.0
 region = ExtResource("10_58dan")
 
-[node name="RegionPopup" type="Panel" parent="." unique_id=25891865]
+[node name="RegionPopup (Temp)" type="Panel" parent="." unique_id=25891865]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 50.0
@@ -146,7 +152,7 @@ offset_top = 250.0
 offset_right = 250.0
 offset_bottom = 450.0
 
-[node name="RegionPopupLabel" type="Label" parent="RegionPopup" unique_id=979660636]
+[node name="RegionPopupLabel" type="Label" parent="RegionPopup (Temp)" unique_id=979660636]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
