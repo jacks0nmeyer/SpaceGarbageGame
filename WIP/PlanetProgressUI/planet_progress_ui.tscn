@@ -19,25 +19,6 @@ offset_right = 197.5
 offset_bottom = 50.0
 grow_horizontal = 2
 
-[node name="Panel" type="Panel" parent="." unique_id=1583716266]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = -132.5
-offset_top = 5.0
-offset_right = -21.5
-offset_bottom = 50.0
-
-[node name="Label" type="Label" parent="Panel" unique_id=786045547]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-vertical_alignment = 1
-
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=765113101]
 layout_mode = 1
 anchors_preset = 15
@@ -50,18 +31,36 @@ theme_override_constants/margin_top = 5
 [node name="Trash&Pollution" type="HBoxContainer" parent="MarginContainer" unique_id=534806870]
 layout_mode = 2
 
-[node name="TrashProgressBar" type="ProgressBar" parent="MarginContainer/Trash&Pollution" unique_id=969464824]
+[node name="Control" type="Control" parent="MarginContainer/Trash&Pollution" unique_id=457111619]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TrashProgressBar" type="ProgressBar" parent="MarginContainer/Trash&Pollution/Control" unique_id=969464824]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 step = 1.0
+show_percentage = false
 script = ExtResource("1_d48fv")
 planet = ExtResource("2_h53k6")
+
+[node name="Label" type="Label" parent="MarginContainer/Trash&Pollution/Control" unique_id=1180163292]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "TEST"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/Trash&Pollution" unique_id=567715038]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 texture = SubResource("AtlasTexture_hw0da")
-
-[connection signal="mouse_entered" from="MarginContainer/Trash&Pollution/TrashProgressBar" to="MarginContainer/Trash&Pollution/TrashProgressBar" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="MarginContainer/Trash&Pollution/TrashProgressBar" to="MarginContainer/Trash&Pollution/TrashProgressBar" method="_on_mouse_exited"]

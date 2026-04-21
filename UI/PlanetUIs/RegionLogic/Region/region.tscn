@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://8hscjtcu71mp"]
 
-[ext_resource type="Script" uid="uid://d4ljifr58gpen" path="res://UI/PlanetUIs/RegionLogic/region.gd" id="1_33eaq"]
+[ext_resource type="Script" uid="uid://d4ljifr58gpen" path="res://UI/PlanetUIs/RegionLogic/Region/region.gd" id="1_33eaq"]
 
 [node name="Region" type="TextureButton" unique_id=2140231024]
 anchors_preset = 15
@@ -11,5 +11,4 @@ grow_vertical = 2
 script = ExtResource("1_33eaq")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="." to="." method="_on_pressed"]

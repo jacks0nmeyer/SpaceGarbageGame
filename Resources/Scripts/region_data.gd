@@ -2,7 +2,7 @@ class_name RegionData
 extends Resource
 
 
-@export var name: String
+@export var regionName: String
 
 @export_group("Data")
 @export var resourceChances: Array[ResourceEntry] = []
@@ -13,7 +13,9 @@ extends Resource
 
 
 @export var trash: int
+@export var maxTrash: int 
 @export var pollution: int
+
 
 
 @export var description: String
@@ -28,14 +30,13 @@ extends Resource
 func returnResource(): #outputs a string based on the region's resource chance
 	if resourceChances.is_empty():
 		return ""
-		
+
 	var weights := {}
 	for entry in resourceChances:
 		if entry.chance > 0.0:
 			weights[entry.resource] = entry.chance
-		
+
 	if weights.is_empty():
 		return ""
-	
+
 	return GlobalResources.weighted_random(weights)
-	

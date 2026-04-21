@@ -1,8 +1,8 @@
 extends ProgressBar
 
 @export var planet: PlanetData
-@onready var panel: Panel = %Panel
-@onready var label: Label = %Label
+@onready var label: Label = $"../Label"
+
 
 
 
@@ -19,11 +19,3 @@ func onPlanetTrashUpdated(updated_planet: PlanetData):
 	if updated_planet == planet:
 		value = planet.getTotalTrash()
 		label.text = "%d / %d" % [value, max_value]
-
-
-func _on_mouse_entered():
-	panel.show()
-	
-
-func _on_mouse_exited():
-	panel.hide()

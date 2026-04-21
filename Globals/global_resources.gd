@@ -18,12 +18,27 @@ var multipliers: Dictionary = {
 	"glass": 1,
 }
 
+#rate tracking
+var resourceRates: Dictionary = {}
+var rateTracker: Dictionary = {}
+var rateInterval: float = 1.0
+var rateTimer: float = 0.0
+
+
+func _process(delta):
+	rateTimer += delta
+	if rateTimer >= rateInterval:
+		rateTimer = 0.0
+		resourceRates = rateTracker.duplicate()
+		rateTracker.clear()
+		GlobalSignals.resourceRateUpdated.emit(resourceRates)
 
 #Player gains a resource
 func gotResource(resource: String, amount: int):
 	var lcResource := resource.to_lower()
 	if playerResources.has(lcResource):
 		playerResources[lcResource] += amount * multipliers.get(lcResource, 1) * globalMultiplier
+		rateTracker[lcResource] = rateTracker.get(lcResource, 0) + amount
 		GlobalSignals.resourcesUpdated.emit(playerResources)
 
 

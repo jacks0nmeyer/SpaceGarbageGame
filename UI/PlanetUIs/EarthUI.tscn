@@ -1,17 +1,18 @@
 [gd_scene format=3 uid="uid://nas23o6yox7c"]
 
-[ext_resource type="PackedScene" uid="uid://8hscjtcu71mp" path="res://UI/PlanetUIs/RegionLogic/region.tscn" id="2_30wv6"]
+[ext_resource type="PackedScene" uid="uid://8hscjtcu71mp" path="res://UI/PlanetUIs/RegionLogic/Region/region.tscn" id="2_30wv6"]
 [ext_resource type="Texture2D" uid="uid://gfb7cfrq1i7v" path="res://Art/Earth Regions/Region1/EarthRegion1.png" id="3_pqped"]
 [ext_resource type="Resource" uid="uid://dtn5yub1otyus" path="res://Resources/Planets/Earth.tres" id="4_7n5yb"]
 [ext_resource type="Resource" uid="uid://depbfwjnlx5fl" path="res://Resources/Regions/EarthRegion1.tres" id="4_luohe"]
 [ext_resource type="Texture2D" uid="uid://c3s7sefxbd75o" path="res://Art/Earth Regions/Region2/EarthRegion2.png" id="5_343ht"]
 [ext_resource type="Resource" uid="uid://dofilmx2jjdyp" path="res://Resources/Regions/EarthRegion2.tres" id="6_1xbnw"]
-[ext_resource type="PackedScene" uid="uid://cm3ons8g0vpvs" path="res://UI/PlanetUIs/RegionLogic/region_lock.tscn" id="7_egi46"]
+[ext_resource type="PackedScene" uid="uid://cm3ons8g0vpvs" path="res://UI/PlanetUIs/RegionLogic/Lock/region_lock.tscn" id="7_egi46"]
 [ext_resource type="Texture2D" uid="uid://bmfano4vfvs3i" path="res://Art/Earth Regions/Region3/EarthRegion3.png" id="7_luohe"]
 [ext_resource type="Resource" uid="uid://dthrfnux8ljo6" path="res://Resources/Regions/EarthRegion3.tres" id="8_343ht"]
-[ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/cost_entry.gd" id="8_sokf5"]
+[ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="8_sokf5"]
 [ext_resource type="Texture2D" uid="uid://dkv5hb0yk7sc" path="res://Art/Earth Regions/Region4/EarthRegion4.png" id="9_1xbnw"]
 [ext_resource type="Resource" uid="uid://cgtgfelevne34" path="res://Resources/Regions/EarthRegion4.tres" id="10_58dan"]
+[ext_resource type="PackedScene" uid="uid://f060h0oxn7jq" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_information.tscn" id="13_in0od"]
 
 [sub_resource type="Resource" id="Resource_eb7ci"]
 script = ExtResource("8_sokf5")
@@ -29,6 +30,24 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 script = ExtResource("8_sokf5")
 resource = "Scrap"
 amount = 5000
+metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
+
+[sub_resource type="Resource" id="Resource_in0od"]
+script = ExtResource("8_sokf5")
+resource = "Junk"
+amount = 50000
+metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
+
+[sub_resource type="Resource" id="Resource_ekhyl"]
+script = ExtResource("8_sokf5")
+resource = "Scrap"
+amount = 25000
+metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
+
+[sub_resource type="Resource" id="Resource_jw7fp"]
+script = ExtResource("8_sokf5")
+resource = "Glass"
+amount = 10000
 metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [node name="EarthUI" type="Control" unique_id=1975476536]
@@ -142,25 +161,29 @@ offset_left = -48.0
 offset_top = -77.0
 offset_right = 32.0
 offset_bottom = 27.0
+unlockCost = Array[ExtResource("8_sokf5")]([SubResource("Resource_in0od"), SubResource("Resource_ekhyl"), SubResource("Resource_jw7fp")])
 region = ExtResource("10_58dan")
 
-[node name="RegionPopup (Temp)" type="Panel" parent="." unique_id=25891865]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 50.0
-offset_top = 250.0
-offset_right = 250.0
-offset_bottom = 450.0
+[node name="RegionInformationLayer" type="CanvasLayer" parent="." unique_id=790355808]
 
-[node name="RegionPopupLabel" type="Label" parent="RegionPopup (Temp)" unique_id=979660636]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "REGION DESCRIPTION"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+[node name="Container" type="Control" parent="RegionInformationLayer" unique_id=416458959]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 35.0
+offset_top = 200.0
+offset_right = 260.0
+offset_bottom = 500.0
+
+[node name="RegionInformation" parent="RegionInformationLayer/Container" unique_id=1090157542 instance=ExtResource("13_in0od")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 225.0
+offset_bottom = 300.0
+grow_horizontal = 1
+grow_vertical = 1

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cm3ons8g0vpvs"]
 
-[ext_resource type="Script" uid="uid://cupw71se8mfbp" path="res://UI/PlanetUIs/RegionLogic/region_lock.gd" id="1_54d4q"]
+[ext_resource type="Script" uid="uid://cupw71se8mfbp" path="res://UI/PlanetUIs/RegionLogic/Lock/region_lock.gd" id="1_54d4q"]
 [ext_resource type="Texture2D" uid="uid://c1oyd8d2qdcsq" path="res://Art/Misc/Lock.png" id="1_r1yj8"]
 [ext_resource type="Texture2D" uid="uid://c1wq6nbnurdqs" path="res://Art/Misc/LockHL.png" id="2_kfc0l"]
 

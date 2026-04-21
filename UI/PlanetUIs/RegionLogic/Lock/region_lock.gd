@@ -3,8 +3,6 @@ class_name RegionLock
 
 @export var unlockCost: Array[CostEntry] = []
 @export var region: RegionData
-@onready var popup: Panel = %"RegionPopup (Temp)"
-@onready var popup_label: Label = %RegionPopupLabel
 
 
 func cost_dict() -> Dictionary:
@@ -21,12 +19,11 @@ func _on_pressed():
 
 
 func _on_mouse_entered():
-	popup.show()
-	popup_label.text = region.lockedDescription
+	pass
 
 
 func _on_mouse_exited():
-		popup.hide()
+	pass
 
 
 func _ready():

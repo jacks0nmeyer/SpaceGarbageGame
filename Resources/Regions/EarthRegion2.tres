@@ -1,35 +1,37 @@
 [gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://dofilmx2jjdyp"]
 
-[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/resource_entry.gd" id="1_gfq5o"]
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="1_u832g"]
 [ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_qmlwg"]
 [ext_resource type="Texture2D" uid="uid://dshk5mwtq3ma6" path="res://Art/Earth Regions/Region2/EarthRegion2Dis.png" id="3_gfq5o"]
 [ext_resource type="Texture2D" uid="uid://7bisbe3htk8o" path="res://Art/Earth Regions/Region2/EarthRegion2HL.png" id="4_ryfej"]
 [ext_resource type="Texture2D" uid="uid://c3s7sefxbd75o" path="res://Art/Earth Regions/Region2/EarthRegion2.png" id="5_yfg6c"]
 
 [sub_resource type="Resource" id="Resource_tv6ve"]
-script = ExtResource("1_gfq5o")
+script = ExtResource("1_u832g")
 resource = "Junk"
 chance = 0.75
 metadata/_custom_type_script = "uid://fqpmooiymym6"
 
 [sub_resource type="Resource" id="Resource_tyvks"]
-script = ExtResource("1_gfq5o")
+script = ExtResource("1_u832g")
 resource = "Scrap"
 chance = 0.2
 metadata/_custom_type_script = "uid://fqpmooiymym6"
 
 [sub_resource type="Resource" id="Resource_ggpym"]
-script = ExtResource("1_gfq5o")
+script = ExtResource("1_u832g")
 resource = "Glass"
 chance = 0.05
 metadata/_custom_type_script = "uid://fqpmooiymym6"
 
 [resource]
 script = ExtResource("2_qmlwg")
-name = "EarthRegion2"
-resourceChances = Array[ExtResource("1_gfq5o")]([SubResource("Resource_tv6ve"), SubResource("Resource_tyvks"), SubResource("Resource_ggpym")])
+regionName = "Region 2"
+resourceChances = Array[ExtResource("1_u832g")]([SubResource("Resource_tv6ve"), SubResource("Resource_tyvks"), SubResource("Resource_ggpym")])
+robot_capacity = 4
 trash = 200000
-description = "Resource chance: 75% Junk, 20% Scrap, 5% Glass"
+maxTrash = 200000
+pollution = 2
 lockedDescription = "This region is locked, pay 5000 Junk to unlock?"
 locked = true
 texture_normal = ExtResource("5_yfg6c")

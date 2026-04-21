@@ -1,0 +1,185 @@
+[gd_scene format=3 uid="uid://f060h0oxn7jq"]
+
+[ext_resource type="Script" uid="uid://c2b7ytgk0wn7b" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_information.gd" id="1_3thv7"]
+[ext_resource type="Texture2D" uid="uid://fkwqh3egtedn" path="res://Art/Misc/PollutionLevel.png" id="1_e4uio"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3thv7"]
+atlas = ExtResource("1_e4uio")
+region = Rect2(104, 0, 44, 44)
+
+[node name="RegionInformation" type="TabContainer" unique_id=1090157542]
+custom_minimum_size = Vector2(225, 300)
+anchors_preset = -1
+anchor_left = 0.030000001
+anchor_top = 0.30900002
+anchor_right = 0.22600001
+anchor_bottom = 0.772
+offset_left = 0.43999863
+offset_top = -0.23200989
+offset_right = -0.35202026
+offset_bottom = -0.25601196
+grow_horizontal = 2
+grow_vertical = 2
+tab_alignment = 1
+current_tab = 0
+script = ExtResource("1_3thv7")
+
+[node name="Info" type="VBoxContainer" parent="." unique_id=470652075]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Separator" type="Control" parent="Info" unique_id=1559653874]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="RegionName" type="Label" parent="Info" unique_id=806487147]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+text = "Region Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="T&PContainer" type="MarginContainer" parent="Info" unique_id=1332196174]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Trash&Pollution" type="HBoxContainer" parent="Info/T&PContainer" unique_id=235274414]
+layout_mode = 2
+
+[node name="TrashDisplay" type="Control" parent="Info/T&PContainer/Trash&Pollution" unique_id=1134774856]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TrashBar" type="ProgressBar" parent="Info/T&PContainer/Trash&Pollution/TrashDisplay" unique_id=2052773542]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+show_percentage = false
+
+[node name="TrashDisplay" type="Label" parent="Info/T&PContainer/Trash&Pollution/TrashDisplay" unique_id=1805094995]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "TEST"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionPollution" type="TextureRect" parent="Info/T&PContainer/Trash&Pollution" unique_id=302454693]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+texture = SubResource("AtlasTexture_3thv7")
+
+[node name="Separator2" type="HSeparator" parent="Info" unique_id=971708238]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="ResourceGrid" type="GridContainer" parent="Info" unique_id=593768345]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="RegionResources" type="Label" parent="Info/ResourceGrid" unique_id=1576660521]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Junk: 90%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionResources3" type="Label" parent="Info/ResourceGrid" unique_id=1913616321]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Junk: 90%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionResources2" type="Label" parent="Info/ResourceGrid" unique_id=478095851]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scrap: 10%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator3" type="HSeparator" parent="Info" unique_id=960582988]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="ProductionGrid" type="GridContainer" parent="Info" unique_id=1782527383]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+columns = 2
+
+[node name="RegionProduction" type="Label" parent="Info/ProductionGrid" unique_id=876500397]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Junk/S: Temp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionProduction2" type="Label" parent="Info/ProductionGrid" unique_id=997688977]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scrap/S: Temp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionProduction3" type="Label" parent="Info/ProductionGrid" unique_id=1705661912]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scrap/S: Temp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator4" type="HSeparator" parent="Info" unique_id=56092117]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="DescContainer" type="MarginContainer" parent="Info" unique_id=779318952]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Region Description" type="Label" parent="Info/DescContainer" unique_id=1224420622]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_vertical = 1
+text = "This is an example of a region description, it would probably say something about this long, this demonstration is just for looks. "
+autowrap_mode = 2
+
+[node name="Robots" type="VBoxContainer" parent="." unique_id=1158874029]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Buildings" type="VBoxContainer" parent="." unique_id=190749300]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="X" type="Control" parent="." unique_id=1343383403]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[connection signal="tab_clicked" from="." to="." method="_on_tab_clicked"]

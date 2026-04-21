@@ -1,16 +1,38 @@
 [gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://dthrfnux8ljo6"]
 
-[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/resource_entry.gd" id="1_bitr4"]
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="1_qpyfh"]
 [ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_15bi2"]
 [ext_resource type="Texture2D" uid="uid://crfng3sfo3tnm" path="res://Art/Earth Regions/Region3/EarthRegion3HL.png" id="3_bitr4"]
 [ext_resource type="Texture2D" uid="uid://bsxgonxfbw6t8" path="res://Art/Earth Regions/Region3/EarthRegion3Dis.png" id="4_rviqn"]
 [ext_resource type="Texture2D" uid="uid://bmfano4vfvs3i" path="res://Art/Earth Regions/Region3/EarthRegion3.png" id="5_m540m"]
 
+[sub_resource type="Resource" id="Resource_qpyfh"]
+script = ExtResource("1_qpyfh")
+resource = "Junk"
+chance = 0.5
+metadata/_custom_type_script = "uid://fqpmooiymym6"
+
+[sub_resource type="Resource" id="Resource_jl0rf"]
+script = ExtResource("1_qpyfh")
+resource = "Scrap"
+chance = 0.3
+metadata/_custom_type_script = "uid://fqpmooiymym6"
+
+[sub_resource type="Resource" id="Resource_eif7m"]
+script = ExtResource("1_qpyfh")
+resource = "Glass"
+chance = 0.2
+metadata/_custom_type_script = "uid://fqpmooiymym6"
+
 [resource]
 script = ExtResource("2_15bi2")
-name = "EarthRegion3"
+regionName = "Sahara Dump"
+resourceChances = Array[ExtResource("1_qpyfh")]([SubResource("Resource_qpyfh"), SubResource("Resource_jl0rf"), SubResource("Resource_eif7m")])
+robot_capacity = 4
 trash = 300000
-description = "Placeholder"
+maxTrash = 300000
+pollution = 2
+description = "Once the hottest place on Earth, now just the stinkiest. Mounds of trash simmer atop the dunes. "
 lockedDescription = "This region is locked, pay 10,000 Junk and 5,000 Scrap to unlock?"
 locked = true
 texture_normal = ExtResource("5_m540m")

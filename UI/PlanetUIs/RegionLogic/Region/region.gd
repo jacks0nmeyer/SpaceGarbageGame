@@ -3,8 +3,7 @@ class_name Region
 
 @export var region: RegionData
 @export var planet: PlanetData
-@onready var popup: Panel = %"RegionPopup (Temp)"
-@onready var popup_label: Label = %RegionPopupLabel
+
 
 func _ready(): 
 	texture_normal = region.texture_normal #assigns textures from resource
@@ -37,9 +36,4 @@ func _on_pressed():
 
 
 func _on_mouse_entered(): 
-	popup.show()
-	popup_label.text = region.description
-
-
-func _on_mouse_exited():
-		popup.hide()
+	GlobalSignals.regionHovered.emit(region)
