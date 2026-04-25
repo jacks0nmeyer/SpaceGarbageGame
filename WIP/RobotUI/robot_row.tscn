@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://WIP/RobotUI/robot_row.gd" id="1_row"]
+
+[node name="RobotRow" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 80)
+script = ExtResource("1_row")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="IconHolder" type="Control" parent="HBox"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="Info" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NameLabel" type="Label" parent="HBox/Info"]
+layout_mode = 2
+
+[node name="DescLabel" type="Label" parent="HBox/Info"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="OwnedLabel" type="Label" parent="HBox/Info"]
+layout_mode = 2
+
+[node name="Buy" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+
+[node name="CostLabel" type="Label" parent="HBox/Buy"]
+layout_mode = 2
+
+[node name="BuyButton" type="Button" parent="HBox/Buy"]
+layout_mode = 2
+text = "Buy"

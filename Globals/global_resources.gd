@@ -75,6 +75,7 @@ func purchase(cost: Dictionary) -> bool:
 
 #Trash Logic
 var solarSystem: SolarSystemData = preload("res://Resources/SolarSystem/SolarSystem.tres")
+var robots: RobotCollection = preload("res://Resources/Robots/Robots.tres")
 
 func getPlanetTrash(planet: PlanetData) -> int:
 	return planet.getTotalTrash()

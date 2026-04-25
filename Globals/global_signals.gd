@@ -20,3 +20,6 @@ signal TotalTrashUpdated(total: int)
 
 @warning_ignore("unused_signal")
 signal regionHovered(region: RegionData)
+
+@warning_ignore("unused_signal")
+signal robotPurchased(robot: RobotData)

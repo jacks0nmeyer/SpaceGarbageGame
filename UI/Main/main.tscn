@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://nas23o6yox7c" path="res://UI/PlanetUIs/EarthUI.tscn" id="3_vhxei"]
 [ext_resource type="PackedScene" uid="uid://b31cvtpmig7ec" path="res://WIP/PlanetProgressUI/planet_progress_ui.tscn" id="4_uqj38"]
 [ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
+[ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -46,3 +47,22 @@ layout_mode = 1
 
 [node name="EarthUI" parent="." unique_id=1975476536 instance=ExtResource("3_vhxei")]
 layout_mode = 1
+
+[node name="RobotUI" parent="." unique_id=1500000001 instance=ExtResource("6_robotui")]
+layout_mode = 1
+
+[node name="RobotsButton" type="Button" parent="." unique_id=1500000002]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 40.0
+grow_horizontal = 0
+text = "Robots"
+
+[connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]
+[connection signal="panelOpened" from="RobotUI" to="RobotsButton" method="hide"]
+[connection signal="panelClosed" from="RobotUI" to="RobotsButton" method="show"]

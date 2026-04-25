@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RobotCollection" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Resources/Scripts/robot_collection.gd" id="1_coll"]
+[ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="2_robot"]
+[ext_resource type="Resource" path="res://Resources/Robots/Scrapper.tres" id="3_scr"]
+[ext_resource type="Resource" path="res://Resources/Robots/Sweeper.tres" id="4_swe"]
+[ext_resource type="Resource" path="res://Resources/Robots/Compactor.tres" id="5_com"]
+
+[resource]
+script = ExtResource("1_coll")
+robots = Array[ExtResource("2_robot")]([ExtResource("3_scr"), ExtResource("4_swe"), ExtResource("5_com")])
