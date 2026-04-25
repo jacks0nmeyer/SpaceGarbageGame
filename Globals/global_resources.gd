@@ -25,6 +25,10 @@ var rateInterval: float = 1.0
 var rateTimer: float = 0.0
 
 
+func _ready():
+	GlobalSignals.regionPinToggled.connect(_toggle_pinned_region)
+
+
 func _process(delta):
 	rateTimer += delta
 	if rateTimer >= rateInterval:
@@ -76,6 +80,67 @@ func purchase(cost: Dictionary) -> bool:
 #Trash Logic
 var solarSystem: SolarSystemData = preload("res://Resources/SolarSystem/SolarSystem.tres")
 var robots: RobotCollection = preload("res://Resources/Robots/Robots.tres")
+
+# Currently pinned region for the info panel. While non-null, hover-driven
+# retargeting is disabled and only this region accepts robot drops.
+var pinnedRegion: RegionData = null
+
+
+func _toggle_pinned_region(region: RegionData) -> void:
+	if pinnedRegion == region:
+		pinnedRegion = null
+	else:
+		pinnedRegion = region
+
+
+# Move/copy one of `robot` to `target`. If `from_region` is non-null and not
+# the same as `target`, decrement source first (a cross-region move). Caller
+# is responsible for capacity validation via region.canFit(robot).
+func assignOne(robot: RobotData, target: RegionData, from_region: RegionData = null) -> void:
+	if robot == null or target == null:
+		return
+	if from_region != null and from_region != target:
+		var src: int = int(from_region.assignedRobots.get(robot, 0))
+		if src <= 1:
+			from_region.assignedRobots.erase(robot)
+		else:
+			from_region.assignedRobots[robot] = src - 1
+		GlobalSignals.robotUnassigned.emit(robot, from_region)
+	target.assignedRobots[robot] = int(target.assignedRobots.get(robot, 0)) + 1
+	GlobalSignals.robotAssigned.emit(robot, target)
+
+
+# Decrement one of `robot` from `region`, clearing the dict entry when it
+# reaches zero, and emit robotUnassigned. Safe to call when none are assigned.
+func unassignOne(robot: RobotData, region: RegionData) -> void:
+	if robot == null or region == null:
+		return
+	var current: int = int(region.assignedRobots.get(robot, 0))
+	if current <= 0:
+		return
+	if current <= 1:
+		region.assignedRobots.erase(robot)
+	else:
+		region.assignedRobots[robot] = current - 1
+	GlobalSignals.robotUnassigned.emit(robot, region)
+
+
+#Total count of a given robot type currently assigned across every region.
+func assignedTotal(robot: RobotData) -> int:
+	if robot == null or solarSystem == null:
+		return 0
+	var total := 0
+	for planet in solarSystem.planets:
+		for region in planet.regions:
+			total += int(region.assignedRobots.get(robot, 0))
+	return total
+
+
+#Total minus assigned. Never goes below zero.
+func unassignedCount(robot: RobotData) -> int:
+	if robot == null:
+		return 0
+	return max(0, robot.amount - assignedTotal(robot))
 
 func getPlanetTrash(planet: PlanetData) -> int:
 	return planet.getTotalTrash()

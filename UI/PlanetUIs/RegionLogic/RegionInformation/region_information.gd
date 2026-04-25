@@ -7,27 +7,72 @@ extends TabContainer
 @onready var resource_grid: GridContainer = $Info/ResourceGrid
 @onready var production_grid: GridContainer = $Info/ProductionGrid
 @onready var region_description: Label = $"Info/DescContainer/Region Description"
+@onready var slots_label: Label = $Robots/Margin/Vbox/SlotsLabel
+@onready var assigned_rows: VBoxContainer = $Robots/Margin/Vbox/Scroll/Rows
+@onready var empty_label: Label = $Robots/Margin/Vbox/EmptyLabel
 
 
 func _ready():
 	GlobalSignals.regionHovered.connect(onRegionHovered)
 	GlobalSignals.regionTrashUpdated.connect(updateProgress)
 	GlobalSignals.resourceRateUpdated.connect(onRateUpdated)
+	GlobalSignals.robotAssigned.connect(_on_robot_pair_changed)
+	GlobalSignals.robotUnassigned.connect(_on_robot_pair_changed)
+	GlobalSignals.regionPinToggled.connect(_on_pin_toggled)
 	hide()
 
 
 var currentRegion: RegionData = null
+
+
 func onRegionHovered(region: RegionData):
+	# Don't retarget mid-drag (e.g. dragging an AssignedRobotRow back to the
+	# Owned tab and brushing past another region) and don't retarget while
+	# the panel is pinned to a specific region.
+	if get_viewport().gui_is_dragging():
+		return
+	if GlobalResources.pinnedRegion != null:
+		return
 	show()
 	if region != currentRegion:
-		currentRegion = region
-		updateInfo(region)
-		updateResources(region)
-		updateProgress(region)
+		_switch_to(region)
+
+
+func _switch_to(region: RegionData):
+	currentRegion = region
+	updateInfo(region)
+	updateResources(region)
+	updateProgress(region)
+	updateRobots(region)
+
+
+# Fires after GlobalResources has already toggled its pinnedRegion. We just
+# react: if the new pin targets a different region, switch to it; either way,
+# refresh the 📌 indicator.
+func _on_pin_toggled(_region: RegionData):
+	var pinned: RegionData = GlobalResources.pinnedRegion
+	if pinned != null:
+		show()
+		if pinned != currentRegion:
+			_switch_to(pinned)
+			return
+	_refresh_pin_indicator()
+
+
+func _refresh_pin_indicator():
+	if currentRegion == null:
+		return
+	var prefix := ""
+	if GlobalResources.pinnedRegion == currentRegion:
+		prefix = "📌 "
+	region_name.text = prefix + currentRegion.regionName
 
 
 func updateInfo(region: RegionData):
-	region_name.text = region.regionName
+	var prefix := ""
+	if GlobalResources.pinnedRegion == region:
+		prefix = "📌 "
+	region_name.text = prefix + region.regionName
 	if region.locked == true:
 		region_description.text = region.lockedDescription
 	else:
@@ -78,6 +123,33 @@ func updateProgress(region: RegionData):
 	trash_display.text = "%d / %d" % [region.trash, region.maxTrash]
 	
 	
+func updateRobots(region: RegionData):
+	for child in assigned_rows.get_children():
+		child.queue_free()
+
+	var used := region.assignedSlotsUsed()
+	slots_label.text = "Slots: %d / %d" % [used, region.robot_capacity]
+
+	var any := false
+	for robot in region.assignedRobots:
+		var count: int = int(region.assignedRobots[robot])
+		if count <= 0:
+			continue
+		any = true
+		var row := AssignedRobotRow.new()
+		assigned_rows.add_child(row)
+		row.setup(robot, region, count)
+
+	empty_label.visible = not any
+
+
+func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
+	if region == currentRegion:
+		updateRobots(region)
+
+
 func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu
-	if tab == 3:
+	if tab == 2:
+		if GlobalResources.pinnedRegion != null:
+			GlobalSignals.regionPinToggled.emit(GlobalResources.pinnedRegion)
 		hide()

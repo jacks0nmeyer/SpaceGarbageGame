@@ -11,6 +11,10 @@ extends Resource
 @export var building: bool
 @export var robot_capacity: int
 
+# Runtime-only mapping of RobotData -> int count of that type assigned here.
+# Mutated at runtime; not persisted into the .tres on disk.
+var assignedRobots: Dictionary = {}
+
 
 @export var trash: int
 @export var maxTrash: int 
@@ -26,6 +30,19 @@ extends Resource
 @export var texture_normal: Texture2D
 @export var texture_hover: Texture2D
 @export var texture_disabled: Texture2D
+
+func assignedSlotsUsed() -> int:
+	var used := 0
+	for robot in assignedRobots:
+		used += int(assignedRobots[robot]) * int(robot.size)
+	return used
+
+
+func canFit(robot: RobotData) -> bool:
+	if locked:
+		return false
+	return assignedSlotsUsed() + int(robot.size) <= robot_capacity
+
 
 func returnResource(): #outputs a string based on the region's resource chance
 	if resourceChances.is_empty():
