@@ -2,7 +2,10 @@
 
 [ext_resource type="Script" uid="uid://c2b7ytgk0wn7b" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_information.gd" id="1_3thv7"]
 [ext_resource type="Texture2D" uid="uid://fkwqh3egtedn" path="res://Art/Misc/PollutionLevel.png" id="1_e4uio"]
-[ext_resource type="Script" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_robots_tab.gd" id="2_robotstab"]
+[ext_resource type="Script" uid="uid://bjr110mr08hb2" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_robots_tab.gd" id="2_robotstab"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0jtr"]
+atlas = ExtResource("1_e4uio")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3thv7"]
 atlas = ExtResource("1_e4uio")
@@ -24,6 +27,7 @@ grow_vertical = 2
 tab_alignment = 1
 current_tab = 0
 script = ExtResource("1_3thv7")
+pollutionAtlas = SubResource("AtlasTexture_k0jtr")
 
 [node name="Info" type="VBoxContainer" parent="." unique_id=470652075]
 layout_mode = 2
@@ -81,6 +85,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(25, 0)
 layout_mode = 2
 texture = SubResource("AtlasTexture_3thv7")
+flip_h = true
 
 [node name="Separator2" type="HSeparator" parent="Info" unique_id=971708238]
 custom_minimum_size = Vector2(0, 5)
@@ -175,7 +180,7 @@ theme_override_constants/separation = 6
 script = ExtResource("2_robotstab")
 metadata/_tab_index = 1
 
-[node name="Margin" type="MarginContainer" parent="Robots"]
+[node name="Margin" type="MarginContainer" parent="Robots" unique_id=903660517]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 8
@@ -183,33 +188,33 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Vbox" type="VBoxContainer" parent="Robots/Margin"]
+[node name="Vbox" type="VBoxContainer" parent="Robots/Margin" unique_id=1292539404]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="SlotsLabel" type="Label" parent="Robots/Margin/Vbox"]
+[node name="SlotsLabel" type="Label" parent="Robots/Margin/Vbox" unique_id=187229381]
 layout_mode = 2
 text = "Slots: 0 / 0"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Robots/Margin/Vbox"]
+[node name="HSeparator" type="HSeparator" parent="Robots/Margin/Vbox" unique_id=1728086068]
 layout_mode = 2
 
-[node name="Scroll" type="ScrollContainer" parent="Robots/Margin/Vbox"]
+[node name="Scroll" type="ScrollContainer" parent="Robots/Margin/Vbox" unique_id=157092631]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Rows" type="VBoxContainer" parent="Robots/Margin/Vbox/Scroll"]
+[node name="Rows" type="VBoxContainer" parent="Robots/Margin/Vbox/Scroll" unique_id=1559123982]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="EmptyLabel" type="Label" parent="Robots/Margin/Vbox"]
+[node name="EmptyLabel" type="Label" parent="Robots/Margin/Vbox" unique_id=560230378]
 layout_mode = 2
 text = "No robots assigned. Drag from the Robots panel."
-autowrap_mode = 2
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="X" type="Control" parent="." unique_id=1343383403]
 visible = false

@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://depbfwjnlx5fl"]
 
 [ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="1_oeg67"]
-[ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_v061p"]
 [ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_mk2uv"]
 [ext_resource type="Texture2D" uid="uid://c2d62awwtqv2p" path="res://Art/Earth Regions/Region1/EarthRegion1HL.png" id="3_7e3m3"]
 [ext_resource type="Texture2D" uid="uid://gfb7cfrq1i7v" path="res://Art/Earth Regions/Region1/EarthRegion1.png" id="4_48ii6"]
@@ -25,7 +24,8 @@ resourceChances = Array[ExtResource("1_oeg67")]([SubResource("Resource_xy24g"), 
 robot_capacity = 4
 trash = 100000
 maxTrash = 100000
-pollution = 2
+pollution = 2600
+maxPollution = 10000
 description = "Now known as \"The Big Crapple\", the trash center of the universe. Still has lots of rats."
 texture_normal = ExtResource("4_48ii6")
 texture_hover = ExtResource("3_7e3m3")

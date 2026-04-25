@@ -19,6 +19,7 @@ var assignedRobots: Dictionary = {}
 @export var trash: int
 @export var maxTrash: int 
 @export var pollution: int
+@export var maxPollution: int
 
 
 
@@ -30,6 +31,16 @@ var assignedRobots: Dictionary = {}
 @export var texture_normal: Texture2D
 @export var texture_hover: Texture2D
 @export var texture_disabled: Texture2D
+
+
+func getPollutionLevel() -> GlobalResources.PollutionLevel:
+	var percentage := (float(pollution)/float(maxPollution)) * 100.0
+	return GlobalResources.getPollutionLevel(percentage)
+	
+	
+func getPollutionName() -> String:
+	return GlobalResources.getPollutionName(getPollutionLevel())
+
 
 func assignedSlotsUsed() -> int:
 	var used := 0

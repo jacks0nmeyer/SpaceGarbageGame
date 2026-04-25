@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://d10funnmhi6s" path="res://WIP/PlanetProgressUI/trash_progress_bar.gd" id="1_d48fv"]
 [ext_resource type="Resource" uid="uid://dtn5yub1otyus" path="res://Resources/Planets/Earth.tres" id="2_h53k6"]
 [ext_resource type="Texture2D" uid="uid://fkwqh3egtedn" path="res://Art/Misc/PollutionLevel.png" id="3_5tvvm"]
+[ext_resource type="Script" uid="uid://ce3iat4xvjxq3" path="res://WIP/PlanetProgressUI/pollution_level.gd" id="4_hw0da"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hw0da"]
 atlas = ExtResource("3_5tvvm")
@@ -60,7 +61,10 @@ text = "TEST"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/Trash&Pollution" unique_id=567715038]
+[node name="PollutionLevel" type="TextureRect" parent="MarginContainer/Trash&Pollution" unique_id=567715038]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 texture = SubResource("AtlasTexture_hw0da")
+script = ExtResource("4_hw0da")
+planet = ExtResource("2_h53k6")
+pollutionAtlas = ExtResource("3_5tvvm")

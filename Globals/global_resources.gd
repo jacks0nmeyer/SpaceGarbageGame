@@ -19,6 +19,26 @@ var multipliers: Dictionary = {
 }
 
 
+#pollution
+enum PollutionLevel {CLEAN, LOW, MODERATE, HIGH, CRITICAL}
+
+func getPollutionLevel(pollution: float) -> PollutionLevel:
+	if pollution < 20.0:
+		return PollutionLevel.CLEAN
+	elif pollution < 40.0:
+		return PollutionLevel.LOW
+	elif pollution < 60.0:
+		return PollutionLevel.MODERATE
+	elif pollution < 80.0:
+		return PollutionLevel.HIGH
+	else: 
+		return PollutionLevel.CRITICAL
+
+
+func getPollutionName(level: PollutionLevel) -> String:
+	return PollutionLevel.keys()[level].capitalize()
+		
+
 #robots
 var ownedRobots: Dictionary = {} #robot data -> amount owned
 
@@ -168,7 +188,3 @@ func weighted_random(weights: Dictionary) -> Variant:
 
 #Progress
 var totalSystemTrash
-var totalSystemPollution
-
-
-	

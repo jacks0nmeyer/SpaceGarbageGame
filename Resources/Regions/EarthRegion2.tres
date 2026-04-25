@@ -1,6 +1,5 @@
 [gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://dofilmx2jjdyp"]
 
-[ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_2i80d"]
 [ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="1_u832g"]
 [ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_qmlwg"]
 [ext_resource type="Texture2D" uid="uid://dshk5mwtq3ma6" path="res://Art/Earth Regions/Region2/EarthRegion2Dis.png" id="3_gfq5o"]
@@ -32,7 +31,8 @@ resourceChances = Array[ExtResource("1_u832g")]([SubResource("Resource_tv6ve"), 
 robot_capacity = 4
 trash = 200000
 maxTrash = 200000
-pollution = 2
+pollution = 5100
+maxPollution = 10000
 description = "Placeholder"
 lockedDescription = "This region is locked, pay 5000 Junk to unlock?"
 locked = true
