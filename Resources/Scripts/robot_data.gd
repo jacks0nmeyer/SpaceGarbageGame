@@ -1,6 +1,8 @@
 class_name RobotData
 extends Resource
 
+@export var robotName: String
+
 @export_group("Textures")
 @export var texture: Texture2D
 @export var UISprite: Texture2D

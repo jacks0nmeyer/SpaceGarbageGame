@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="RobotData" format=3 uid="uid://d37tih08vormy"]
+
+[ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_robot"]
+[ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="2_cost"]
+
+[sub_resource type="Resource" id="Resource_cost1"]
+script = ExtResource("2_cost")
+resource = "junk"
+amount = 4000
+metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
+
+[sub_resource type="Resource" id="Resource_cost2"]
+script = ExtResource("2_cost")
+resource = "scrap"
+amount = 150
+metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
+
+[resource]
+script = ExtResource("1_robot")
+robotName = "Recycler"
+description = "Slow, careful processor. Squeezes extra resources from each piece of debris and lightly cleans the air."
+unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
+costIncrease = 1.15
+size = 2
+productionRate = 0.25
+resourceReturn = 2.5
+pollutionEffect = -1
+metadata/_custom_type_script = "uid://8cstlrx4ytgo"

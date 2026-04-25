@@ -1,3 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Claude Code
+.claude/
+
+# Markdown (notes, Claude memory, etc.)
+*.md

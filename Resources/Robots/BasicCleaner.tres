@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="RobotData" format=3 uid="uid://ctcgqgq4l0h7i"]
+
+[ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_robot"]
+[ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="2_cost"]
+
+[sub_resource type="Resource" id="Resource_cost1"]
+script = ExtResource("2_cost")
+resource = "junk"
+amount = 500
+metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
+
+[resource]
+script = ExtResource("1_robot")
+robotName = "Basic Cleaner"
+description = "Steady, all-purpose harvester. Generates a small amount of pollution."
+unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
+costIncrease = 1.15
+size = 1
+productionRate = 1.0
+resourceReturn = 1.0
+pollutionEffect = 1
+metadata/_custom_type_script = "uid://8cstlrx4ytgo"
