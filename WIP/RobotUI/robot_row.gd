@@ -3,12 +3,12 @@ class_name RobotRow
 
 @export var data: RobotData
 
-@onready var icon_holder: Control = $HBox/IconHolder
-@onready var name_label: Label = $HBox/Info/NameLabel
-@onready var desc_label: Label = $HBox/Info/DescLabel
-@onready var owned_label: Label = $HBox/Info/OwnedLabel
-@onready var cost_label: Label = $HBox/Buy/CostLabel
-@onready var buy_button: Button = $HBox/Buy/BuyButton
+@onready var icon_holder: Control = $Margin/HBox/IconHolder
+@onready var name_label: Label = $Margin/HBox/Info/NameLabel
+@onready var desc_label: Label = $Margin/HBox/Info/DescLabel
+@onready var owned_label: Label = $Margin/HBox/Info/OwnedLabel
+@onready var cost_label: Label = $Margin/HBox/Buy/CostLabel
+@onready var buy_button: Button = $Margin/HBox/Buy/BuyButton
 
 
 func _ready():
@@ -55,7 +55,7 @@ func _refresh():
 		var parts: Array[String] = []
 		for resource in cost:
 			parts.append("%s: %d" % [str(resource).capitalize(), cost[resource]])
-		cost_label.text = ", ".join(parts)
+		cost_label.text = "\n".join(parts)
 	buy_button.disabled = not GlobalResources.can_afford(cost)
 
 

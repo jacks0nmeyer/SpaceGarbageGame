@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://douk4ce8wdirc" path="res://WIP/RobotUI/robot_ui.gd" id="1_su03b"]
 
 [node name="RobotUI" type="Control" unique_id=461547080]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 3
 anchors_preset = 9
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -300.0
+offset_left = -360.0
 grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("1_su03b")
@@ -22,28 +22,37 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Vbox" type="VBoxContainer" parent="Panel"]
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="Vbox" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleRow" type="HBoxContainer" parent="Panel/Margin/Vbox"]
 layout_mode = 2
 
-[node name="TitleRow" type="HBoxContainer" parent="Panel/Vbox"]
-layout_mode = 2
-
-[node name="Title" type="Label" parent="Panel/Vbox/TitleRow"]
+[node name="Title" type="Label" parent="Panel/Margin/Vbox/TitleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Robots"
 horizontal_alignment = 1
 
-[node name="CloseButton" type="Button" parent="Panel/Vbox/TitleRow"]
+[node name="CloseButton" type="Button" parent="Panel/Margin/Vbox/TitleRow"]
 layout_mode = 2
 text = "X"
 
-[node name="Scroll" type="ScrollContainer" parent="Panel/Vbox"]
+[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Rows" type="VBoxContainer" parent="Panel/Vbox/Scroll"]
+[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
-[connection signal="pressed" from="Panel/Vbox/TitleRow/CloseButton" to="." method="toggle"]
+[connection signal="pressed" from="Panel/Margin/Vbox/TitleRow/CloseButton" to="." method="toggle"]

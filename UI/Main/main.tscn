@@ -50,6 +50,7 @@ layout_mode = 1
 
 [node name="RobotUI" parent="." unique_id=1500000001 instance=ExtResource("6_robotui")]
 layout_mode = 1
+anchors_preset = 11
 
 [node name="RobotsButton" type="Button" parent="." unique_id=1500000002]
 layout_mode = 1
@@ -63,6 +64,6 @@ offset_bottom = 40.0
 grow_horizontal = 0
 text = "Robots"
 
-[connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]
-[connection signal="panelOpened" from="RobotUI" to="RobotsButton" method="hide"]
 [connection signal="panelClosed" from="RobotUI" to="RobotsButton" method="show"]
+[connection signal="panelOpened" from="RobotUI" to="RobotsButton" method="hide"]
+[connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]

@@ -9,7 +9,7 @@ const ROBOT_ROW_SCENE: PackedScene = preload("res://WIP/RobotUI/robot_row.tscn")
 signal panelOpened
 signal panelClosed
 
-@onready var rows_parent: VBoxContainer = $Panel/Vbox/Scroll/Rows
+@onready var rows_parent: VBoxContainer = $Panel/Margin/Vbox/Scroll/Rows
 
 
 func _ready():
