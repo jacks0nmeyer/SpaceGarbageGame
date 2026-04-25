@@ -18,6 +18,11 @@ var multipliers: Dictionary = {
 	"glass": 1,
 }
 
+
+#robots
+var ownedRobots: Dictionary = {} #robot data -> amount owned
+
+
 #rate tracking
 var resourceRates: Dictionary = {}
 var rateTracker: Dictionary = {}

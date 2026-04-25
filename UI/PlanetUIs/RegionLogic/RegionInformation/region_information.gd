@@ -1,5 +1,6 @@
 extends TabContainer
 
+#Info Tab Connections
 @onready var region_name: Label = $Info/RegionName
 @onready var trash_bar: ProgressBar = $"Info/T&PContainer/Trash&Pollution/TrashDisplay/TrashBar"
 @onready var trash_display: Label = $"Info/T&PContainer/Trash&Pollution/TrashDisplay/TrashDisplay"
@@ -10,10 +11,11 @@ extends TabContainer
 
 
 func _ready():
-	GlobalSignals.regionHovered.connect(onRegionHovered)
+	GlobalSignals.regionHovered.connect(onRegionHovered) 
 	GlobalSignals.regionTrashUpdated.connect(updateProgress)
 	GlobalSignals.resourceRateUpdated.connect(onRateUpdated)
-	hide()
+	GlobalSignals.regionUnlocked.connect(updateInfo)
+	#hide()
 
 
 var currentRegion: RegionData = null

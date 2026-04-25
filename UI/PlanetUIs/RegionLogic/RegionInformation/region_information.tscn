@@ -8,7 +8,7 @@ atlas = ExtResource("1_e4uio")
 region = Rect2(104, 0, 44, 44)
 
 [node name="RegionInformation" type="TabContainer" unique_id=1090157542]
-custom_minimum_size = Vector2(225, 300)
+custom_minimum_size = Vector2(225, 325)
 anchors_preset = -1
 anchor_left = 0.030000001
 anchor_top = 0.30900002
@@ -21,10 +21,11 @@ offset_bottom = -0.25601196
 grow_horizontal = 2
 grow_vertical = 2
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 script = ExtResource("1_3thv7")
 
 [node name="Info" type="VBoxContainer" parent="." unique_id=470652075]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -167,10 +168,74 @@ size_flags_vertical = 1
 text = "This is an example of a region description, it would probably say something about this long, this demonstration is just for looks. "
 autowrap_mode = 2
 
-[node name="Robots" type="VBoxContainer" parent="." unique_id=1158874029]
-visible = false
+[node name="Robots" type="MarginContainer" parent="." unique_id=1474547112]
 layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 5
 metadata/_tab_index = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Robots" unique_id=966964123]
+layout_mode = 2
+
+[node name="RobotGrid" type="GridContainer" parent="Robots/ScrollContainer" unique_id=1345486204]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 2
+
+[node name="Panel" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=934577452]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel2" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=1717334990]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel3" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=596058795]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel4" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=1019890227]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel5" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=237874402]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel6" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=1237258921]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel7" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=1556222298]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel8" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=1383606633]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel9" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=118288862]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel10" type="Panel" parent="Robots/ScrollContainer/RobotGrid" unique_id=635036824]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Buildings" type="VBoxContainer" parent="." unique_id=190749300]
 visible = false

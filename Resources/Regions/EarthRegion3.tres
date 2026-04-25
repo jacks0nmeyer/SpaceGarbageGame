@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="RegionData" format=3 uid="uid://dthrfnux8ljo6"]
 
+[ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_jl0rf"]
 [ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="1_qpyfh"]
 [ext_resource type="Script" uid="uid://sqbo7ix4vhsb" path="res://Resources/Scripts/region_data.gd" id="2_15bi2"]
 [ext_resource type="Texture2D" uid="uid://crfng3sfo3tnm" path="res://Art/Earth Regions/Region3/EarthRegion3HL.png" id="3_bitr4"]

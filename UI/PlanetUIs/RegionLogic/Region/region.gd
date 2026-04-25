@@ -29,6 +29,7 @@ func onRegionUnlock(current_region: RegionData):
 
 func unlock():
 	self.disabled = false
+	region.locked = false
 	
 	
 func _on_pressed():

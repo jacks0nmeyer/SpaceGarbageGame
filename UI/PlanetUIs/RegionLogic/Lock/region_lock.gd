@@ -18,14 +18,6 @@ func _on_pressed():
 		self.queue_free()
 
 
-func _on_mouse_entered():
-	pass
-
-
-func _on_mouse_exited():
-	pass
-
-
 func _ready():
 	
 	if texture_normal: #Matches button size to region texture
