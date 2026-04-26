@@ -19,7 +19,6 @@ func onRegionHovered(region: RegionData):
 	show()
 	updateInfo(region)
 	updateResources(region)
-	updateProduction(region)
 	updateProgress(region)
 
 
@@ -31,7 +30,7 @@ func updateInfo(region: RegionData):
 func updateResources(region: RegionData):
 	for child in resource_grid.get_children(): #removes placeholder labels
 		child.queue_free()
-	
+
 	var limit := 0
 	for entry in region.resourceChances: #sets labels based on region's resource chances
 		if entry.chance > 0.0 and limit < 4: 
@@ -41,12 +40,8 @@ func updateResources(region: RegionData):
 			label.text = "%s: %d%%" % [entry.resource.capitalize(), entry.chance*100]
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			
-			resource_grid.add_child(label)
- 
 
-func updateProduction(region: RegionData):
-	pass
+			resource_grid.add_child(label)
 
 
 func updateProgress(region: RegionData):

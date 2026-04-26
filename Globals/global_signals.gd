@@ -32,3 +32,9 @@ signal robotUnassigned(robot: RobotData, region: RegionData)
 
 @warning_ignore("unused_signal")
 signal regionPinToggled(region: RegionData)
+
+@warning_ignore("unused_signal")
+signal regionPollutionUpdated(region: RegionData)
+
+@warning_ignore("unused_signal")
+signal planetPollutionUpdated(region: RegionData)

@@ -3,7 +3,6 @@ extends TabContainer
 @onready var region_name: Label = $Info/RegionName
 @onready var trash_bar: ProgressBar = $"Info/T&PContainer/Trash&Pollution/TrashDisplay/TrashBar"
 @onready var trash_display: Label = $"Info/T&PContainer/Trash&Pollution/TrashDisplay/TrashDisplay"
-@onready var region_pollution: TextureRect = $"Info/T&PContainer/Trash&Pollution/RegionPollution"
 @onready var resource_grid: GridContainer = $Info/ResourceGrid
 @onready var production_grid: GridContainer = $Info/ProductionGrid
 @onready var region_description: Label = $"Info/DescContainer/Region Description"
@@ -19,6 +18,7 @@ func _ready():
 	GlobalSignals.robotAssigned.connect(_on_robot_pair_changed)
 	GlobalSignals.robotUnassigned.connect(_on_robot_pair_changed)
 	GlobalSignals.regionPinToggled.connect(_on_pin_toggled)
+	GlobalSignals.regionPollutionUpdated.connect(onPollutionUpdated)
 	hide()
 
 
@@ -44,6 +44,7 @@ func _switch_to(region: RegionData):
 	updateResources(region)
 	updateProgress(region)
 	updateRobots(region)
+	updatePollution(region)
 
 
 # Fires after GlobalResources has already toggled its pinnedRegion. We just
@@ -115,6 +116,7 @@ func onRateUpdated(rates: Dictionary):
 			var rate = rates.get(resource_name, 0)
 			child.text = "%s/S: %d" % [resource_name.capitalize(), rate]
 
+
 func updateProgress(region: RegionData):
 	if region != currentRegion:
 		return
@@ -146,6 +148,31 @@ func updateRobots(region: RegionData):
 func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 	if region == currentRegion:
 		updateRobots(region)
+
+@onready var region_pollution: TextureRect = $"Info/T&PContainer/Trash&Pollution/RegionPollution"
+@export var pollutionAtlas: Texture2D
+var pollutionIconSize := Vector2(44, 44)
+var pollutionIconSpacing := 8
+
+
+func updatePollution(region: RegionData):
+	if pollutionAtlas == null:
+		return
+	var level := region.getPollutionLevel()
+	var step := pollutionIconSize.x + pollutionIconSpacing
+	
+	var atlas := AtlasTexture.new()
+	atlas.atlas = pollutionAtlas
+	atlas.region = Rect2(step * int(level), 0, pollutionIconSize.x, pollutionIconSize.y)
+	region_pollution.texture = atlas
+	
+	
+	
+
+
+func onPollutionUpdated(updated_region: RegionData):
+	if updated_region == currentRegion:
+		updatePollution(updated_region)
 
 
 func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu
