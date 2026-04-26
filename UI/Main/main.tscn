@@ -51,6 +51,7 @@ layout_mode = 1
 [node name="RobotUI" parent="." unique_id=1500000001 instance=ExtResource("6_robotui")]
 layout_mode = 1
 anchors_preset = 11
+offset_left = 0.0
 
 [node name="RobotsButton" type="Button" parent="." unique_id=1500000002]
 layout_mode = 1

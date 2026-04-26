@@ -2,8 +2,8 @@ extends Node
 
 #Resources
 var playerResources: Dictionary = {
-	"junk": 10000,
-	"scrap": 5000,
+	"junk": 100000,
+	"scrap": 50000,
 	"plastic": 0,
 	"glass": 0,
 }
