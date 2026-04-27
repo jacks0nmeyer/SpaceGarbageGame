@@ -14,7 +14,6 @@ extends TabContainer
 func _ready():
 	GlobalSignals.regionHovered.connect(onRegionHovered)
 	GlobalSignals.regionTrashUpdated.connect(updateProgress)
-	GlobalSignals.resourceRateUpdated.connect(onRateUpdated)
 	GlobalSignals.robotAssigned.connect(_on_robot_pair_changed)
 	GlobalSignals.robotUnassigned.connect(_on_robot_pair_changed)
 	GlobalSignals.regionPinToggled.connect(_on_pin_toggled)
@@ -23,6 +22,7 @@ func _ready():
 
 
 var currentRegion: RegionData = null
+var currentPollutionLevel: int = -1
 
 
 func onRegionHovered(region: RegionData):
@@ -40,11 +40,14 @@ func onRegionHovered(region: RegionData):
 
 func _switch_to(region: RegionData):
 	currentRegion = region
+	currentPollutionLevel = int(region.getPollutionLevel())
 	updateInfo(region)
 	updateResources(region)
+	updateResourceRates(region)
 	updateProgress(region)
 	updateRobots(region)
 	updatePollution(region)
+	updatePollutionTrend(region)
 
 
 # Fires after GlobalResources has already toggled its pinnedRegion. We just
@@ -81,9 +84,16 @@ func updateInfo(region: RegionData):
 
 
 func updateResources(region: RegionData):
+	# remove_child first so the name slot is freed synchronously; queue_free alone
+	# defers deletion to end-of-frame, which causes add_child below to see the
+	# old "junk_rate" / "scrap_rate" siblings still present and silently rename
+	# the replacements to "junk_rate2" — breaking the suffix-based lookup in
+	# updateResourceRates on every hover after the first.
 	for child in resource_grid.get_children(): #removes placeholder labels
+		resource_grid.remove_child(child)
 		child.queue_free()
 	for child in production_grid.get_children():
+		production_grid.remove_child(child)
 		child.queue_free()
 		
 	var limit := 0
@@ -109,12 +119,34 @@ func updateResources(region: RegionData):
 			limit += 1
  
 
-func onRateUpdated(rates: Dictionary):
+# Deterministic per-region resource rate. Each robot picks one resource per
+# trash unit weighted by region.resourceChances, then deposits resourceReturn
+# of it; expected per-second contribution of robot R to resource X is
+# count * productionRate * chance(X) * resourceReturn(R). Updated only when
+# robot composition changes, not on a polling timer.
+func updateResourceRates(region: RegionData):
+	var rates: Dictionary = {}
+	for entry in region.resourceChances:
+		rates[entry.resource.to_lower()] = 0.0
+
+	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
+	for robot in region.assignedRobots:
+		var count: int = int(region.assignedRobots[robot])
+		if count <= 0:
+			continue
+		var trash_per_sec: float = float(count) * float(robot.productionRate) * pollution_mult
+		var per_unit_return: float = float(robot.resourceReturn)
+		for entry in region.resourceChances:
+			var key := entry.resource.to_lower()
+			if not rates.has(key):
+				continue
+			rates[key] += trash_per_sec * float(entry.chance) * per_unit_return
+
 	for child in production_grid.get_children():
 		if child.name.ends_with("_rate"):
-			var resource_name = child.name.replace("_rate", "")
-			var rate = rates.get(resource_name, 0)
-			child.text = "%s/S: %d" % [resource_name.capitalize(), rate]
+			var resource_name: String = child.name.replace("_rate", "")
+			var rate: float = rates.get(resource_name, 0.0)
+			child.text = "%s/S: %.2f" % [resource_name.capitalize(), rate]
 
 
 func updateProgress(region: RegionData):
@@ -148,8 +180,11 @@ func updateRobots(region: RegionData):
 func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 	if region == currentRegion:
 		updateRobots(region)
+		updateResourceRates(region)
+		updatePollutionTrend(region)
 
 @onready var region_pollution: TextureRect = $"Info/T&PContainer/Trash&Pollution/RegionPollution"
+@onready var pollution_trend: Label = $"Info/T&PContainer/Trash&Pollution/PollutionTrend"
 @export var pollutionAtlas: Texture2D
 var pollutionIconSize := Vector2(44, 44)
 var pollutionIconSpacing := 8
@@ -171,12 +206,47 @@ func updatePollution(region: RegionData):
 
 
 func onPollutionUpdated(updated_region: RegionData):
-	if updated_region == currentRegion:
-		updatePollution(updated_region)
+	if updated_region != currentRegion:
+		return
+	updatePollution(updated_region)
+	# Production multiplier is bracket-based, so the displayed rates only need
+	# to refresh when the level changes — not on every +1 pollution tick.
+	var new_level := int(updated_region.getPollutionLevel())
+	if new_level != currentPollutionLevel:
+		currentPollutionLevel = new_level
+		updateResourceRates(updated_region)
+		updatePollutionTrend(updated_region)
+
+
+# Net pollution per second this region accrues at the current robot assignment,
+# while there is trash to process. Each robot processes productionRate trash/sec
+# and applies pollutionEffect once per trash unit, so the rate sums to
+# count * productionRate * pollutionEffect across assigned robots.
+func updatePollutionTrend(region: RegionData):
+	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
+	var rate := 0.0
+	for robot in region.assignedRobots:
+		var count: int = int(region.assignedRobots[robot])
+		if count <= 0:
+			continue
+		rate += float(count) * float(robot.productionRate) * pollution_mult * float(robot.pollutionEffect)
+
+	var sign_str := ""
+	var color: Color
+	if rate > 0.0:
+		sign_str = "+"
+		color = Color(1.0, 0.45, 0.45)
+	elif rate < 0.0:
+		color = Color(0.45, 1.0, 0.55)
+	else:
+		color = Color(0.7, 0.7, 0.7)
+
+	pollution_trend.text = "%s%.1f/s" % [sign_str, rate]
+	pollution_trend.add_theme_color_override("font_color", color)
 
 
 func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu
-	if tab == 2:
+	if tab == 3:
 		if GlobalResources.pinnedRegion != null:
 			GlobalSignals.regionPinToggled.emit(GlobalResources.pinnedRegion)
 		hide()

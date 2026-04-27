@@ -6,5 +6,5 @@ class_name SolarSystemData
 func getTotalTrash() -> int:
 	var total:= 0
 	for planet in planets:
-		total =+ planet.getTotalTrash()
+		total += planet.getTotalTrash()
 	return total

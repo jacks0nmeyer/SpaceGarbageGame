@@ -17,7 +17,6 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 [autoload]
 
 GlobalResources="*uid://2f0nb0e8s0k5"
-EarthGlobal="*uid://dn28kkmsvskd5"
 GameManager="*uid://b1yalpfu8jobt"
 GlobalSignals="*uid://bqql6k1irdmri"
 

@@ -37,37 +37,36 @@ func getPollutionLevel(pollution: float) -> PollutionLevel:
 
 func getPollutionName(level: PollutionLevel) -> String:
 	return PollutionLevel.keys()[level].capitalize()
+
+
+# Per-region production rate multiplier driven by pollution level. MODERATE is
+# the neutral anchor (1.0): a player who never builds Recyclers feels like
+# they're playing the default game. CLEAN/LOW give small bonuses for engaging
+# with the cleanup loop; HIGH/CRITICAL impose meaningful but non-fatal drag so
+# a region can still be deliberately neglected for short-term gain.
+func getPollutionProductionMultiplier(level: PollutionLevel) -> float:
+	match level:
+		PollutionLevel.CLEAN: return 1.10
+		PollutionLevel.LOW: return 1.05
+		PollutionLevel.MODERATE: return 1.00
+		PollutionLevel.HIGH: return 0.80
+		PollutionLevel.CRITICAL: return 0.55
+	return 1.00
 		
 
 #robots
 var ownedRobots: Dictionary = {} #robot data -> amount owned
 
 
-#rate tracking
-var resourceRates: Dictionary = {}
-var rateTracker: Dictionary = {}
-var rateInterval: float = 1.0
-var rateTimer: float = 0.0
-
-
 func _ready():
 	GlobalSignals.regionPinToggled.connect(_toggle_pinned_region)
 
-
-func _process(delta):
-	rateTimer += delta
-	if rateTimer >= rateInterval:
-		rateTimer = 0.0
-		resourceRates = rateTracker.duplicate()
-		rateTracker.clear()
-		GlobalSignals.resourceRateUpdated.emit(resourceRates)
 
 #Player gains a resource
 func gotResource(resource: String, amount: int):
 	var lcResource := resource.to_lower()
 	if playerResources.has(lcResource):
 		playerResources[lcResource] += amount * multipliers.get(lcResource, 1) * globalMultiplier
-		rateTracker[lcResource] = rateTracker.get(lcResource, 0) + amount
 		GlobalSignals.resourcesUpdated.emit(playerResources)
 
 

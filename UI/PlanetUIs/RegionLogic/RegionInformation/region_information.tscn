@@ -87,6 +87,13 @@ layout_mode = 2
 texture = SubResource("AtlasTexture_3thv7")
 flip_h = true
 
+[node name="PollutionTrend" type="Label" parent="Info/T&PContainer/Trash&Pollution" unique_id=302454694]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "0/s"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Separator2" type="HSeparator" parent="Info" unique_id=971708238]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
@@ -216,9 +223,30 @@ text = "No robots assigned. Drag from the Robots panel."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="Buildings" type="VBoxContainer" parent="." unique_id=1158874030]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+metadata/_tab_index = 2
+
+[node name="Margin" type="MarginContainer" parent="Buildings" unique_id=903660518]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="EmptyLabel" type="Label" parent="Buildings/Margin" unique_id=560230379]
+layout_mode = 2
+text = "No buildings yet."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
 [node name="X" type="Control" parent="." unique_id=1343383403]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 2
+metadata/_tab_index = 3
 
 [connection signal="tab_clicked" from="." to="." method="_on_tab_clicked"]

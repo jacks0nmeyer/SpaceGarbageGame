@@ -7,9 +7,6 @@ signal regionUnlocked(region: RegionData)
 signal resourcesUpdated(resources: Dictionary)
 
 @warning_ignore("unused_signal")
-signal resourceRateUpdated(rates: Dictionary)
-
-@warning_ignore("unused_signal")
 signal regionTrashUpdated(region: RegionData)
 
 @warning_ignore("unused_signal")
@@ -37,4 +34,4 @@ signal regionPinToggled(region: RegionData)
 signal regionPollutionUpdated(region: RegionData)
 
 @warning_ignore("unused_signal")
-signal planetPollutionUpdated(region: RegionData)
+signal planetPollutionUpdated(planet: PlanetData)
