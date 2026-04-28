@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://kj12fvfyto82" path="res://WIP/ResourceUI/resource_ui.gd" id="1_07p5t"]
 
 [node name="ResourceUI(Temp)" type="Control" unique_id=684933601]
-custom_minimum_size = Vector2(350, 100)
+custom_minimum_size = Vector2(250, 100)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 350.0
+offset_right = 250.0
 offset_bottom = 100.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
