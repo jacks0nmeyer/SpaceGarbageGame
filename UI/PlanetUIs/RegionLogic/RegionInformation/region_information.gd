@@ -241,8 +241,8 @@ func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 @onready var pollution_value_left: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueLeft"
 @onready var pollution_value_right: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueRight"
 @export var pollutionAtlas: Texture2D
-var pollutionIconSize := Vector2(44, 44)
-var pollutionIconSpacing := 8
+var pollutionIconSize := Vector2(76, 48)
+var pollutionIconSpacing := 20
 
 
 func updatePollution(region: RegionData):
@@ -318,7 +318,7 @@ func _refresh_pollution_value_row(region: RegionData) -> void:
 		tr_color = Color(0.75, 0.78, 0.82)
 
 	var rate_str: String = "%s%.1f/s" % [sign_str, rate]
-	pollution_value_right.text = "Poll/s: %s" % rate_str
+	pollution_value_right.text = "Pollution/s: %s" % rate_str
 	pollution_value_right.add_theme_color_override("font_color", tr_color)
 
 

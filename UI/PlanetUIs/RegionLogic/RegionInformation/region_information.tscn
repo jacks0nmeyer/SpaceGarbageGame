@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://f060h0oxn7jq"]
 
 [ext_resource type="Script" uid="uid://c2b7ytgk0wn7b" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_information.gd" id="1_3thv7"]
-[ext_resource type="Texture2D" uid="uid://fkwqh3egtedn" path="res://Art/Misc/PollutionLevel.png" id="1_e4uio"]
+[ext_resource type="Texture2D" uid="uid://cl1xhpc0kr3vf" path="res://Art/Misc/PollutionDisplay.png" id="2_gtqb7"]
 [ext_resource type="Script" uid="uid://bjr110mr08hb2" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_robots_tab.gd" id="2_robotstab"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k0jtr"]
-atlas = ExtResource("1_e4uio")
+atlas = ExtResource("2_gtqb7")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3thv7"]
-atlas = ExtResource("1_e4uio")
-region = Rect2(104, 0, 44, 44)
+atlas = ExtResource("2_gtqb7")
+region = Rect2(192, 4, 76, 48)
 
 [node name="RegionInformation" type="TabContainer" unique_id=1090157542]
 custom_minimum_size = Vector2(252, 312)
@@ -32,7 +32,6 @@ pollutionAtlas = SubResource("AtlasTexture_k0jtr")
 [node name="Info" type="VBoxContainer" parent="." unique_id=470652075]
 layout_mode = 2
 theme_override_constants/separation = 2
-theme_override_font_sizes/font_size = 12
 metadata/_tab_index = 0
 
 [node name="Separator" type="Control" parent="Info" unique_id=1559653874]
@@ -130,8 +129,8 @@ flip_h = true
 [node name="PollutionDisplay" type="Control" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1922294673]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-size_flags_vertical = 3
 size_flags_horizontal = 3
+size_flags_vertical = 3
 tooltip_text = "Regional pollution fill. Return multiplier and net poll/s update from tier and assigned robots (while debris remains)."
 
 [node name="PollutionProgress" type="ProgressBar" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay" unique_id=48878627]
@@ -152,10 +151,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_text = "Current pollution amount vs maximum."
 text = "0 / 10,000"
 horizontal_alignment = 1
 vertical_alignment = 1
-tooltip_text = "Current pollution amount vs maximum."
 
 [node name="PollutionValuesRow" type="HBoxContainer" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1162175422]
 layout_mode = 2
@@ -164,29 +163,27 @@ theme_override_constants/separation = 8
 [node name="PollutionValueLeft" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow" unique_id=1083392533]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Return: 1.0x"
-horizontal_alignment = 0
-vertical_alignment = 1
-autowrap_mode = 0
-clip_text = true
 tooltip_text = "Resource return multiplier for cleanup (pollution tier)."
+text = "Return: 1.0x"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="PollutionValueRight" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow" unique_id=1027049924]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Poll/s: ±0/s"
-horizontal_alignment = 2
-vertical_alignment = 1
-autowrap_mode = 0
-clip_text = true
 tooltip_text = "Net regional pollution change per second from assigned robots (while debris remains)."
+text = "Poll/s: ±0/s"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="HarvestHeader" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=991001012]
 layout_mode = 2
-text = "Debris & harvest"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Debris & Harvest"
 horizontal_alignment = 1
 vertical_alignment = 1
-modulate = Color(0.78, 0.8, 0.85, 1)
 
 [node name="Separator2" type="HSeparator" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=971708238]
 custom_minimum_size = Vector2(0, 2)
@@ -281,7 +278,6 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
-theme_override_font_sizes/font_size = 12
 script = ExtResource("2_robotstab")
 metadata/_tab_index = 1
 
@@ -325,7 +321,6 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
-theme_override_font_sizes/font_size = 12
 metadata/_tab_index = 2
 
 [node name="Margin" type="MarginContainer" parent="Buildings" unique_id=903660518]

@@ -2,8 +2,8 @@ extends TextureRect
 
 @export var planet: PlanetData
 @export var pollutionAtlas: Texture2D
-var iconSize := Vector2(44, 44)
-var iconSpacing := 8
+var iconSize := Vector2(76, 48)
+var iconSpacing := 20
 
 func _ready():
 	GlobalSignals.planetPollutionUpdated.connect(onPlanetPollutionUpdated)
