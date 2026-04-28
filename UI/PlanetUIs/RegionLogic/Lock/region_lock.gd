@@ -19,9 +19,12 @@ func _on_pressed():
 
 
 func _ready():
-	
 	if texture_normal: #Matches button size to region texture
 		var image = texture_normal.get_image()
 		var bitmap = BitMap.new()
 		bitmap.create_from_image_alpha(image)
 		texture_click_mask = bitmap
+
+	if region != null and not region.locked:
+		queue_free()
+		return

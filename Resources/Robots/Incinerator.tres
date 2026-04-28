@@ -21,7 +21,6 @@ robotName = "Incinerator"
 description = "Maximum throughput burner. Extremely polluting — cannot operate in aquatic regions."
 unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
 costIncrease = 1.2
-amount = 0
 size = 3
 productionRate = 8.0
 resourceReturn = 0.3

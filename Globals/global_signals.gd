@@ -41,3 +41,6 @@ signal techUnlocked(tech: TechData)
 
 @warning_ignore("unused_signal")
 signal researchMilestoneAwarded(region: RegionData, points: int, planet: PlanetData)
+
+@warning_ignore("unused_signal")
+signal saveLoaded

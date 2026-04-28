@@ -20,11 +20,17 @@ func _ready():
 		self.disabled = true
 	
 	GlobalSignals.regionUnlocked.connect(onRegionUnlock)
+	GlobalSignals.saveLoaded.connect(_on_save_loaded)
 
 
 func onRegionUnlock(current_region: RegionData):
 	if current_region == region:
 		unlock()
+
+
+func _on_save_loaded() -> void:
+	if region != null:
+		self.disabled = region.locked
 
 
 func unlock():

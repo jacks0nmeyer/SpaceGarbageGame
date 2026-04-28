@@ -31,6 +31,7 @@ func _ready() -> void:
 	mouse_exited.connect(_on_hover_out)
 	GlobalSignals.techUnlocked.connect(_on_any_tech_unlocked)
 	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
+	GlobalSignals.saveLoaded.connect(_on_save_loaded)
 	_refresh()
 
 
@@ -58,6 +59,10 @@ func _on_any_tech_unlocked(_t) -> void:
 
 
 func _on_resources_updated(_resources: Dictionary) -> void:
+	_refresh()
+
+
+func _on_save_loaded() -> void:
 	_refresh()
 
 

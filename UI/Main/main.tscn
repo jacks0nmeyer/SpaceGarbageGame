@@ -83,5 +83,48 @@ offset_bottom = 80.0
 grow_horizontal = 0
 text = "Research"
 
+[node name="SaveHUDLayer" type="CanvasLayer" parent="." unique_id=1500000010]
+layer = 50
+
+[node name="HudRoot" type="Control" parent="SaveHUDLayer" unique_id=1500000011]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SaveStrip" type="HBoxContainer" parent="SaveHUDLayer/HudRoot" unique_id=1500000005]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 2
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -44.0
+offset_right = 268.0
+offset_bottom = -8.0
+grow_vertical = 0
+
+[node name="PauseButton" type="Button" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000006]
+layout_mode = 2
+text = "Pause"
+
+[node name="SaveButton" type="Button" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000007]
+layout_mode = 2
+text = "Save"
+
+[node name="ResetButton" type="Button" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000008]
+layout_mode = 2
+text = "Reset"
+
+[node name="ResetConfirm" type="ConfirmationDialog" parent="SaveHUDLayer" unique_id=1500000009]
+process_mode = 3
+ok_button_text = "Reset"
+dialog_text = "Start a new game? This will delete your save file and reset all progress."
+
 [connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]
 [connection signal="pressed" from="ResearchButton" to="TechTree" method="toggle"]

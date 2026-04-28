@@ -13,6 +13,9 @@ extends Control
 #    matching the currently-open panel still hides itself (the in-panel X /
 #    ESC are the canonical close paths); the *other* button stays visible
 #    but non-interactive.
+#
+# 3. Pause / Save / Reset live on SaveHUDLayer (CanvasLayer layer 50) so they
+#    stay above EarthUI's RegionInformationLayer and anchor bottom-left.
 
 @onready var background: Panel = $Background
 @onready var globe: TextureRect = $Background/GlobeTexture
@@ -22,6 +25,10 @@ extends Control
 @onready var robots_button: Button = $RobotsButton
 @onready var tech_tree: Control = $TechTree
 @onready var research_button: Button = $ResearchButton
+@onready var pause_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/PauseButton
+@onready var save_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/SaveButton
+@onready var reset_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/ResetButton
+@onready var reset_confirm: ConfirmationDialog = $SaveHUDLayer/ResetConfirm
 
 
 func _ready() -> void:
@@ -29,6 +36,30 @@ func _ready() -> void:
 	robot_ui.panelClosed.connect(_on_robot_ui_closed)
 	tech_tree.panelOpened.connect(_on_tech_tree_opened)
 	tech_tree.panelClosed.connect(_on_tech_tree_closed)
+
+	pause_button.pressed.connect(_on_pause_pressed)
+	save_button.pressed.connect(_on_save_pressed)
+	reset_button.pressed.connect(_on_reset_pressed)
+	reset_confirm.confirmed.connect(_on_reset_confirmed)
+
+	SaveGame.consume_post_reset_refresh()
+
+
+func _on_pause_pressed() -> void:
+	get_tree().paused = not get_tree().paused
+	pause_button.text = "Resume" if get_tree().paused else "Pause"
+
+
+func _on_save_pressed() -> void:
+	SaveGame.save_to_user()
+
+
+func _on_reset_pressed() -> void:
+	reset_confirm.popup_centered()
+
+
+func _on_reset_confirmed() -> void:
+	SaveGame.reset_to_new_game()
 
 
 func _on_robot_ui_opened() -> void:

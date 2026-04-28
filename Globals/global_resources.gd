@@ -1,13 +1,24 @@
 extends Node
 
-#Resources
-var playerResources: Dictionary = {
+# Shipped new-game inventory (also used after Reset). DEV seeds live here until
+# you tune release defaults.
+const DEFAULT_PLAYER_RESOURCES: Dictionary = {
 	"junk": 100000,
 	"scrap": 50000,
 	"plastic": 0,
 	"glass": 0,
-	"research": 50,  # DEV: seeded for tech-tree testing; reset to 0 on release.
+	"research": 50,
 }
+
+const DEFAULT_MULTIPLIERS: Dictionary = {
+	"junk": 1,
+	"scrap": 1,
+	"plastic": 1,
+	"glass": 1,
+}
+
+#Resources
+var playerResources: Dictionary = DEFAULT_PLAYER_RESOURCES.duplicate()
 
 # Per-planet cumulative-trash thresholds that grant 1 RP each (early-game ramp).
 # A planet awards up to len(thresholds) RP from this source — guarded by
@@ -17,12 +28,7 @@ const PLANET_CUMULATIVE_RP_THRESHOLDS: Array[int] = [500, 1000, 2000, 4000]
 #Modifiers
 var globalMultiplier:= 1
 
-var multipliers: Dictionary = {
-	"junk": 1,
-	"scrap": 1,
-	"plastic": 1,
-	"glass": 1,
-}
+var multipliers: Dictionary = DEFAULT_MULTIPLIERS.duplicate()
 
 
 #pollution
@@ -153,6 +159,14 @@ func purchase(cost: Dictionary) -> bool:
 		playerResources[resource.to_lower()] -= cost[resource]
 		GlobalSignals.resourcesUpdated.emit(playerResources)
 	return true
+
+
+func apply_new_game_inventory() -> void:
+	playerResources = DEFAULT_PLAYER_RESOURCES.duplicate()
+	globalMultiplier = 1
+	multipliers = DEFAULT_MULTIPLIERS.duplicate()
+	pinnedRegion = null
+	GlobalSignals.resourcesUpdated.emit(playerResources)
 
 
 #Trash Logic

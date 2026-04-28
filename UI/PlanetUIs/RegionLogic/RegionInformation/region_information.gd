@@ -20,6 +20,7 @@ func _ready():
 	GlobalSignals.regionPinToggled.connect(_on_pin_toggled)
 	GlobalSignals.regionPollutionUpdated.connect(onPollutionUpdated)
 	GlobalSignals.techUnlocked.connect(_on_tech_changed)
+	GlobalSignals.saveLoaded.connect(_on_save_loaded)
 	var bar := get_tab_bar()
 	if bar:
 		bar.clip_tabs = false
@@ -31,6 +32,11 @@ func _on_tech_changed(_tech: TechData) -> void:
 	if visible and currentRegion != null:
 		updateTrashRemovalRate(currentRegion)
 		updateResourceRates(currentRegion)
+
+
+func _on_save_loaded() -> void:
+	if visible and currentRegion != null:
+		_switch_to(currentRegion)
 
 
 func _on_region_trash_updated(region: RegionData) -> void:

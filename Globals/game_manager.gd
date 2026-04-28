@@ -28,6 +28,133 @@ var _resource_carry: Dictionary = {}
 var _pollution_carry_per_robot: Dictionary = {}
 
 
+func clear_carry_state() -> void:
+	_progress.clear()
+	_resource_carry.clear()
+	_pollution_carry_per_robot.clear()
+
+
+## Serializable snapshot: outer keys are region resource_path strings; inner
+## robot keys are robot resource_path strings. resource_carry inner keys are
+## lowercase resource strings.
+func get_carry_snapshot() -> Dictionary:
+	var progress: Dictionary = {}
+	var res_carry: Dictionary = {}
+	var pol_carry: Dictionary = {}
+	for region in _progress:
+		var rp: String = region.resource_path
+		if rp.is_empty():
+			continue
+		var inner: Dictionary = {}
+		for robot in _progress[region]:
+			var botp: String = robot.resource_path
+			if botp.is_empty():
+				continue
+			inner[botp] = float(_progress[region][robot])
+		progress[rp] = inner
+	for region in _resource_carry:
+		var rp2: String = region.resource_path
+		if rp2.is_empty():
+			continue
+		var inner2: Dictionary = {}
+		for res_key in _resource_carry[region]:
+			inner2[str(res_key)] = float(_resource_carry[region][res_key])
+		res_carry[rp2] = inner2
+	for region in _pollution_carry_per_robot:
+		var rp3: String = region.resource_path
+		if rp3.is_empty():
+			continue
+		var inner3: Dictionary = {}
+		for robot in _pollution_carry_per_robot[region]:
+			var botp2: String = robot.resource_path
+			if botp2.is_empty():
+				continue
+			inner3[botp2] = float(_pollution_carry_per_robot[region][robot])
+		pol_carry[rp3] = inner3
+	return {
+		"progress": progress,
+		"resource_carry": res_carry,
+		"pollution_carry": pol_carry,
+	}
+
+
+func set_carry_snapshot(data: Dictionary) -> void:
+	clear_carry_state()
+	if typeof(data) != TYPE_DICTIONARY:
+		return
+	var progress: Variant = data.get("progress", {})
+	var res_carry: Variant = data.get("resource_carry", {})
+	var pol_carry: Variant = data.get("pollution_carry", {})
+	if typeof(progress) == TYPE_DICTIONARY:
+		for region_path in progress:
+			var region: RegionData = _resolve_region(str(region_path))
+			if region == null:
+				continue
+			var inner: Dictionary = {}
+			var inner_raw: Variant = progress[region_path]
+			if typeof(inner_raw) != TYPE_DICTIONARY:
+				continue
+			for robot_path in inner_raw:
+				var robot: RobotData = _resolve_robot(str(robot_path))
+				if robot == null:
+					continue
+				inner[robot] = float(inner_raw[robot_path])
+			_progress[region] = inner
+	if typeof(res_carry) == TYPE_DICTIONARY:
+		for region_path in res_carry:
+			var region2: RegionData = _resolve_region(str(region_path))
+			if region2 == null:
+				continue
+			var innerc: Dictionary = {}
+			var inner_raw2: Variant = res_carry[region_path]
+			if typeof(inner_raw2) != TYPE_DICTIONARY:
+				continue
+			for res_key in inner_raw2:
+				innerc[str(res_key).to_lower()] = float(inner_raw2[res_key])
+			_resource_carry[region2] = innerc
+	if typeof(pol_carry) == TYPE_DICTIONARY:
+		for region_path in pol_carry:
+			var region3: RegionData = _resolve_region(str(region_path))
+			if region3 == null:
+				continue
+			var innerp: Dictionary = {}
+			var inner_raw3: Variant = pol_carry[region_path]
+			if typeof(inner_raw3) != TYPE_DICTIONARY:
+				continue
+			for robot_path in inner_raw3:
+				var robot2: RobotData = _resolve_robot(str(robot_path))
+				if robot2 == null:
+					continue
+				innerp[robot2] = float(inner_raw3[robot_path])
+			_pollution_carry_per_robot[region3] = innerp
+
+
+func _resolve_region(path: String) -> RegionData:
+	var ss: SolarSystemData = GlobalResources.solarSystem
+	if ss == null or path.is_empty():
+		return null
+	for planet in ss.planets:
+		for region in planet.regions:
+			if region.resource_path == path:
+				return region
+	return null
+
+
+func _resolve_robot(path: String) -> RobotData:
+	var coll: RobotCollection = GlobalResources.robots
+	if coll == null or path.is_empty():
+		return null
+	for bot in coll.robots:
+		if bot.resource_path == path:
+			return bot
+	return null
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		SaveGame.save_to_user()
+
+
 func _ready() -> void:
 	if DEBUG_AUTO_ASSIGN_ROBOT:
 		_debug_auto_assign()
