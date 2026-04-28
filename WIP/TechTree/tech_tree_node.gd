@@ -1,40 +1,66 @@
 extends TextureButton
 class_name TechTreeNode
 
-#each node will need to be individually programmed once placed within the tech tree
+# Single tech node in the tree. Data-bound to a TechData via setup() before
+# being added to the tree. Listens for techUnlocked / resourcesUpdated to keep
+# its visual state in sync with affordability and prerequisites.
+
+signal hovered(tech: TechData)
+signal unhovered
 
 @onready var label: Label = $Spacer/Label
-@onready var node_connector: Line2D = $NodeConnector
 @onready var check_button: CheckButton = $CheckButton
 
+var tech: TechData
 
 
-var ifCheck := false #set to true  if node is 1 time use
-var amount:= 8 #number of total skill points allowed
-var level:= 0: #current level of node
-	set(value):
-		level = value
-		label.text = str(level) + "/" + str(amount)
+func setup(data: TechData) -> void:
+	tech = data
 
 
-func _ready():
-	label.text = str(level) + "/" + str(amount)
-	if get_parent() is TechTreeNode: #Creates path to child nodes
-		node_connector.add_point(global_position + size/2)
-		node_connector.add_point(get_parent().global_position + size/2)
+func _ready() -> void:
+	check_button.show()
+	label.hide()
+	check_button.disabled = true
+	check_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mouse_entered.connect(_on_hover_in)
+	mouse_exited.connect(_on_hover_out)
+	GlobalSignals.techUnlocked.connect(_on_any_tech_unlocked)
+	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
+	_refresh()
+
+
+func _refresh() -> void:
+	if tech == null:
+		return
+	var unlocked: bool = TechTree.is_unlocked(tech)
+	check_button.button_pressed = unlocked
+	if unlocked:
 		disabled = true
-	if ifCheck == true: #creates checkbox
-		check_button.show()
-		label.hide()
-	
-
-func _on_pressed(): #need to create global that handles upgrades
-	if ifCheck == false:
-		level = min(level+1, amount)  #increases level of node
 	else:
-		check_button.button_pressed = true
-	node_connector.default_color = Color(0.712, 0.712, 0.712, 1.0) #highlights path to unlocked nodes
-	for child in get_children(): #unlocks child nodes
-		if child is TextureButton and level >= (amount/2.00):
-			child.disabled = false
-			
+		disabled = not TechTree.can_unlock(tech)
+
+
+func _on_pressed() -> void:
+	if tech == null or TechTree.is_unlocked(tech):
+		return
+	TechTree.unlock(tech)
+	# unlock() emits techUnlocked and updates resources, which triggers _refresh
+	# via the connected signals.
+
+
+func _on_any_tech_unlocked(_t) -> void:
+	_refresh()
+
+
+func _on_resources_updated(_resources: Dictionary) -> void:
+	_refresh()
+
+
+func _on_hover_in() -> void:
+	if tech != null:
+		hovered.emit(tech)
+
+
+func _on_hover_out() -> void:
+	unhovered.emit()

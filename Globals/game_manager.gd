@@ -48,6 +48,10 @@ func _process(delta: float) -> void:
 	if solar_system == null:
 		return
 
+	var global_mult: float = TechTree.get_global_production_multiplier()
+	var cleaner_scalar: float = TechTree.get_cleaner_strength_scalar()
+	var pollution_decay: int = TechTree.get_pollution_decay_per_tick()
+
 	for planet in solar_system.planets:
 		var planet_trash_changed := false
 		var planet_pollution_changed := false
@@ -56,10 +60,8 @@ func _process(delta: float) -> void:
 				continue
 			if region.assignedRobots.is_empty():
 				continue
-			if region.trash <= 0:
-				continue
 
-			var changes := _tick_region(region, delta)
+			var changes := _tick_region(region, planet, delta, global_mult, cleaner_scalar, pollution_decay)
 			if changes.trash:
 				GlobalSignals.regionTrashUpdated.emit(region)
 				planet_trash_changed = true
@@ -73,11 +75,24 @@ func _process(delta: float) -> void:
 			GlobalSignals.planetPollutionUpdated.emit(planet)
 
 
-func _tick_region(region: RegionData, delta: float) -> Dictionary:
+func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_mult: float, cleaner_scalar: float, pollution_decay: int) -> Dictionary:
 	var region_progress: Dictionary = _progress.get(region, {})
 	var region_carry: Dictionary = _resource_carry.get(region, {})
 	var trash_changed := false
 	var pollution_changed := false
+
+	# Carbon Capture / similar techs: passive pollution decay on assigned regions.
+	if pollution_decay != 0 and region.pollution > 0:
+		var decayed: int = clamp(region.pollution + pollution_decay, 0, region.maxPollution)
+		if decayed != region.pollution:
+			region.pollution = decayed
+			pollution_changed = true
+
+	if region.trash <= 0:
+		_progress[region] = region_progress
+		_resource_carry[region] = region_carry
+		return {"trash": trash_changed, "pollution": pollution_changed}
+
 	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
 
 	for robot in region.assignedRobots:
@@ -86,15 +101,19 @@ func _tick_region(region: RegionData, delta: float) -> Dictionary:
 			continue
 
 		var progress: float = region_progress.get(robot, 0.0)
-		progress += float(count) * float(robot.productionRate) * pollution_mult * delta
+		progress += float(count) * float(robot.productionRate) * pollution_mult * global_mult * delta
 
 		while progress >= 1.0 and region.trash > 0:
 			progress -= 1.0
 			region.trash = max(0, region.trash - 1)
 			trash_changed = true
+			GlobalResources._on_planet_trash_cleaned(planet, 1)
 
 			if robot.pollutionEffect != 0:
-				var new_pollution: int = clamp(region.pollution + int(robot.pollutionEffect), 0, region.maxPollution)
+				var effect: int = int(robot.pollutionEffect)
+				if effect < 0:
+					effect = int(round(float(effect) * cleaner_scalar))
+				var new_pollution: int = clamp(region.pollution + effect, 0, region.maxPollution)
 				if new_pollution != region.pollution:
 					region.pollution = new_pollution
 					pollution_changed = true

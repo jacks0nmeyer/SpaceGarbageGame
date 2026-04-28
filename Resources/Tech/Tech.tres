@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="TechCollection" format=3]
+
+[ext_resource type="Script" path="res://Resources/Scripts/tech_collection.gd" id="1_coll"]
+[ext_resource type="Script" path="res://Resources/Scripts/tech_data.gd" id="2_tech"]
+[ext_resource type="Resource" path="res://Resources/Tech/Yield_01_ScrappySorter.tres" id="3_y1"]
+[ext_resource type="Resource" path="res://Resources/Tech/Yield_02_RefinedRecycling.tres" id="4_y2"]
+[ext_resource type="Resource" path="res://Resources/Tech/Yield_03_PlasticPulper.tres" id="5_y3"]
+[ext_resource type="Resource" path="res://Resources/Tech/Yield_04_GlassForge.tres" id="6_y4"]
+[ext_resource type="Resource" path="res://Resources/Tech/Ecology_01_AirFilters.tres" id="7_e1"]
+[ext_resource type="Resource" path="res://Resources/Tech/Ecology_02_BioScrubbers.tres" id="8_e2"]
+[ext_resource type="Resource" path="res://Resources/Tech/Ecology_03_SmogTolerance.tres" id="9_e3"]
+[ext_resource type="Resource" path="res://Resources/Tech/Ecology_04_CarbonCapture.tres" id="10_e4"]
+[ext_resource type="Resource" path="res://Resources/Tech/Robotics_01_MassProduction.tres" id="11_r1"]
+[ext_resource type="Resource" path="res://Resources/Tech/Robotics_02_CompactFrames.tres" id="12_r2"]
+[ext_resource type="Resource" path="res://Resources/Tech/Robotics_03_RegionEngineering.tres" id="13_r3"]
+[ext_resource type="Resource" path="res://Resources/Tech/Robotics_04_Overdrive.tres" id="14_r4"]
+[ext_resource type="Resource" path="res://Resources/Tech/Manual_01_ReinforcedGloves.tres" id="15_m1"]
+[ext_resource type="Resource" path="res://Resources/Tech/Manual_02_SalvageEye.tres" id="16_m2"]
+[ext_resource type="Resource" path="res://Resources/Tech/Manual_03_Crowbar.tres" id="17_m3"]
+[ext_resource type="Resource" path="res://Resources/Tech/Manual_04_PollutionSmash.tres" id="18_m4"]
+
+[resource]
+script = ExtResource("1_coll")
+techs = Array[ExtResource("2_tech")]([ExtResource("3_y1"), ExtResource("4_y2"), ExtResource("5_y3"), ExtResource("6_y4"), ExtResource("7_e1"), ExtResource("8_e2"), ExtResource("9_e3"), ExtResource("10_e4"), ExtResource("11_r1"), ExtResource("12_r2"), ExtResource("13_r3"), ExtResource("14_r4"), ExtResource("15_m1"), ExtResource("16_m2"), ExtResource("17_m3"), ExtResource("18_m4")])

@@ -15,6 +15,11 @@ extends Resource
 # Mutated at runtime; not persisted into the .tres on disk.
 var assignedRobots: Dictionary = {}
 
+# Runtime-only counter (0..4): how many of the per-region 25% RP milestones
+# have already been awarded. Monotonically increases so refilling trash never
+# re-pays.
+var researchMilestonesAwarded: int = 0
+
 
 @export var trash: int
 @export var maxTrash: int 
@@ -52,7 +57,10 @@ func assignedSlotsUsed() -> int:
 func canFit(robot: RobotData) -> bool:
 	if locked:
 		return false
-	return assignedSlotsUsed() + int(robot.size) <= robot_capacity
+	var size_mod: int = TechTree.get_robot_size_modifier()
+	var effective_size: int = max(1, int(robot.size) + size_mod)
+	var capacity: int = robot_capacity + TechTree.get_region_capacity_bonus()
+	return assignedSlotsUsed() + effective_size <= capacity
 
 
 func returnResource(): #outputs a string based on the region's resource chance

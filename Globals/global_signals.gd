@@ -35,3 +35,9 @@ signal regionPollutionUpdated(region: RegionData)
 
 @warning_ignore("unused_signal")
 signal planetPollutionUpdated(planet: PlanetData)
+
+@warning_ignore("unused_signal")
+signal techUnlocked(tech: TechData)
+
+@warning_ignore("unused_signal")
+signal researchMilestoneAwarded(region: RegionData, points: int, planet: PlanetData)
