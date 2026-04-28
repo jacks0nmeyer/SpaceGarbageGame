@@ -4,6 +4,12 @@ class_name PlanetData
 @export var planetName: String
 @export var regions: Array[RegionData] = []
 
+# Runtime-only counters (parallel to RegionData.assignedRobots): cumulative
+# trash removed across all this planet's regions, and how many cumulative-RP
+# milestones have already been awarded. Monotonic; not persisted.
+var cumulativeTrashCleaned: int = 0
+var cumulativeMilestonesAwarded: int = 0
+
 func getTotalTrash() -> int:
 	var total:= 0
 	for region in regions:

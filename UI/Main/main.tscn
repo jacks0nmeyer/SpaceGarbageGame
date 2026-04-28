@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://b31cvtpmig7ec" path="res://WIP/PlanetProgressUI/planet_progress_ui.tscn" id="4_uqj38"]
 [ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
 [ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
+[ext_resource type="PackedScene" uid="uid://cwqdac8yngpi8" path="res://WIP/TechTree/tech_tree.tscn" id="7_techtree"]
+[ext_resource type="Script" path="res://UI/Main/main.gd" id="8_main"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -17,6 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("8_main")
 
 [node name="Background" type="Panel" parent="." unique_id=1432230208]
 z_index = -10
@@ -65,6 +68,20 @@ offset_bottom = 40.0
 grow_horizontal = 0
 text = "Robots"
 
-[connection signal="panelClosed" from="RobotUI" to="RobotsButton" method="show"]
-[connection signal="panelOpened" from="RobotUI" to="RobotsButton" method="hide"]
+[node name="TechTree" parent="." unique_id=1500000003 instance=ExtResource("7_techtree")]
+layout_mode = 1
+
+[node name="ResearchButton" type="Button" parent="." unique_id=1500000004]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 48.0
+offset_right = -8.0
+offset_bottom = 80.0
+grow_horizontal = 0
+text = "Research"
+
 [connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]
+[connection signal="pressed" from="ResearchButton" to="TechTree" method="toggle"]

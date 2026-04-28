@@ -17,6 +17,7 @@ func _ready():
 	_populate_icon()
 	buy_button.pressed.connect(_on_buy_pressed)
 	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
+	GlobalSignals.techUnlocked.connect(_on_tech_unlocked)
 	_refresh()
 
 
@@ -39,8 +40,9 @@ func _populate_icon():
 func current_cost() -> Dictionary:
 	var dict := {}
 	var multiplier: float = pow(data.costIncrease, data.amount)
+	var tech_scalar: float = TechTree.get_robot_cost_scalar()
 	for entry in data.unlockCost:
-		dict[entry.resource] = int(round(entry.amount * multiplier))
+		dict[entry.resource] = max(1, int(round(entry.amount * multiplier * tech_scalar)))
 	return dict
 
 
@@ -71,3 +73,9 @@ func _on_resources_updated(_resources: Dictionary):
 	if data == null:
 		return
 	buy_button.disabled = not GlobalResources.can_afford(current_cost())
+
+
+func _on_tech_unlocked(_tech) -> void:
+	if data == null:
+		return
+	_refresh()

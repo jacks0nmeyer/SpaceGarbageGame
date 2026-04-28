@@ -34,7 +34,16 @@ func unlock():
 	
 	
 func _on_pressed():
-	GlobalResources.regionGotResource(region, planet)
+	var amount: int = TechTree.get_click_trash_amount()
+	var double_resources: bool = randf() < TechTree.get_click_double_chance()
+	GlobalResources.regionGotResource(region, planet, amount, double_resources)
+	var pollution_bonus: int = TechTree.get_click_pollution_bonus()
+	if pollution_bonus != 0 and region.pollution > 0:
+		var new_pollution: int = clamp(region.pollution + pollution_bonus, 0, region.maxPollution)
+		if new_pollution != region.pollution:
+			region.pollution = new_pollution
+			GlobalSignals.regionPollutionUpdated.emit(region)
+			GlobalSignals.planetPollutionUpdated.emit(planet)
 
 
 func _on_mouse_entered(): 
