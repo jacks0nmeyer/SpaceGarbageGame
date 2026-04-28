@@ -221,17 +221,20 @@ func onPollutionUpdated(updated_region: RegionData):
 
 
 # Net pollution per second this region accrues at the current robot assignment,
-# while there is trash to process. Each robot processes productionRate trash/sec
-# and applies pollutionEffect once per trash unit, so the rate sums to
-# count * productionRate * pollutionEffect across assigned robots.
+# while there is trash to process. Pollution is independent of productionRate
+# and the pollution-level multiplier — each robot contributes its raw
+# pollutionEffect/sec, with cleaner_scalar applied to negative effects.
 func updatePollutionTrend(region: RegionData):
-	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
+	var cleaner_scalar: float = TechTree.get_cleaner_strength_scalar()
 	var rate := 0.0
 	for robot in region.assignedRobots:
 		var count: int = int(region.assignedRobots[robot])
 		if count <= 0:
 			continue
-		rate += float(count) * float(robot.productionRate) * pollution_mult * float(robot.pollutionEffect)
+		var effect: float = robot.pollutionEffect
+		if effect < 0.0:
+			effect *= cleaner_scalar
+		rate += float(count) * effect
 
 	var sign_str := ""
 	var color: Color

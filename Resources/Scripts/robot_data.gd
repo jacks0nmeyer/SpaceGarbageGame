@@ -17,4 +17,4 @@ extends Resource
 @export var size: int
 @export var productionRate: float
 @export var resourceReturn: float
-@export var pollutionEffect: int
+@export var pollutionEffect: float
