@@ -47,9 +47,28 @@ func _build_tree() -> void:
 		return
 	for tech in TechTree.collection.techs:
 		_spawn_node(tech)
-	# Connectors after every node exists so prereq positions are resolved.
+	# Re-center the authored layout in the panel before drawing connectors,
+	# so connectors pick up the shifted positions automatically.
+	_center_nodes_horizontally()
 	for tech in TechTree.collection.techs:
 		_draw_connectors(tech)
+
+
+func _center_nodes_horizontally() -> void:
+	if _nodes_by_tech.is_empty():
+		return
+	var min_x: float = INF
+	var max_x: float = -INF
+	for node in _nodes_by_tech.values():
+		min_x = min(min_x, node.position.x)
+		max_x = max(max_x, node.position.x + node.size.x)
+	var content_width: float = max_x - min_x
+	var available: float = nodes_root.size.x
+	var dx: float = (available - content_width) * 0.5 - min_x
+	if dx == 0.0:
+		return
+	for node in _nodes_by_tech.values():
+		node.position.x += dx
 
 
 func _spawn_node(tech: TechData) -> void:
@@ -106,7 +125,26 @@ func _on_node_hovered(tech: TechData) -> void:
 		if not missing.is_empty():
 			lines.append("Requires: " + ", ".join(missing))
 	popup_label.text = "\n".join(lines)
-	tech_popup.popup()
+	tech_popup.popup(_popup_rect_near_node(tech))
+
+
+# Place the popup just to the right of the hovered node, flipping to the left
+# if it would overflow the viewport. Anchored to the node (not the cursor) so
+# the popup stays stable while moving around within the same tile. Coords are
+# viewport-local because subwindows are embedded by default.
+func _popup_rect_near_node(tech: TechData) -> Rect2i:
+	var popup_size: Vector2i = tech_popup.size
+	var node: Control = _nodes_by_tech.get(tech)
+	var viewport_size: Vector2i = Vector2i(get_viewport_rect().size)
+	var offset := 16
+	var node_rect: Rect2 = node.get_global_rect()
+	var x := int(node_rect.end.x) + offset
+	if x + popup_size.x > viewport_size.x:
+		x = int(node_rect.position.x) - offset - popup_size.x
+	var y := int(node_rect.get_center().y) - popup_size.y / 2
+	x = clamp(x, 0, max(0, viewport_size.x - popup_size.x))
+	y = clamp(y, 0, max(0, viewport_size.y - popup_size.y))
+	return Rect2i(Vector2i(x, y), popup_size)
 
 
 func _on_node_unhovered() -> void:

@@ -14,14 +14,18 @@ const DEBUG_AUTO_ASSIGN_ROBOT: bool = false
 # Recycler 2.5) accumulates into a per-(region, resource) carry pool that
 # drains whole integer amounts to GlobalResources.gotResource().
 #
-# Each trash unit also applies the active robot's pollutionEffect to
-# region.pollution (clamped to [0, maxPollution]); regionPollutionUpdated /
-# planetPollutionUpdated emit only when the value actually moved.
+# Pollution is tracked on a separate per-(region, robot) carry pool that
+# accumulates count * robot.pollutionEffect * delta — independent of the
+# pollution-level production multiplier and TechTree global multiplier, but
+# still gated on region.trash > 0. cleaner_scalar still scales negative
+# pollutionEffect (it's a pollution-system tech).
 
 # Dictionary[RegionData -> Dictionary[RobotData -> float]]
 var _progress: Dictionary = {}
 # Dictionary[RegionData -> Dictionary[String -> float]]
 var _resource_carry: Dictionary = {}
+# Dictionary[RegionData -> Dictionary[RobotData -> float]]
+var _pollution_carry_per_robot: Dictionary = {}
 
 
 func _ready() -> void:
@@ -78,6 +82,7 @@ func _process(delta: float) -> void:
 func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_mult: float, cleaner_scalar: float, pollution_decay: int) -> Dictionary:
 	var region_progress: Dictionary = _progress.get(region, {})
 	var region_carry: Dictionary = _resource_carry.get(region, {})
+	var region_pollution_carry: Dictionary = _pollution_carry_per_robot.get(region, {})
 	var trash_changed := false
 	var pollution_changed := false
 
@@ -91,6 +96,7 @@ func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_m
 	if region.trash <= 0:
 		_progress[region] = region_progress
 		_resource_carry[region] = region_carry
+		_pollution_carry_per_robot[region] = region_pollution_carry
 		return {"trash": trash_changed, "pollution": pollution_changed}
 
 	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
@@ -109,15 +115,6 @@ func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_m
 			trash_changed = true
 			GlobalResources._on_planet_trash_cleaned(planet, 1)
 
-			if robot.pollutionEffect != 0:
-				var effect: int = int(robot.pollutionEffect)
-				if effect < 0:
-					effect = int(round(float(effect) * cleaner_scalar))
-				var new_pollution: int = clamp(region.pollution + effect, 0, region.maxPollution)
-				if new_pollution != region.pollution:
-					region.pollution = new_pollution
-					pollution_changed = true
-
 			var res: String = region.returnResource()
 			if res == "":
 				continue
@@ -132,6 +129,29 @@ func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_m
 
 		region_progress[robot] = progress
 
+		# Pollution accumulator: independent of cleanup speed and pollution_mult,
+		# but still gated on region.trash > 0 (function-level early return above).
+		var effective_rate: float = robot.pollutionEffect
+		if effective_rate < 0.0:
+			effective_rate *= cleaner_scalar
+		if effective_rate != 0.0:
+			var carry: float = region_pollution_carry.get(robot, 0.0)
+			carry += float(count) * effective_rate * delta
+			var drain: int = 0
+			if carry >= 1.0:
+				drain = int(floor(carry))
+				carry -= float(drain)
+			elif carry <= -1.0:
+				drain = int(ceil(carry))
+				carry -= float(drain)
+			if drain != 0:
+				var new_pollution: int = clamp(region.pollution + drain, 0, region.maxPollution)
+				if new_pollution != region.pollution:
+					region.pollution = new_pollution
+					pollution_changed = true
+			region_pollution_carry[robot] = carry
+
 	_progress[region] = region_progress
 	_resource_carry[region] = region_carry
+	_pollution_carry_per_robot[region] = region_pollution_carry
 	return {"trash": trash_changed, "pollution": pollution_changed}

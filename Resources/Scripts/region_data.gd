@@ -10,6 +10,7 @@ extends Resource
 
 @export var building: bool
 @export var robot_capacity: int
+@export var isWater: bool = false
 
 # Runtime-only mapping of RobotData -> int count of that type assigned here.
 # Mutated at runtime; not persisted into the .tres on disk.
@@ -56,6 +57,8 @@ func assignedSlotsUsed() -> int:
 
 func canFit(robot: RobotData) -> bool:
 	if locked:
+		return false
+	if isWater and not robot.worksInWater:
 		return false
 	var size_mod: int = TechTree.get_robot_size_modifier()
 	var effective_size: int = max(1, int(robot.size) + size_mod)
