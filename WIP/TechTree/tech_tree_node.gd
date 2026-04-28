@@ -16,6 +16,10 @@ var tech: TechData
 
 func setup(data: TechData) -> void:
 	tech = data
+	# _ready runs at add_child time (before setup), so its _refresh() call sees
+	# tech == null and early-returns. Refresh again now that tech is bound.
+	if is_node_ready():
+		_refresh()
 
 
 func _ready() -> void:
