@@ -21,4 +21,4 @@ prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
 effectKind = 10
 effectKey = ""
 effectAmount = -1.0
-position = Vector2(1040, 140)
+position = Vector2(980, 140)
