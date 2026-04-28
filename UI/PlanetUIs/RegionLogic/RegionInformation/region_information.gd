@@ -187,8 +187,8 @@ func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 @onready var region_pollution: TextureRect = $"Info/T&PContainer/Trash&Pollution/RegionPollution"
 @onready var pollution_trend: Label = $"Info/T&PContainer/Trash&Pollution/PollutionTrend"
 @export var pollutionAtlas: Texture2D
-var pollutionIconSize := Vector2(44, 44)
-var pollutionIconSpacing := 8
+var pollutionIconSize := Vector2(76, 48)
+var pollutionIconSpacing := 20
 
 
 func updatePollution(region: RegionData):

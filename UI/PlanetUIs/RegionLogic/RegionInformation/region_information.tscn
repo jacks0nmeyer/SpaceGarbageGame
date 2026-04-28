@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://f060h0oxn7jq"]
 
 [ext_resource type="Script" uid="uid://c2b7ytgk0wn7b" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_information.gd" id="1_3thv7"]
-[ext_resource type="Texture2D" uid="uid://fkwqh3egtedn" path="res://Art/Misc/PollutionLevel.png" id="1_e4uio"]
+[ext_resource type="Texture2D" uid="uid://cl1xhpc0kr3vf" path="res://Art/Misc/PollutionDisplay.png" id="2_gtqb7"]
 [ext_resource type="Script" uid="uid://bjr110mr08hb2" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_robots_tab.gd" id="2_robotstab"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k0jtr"]
-atlas = ExtResource("1_e4uio")
+atlas = ExtResource("2_gtqb7")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3thv7"]
-atlas = ExtResource("1_e4uio")
-region = Rect2(104, 0, 44, 44)
+atlas = ExtResource("2_gtqb7")
+region = Rect2(192, 4, 76, 48)
 
 [node name="RegionInformation" type="TabContainer" unique_id=1090157542]
 custom_minimum_size = Vector2(225, 300)
