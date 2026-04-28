@@ -1,10 +1,11 @@
 extends TabContainer
 
 @onready var region_name: Label = $Info/RegionName
-@onready var trash_bar: ProgressBar = $"Info/T&PContainer/Trash&Pollution/TrashDisplay/TrashBar"
-@onready var trash_display: Label = $"Info/T&PContainer/Trash&Pollution/TrashDisplay/TrashDisplay"
-@onready var resource_grid: GridContainer = $Info/ResourceGrid
-@onready var production_grid: GridContainer = $Info/ProductionGrid
+@onready var trash_bar: ProgressBar = $"Info/T&PContainer/StatusVBox/TrashSection/TrashDisplay/TrashBar"
+@onready var trash_display: Label = $"Info/T&PContainer/StatusVBox/TrashSection/TrashDisplay/TrashDisplay"
+@onready var trash_removal_trend: Label = $"Info/T&PContainer/StatusVBox/TrashSection/TrashRemovalTrend"
+@onready var resource_grid: GridContainer = $"Info/T&PContainer/StatusVBox/PollutionSection/ResourceGrid"
+@onready var production_grid: GridContainer = $"Info/T&PContainer/StatusVBox/PollutionSection/ProductionGrid"
 @onready var region_description: Label = $"Info/DescContainer/Region Description"
 @onready var slots_label: Label = $Robots/Margin/Vbox/SlotsLabel
 @onready var assigned_rows: VBoxContainer = $Robots/Margin/Vbox/Scroll/Rows
@@ -13,12 +14,30 @@ extends TabContainer
 
 func _ready():
 	GlobalSignals.regionHovered.connect(onRegionHovered)
-	GlobalSignals.regionTrashUpdated.connect(updateProgress)
+	GlobalSignals.regionTrashUpdated.connect(_on_region_trash_updated)
 	GlobalSignals.robotAssigned.connect(_on_robot_pair_changed)
 	GlobalSignals.robotUnassigned.connect(_on_robot_pair_changed)
 	GlobalSignals.regionPinToggled.connect(_on_pin_toggled)
 	GlobalSignals.regionPollutionUpdated.connect(onPollutionUpdated)
+	GlobalSignals.techUnlocked.connect(_on_tech_changed)
+	var bar := get_tab_bar()
+	if bar:
+		bar.clip_tabs = false
+		bar.add_theme_font_size_override(&"font_size", 15)
 	hide()
+
+
+func _on_tech_changed(_tech: TechData) -> void:
+	if visible and currentRegion != null:
+		updateTrashRemovalRate(currentRegion)
+		updateResourceRates(currentRegion)
+
+
+func _on_region_trash_updated(region: RegionData) -> void:
+	updateProgress(region)
+	if region != currentRegion:
+		return
+	updateTrashRemovalRate(region)
 
 
 var currentRegion: RegionData = null
@@ -47,8 +66,8 @@ func _switch_to(region: RegionData):
 	updateProgress(region)
 	updateRobots(region)
 	updatePollution(region)
-	updatePollutionTrend(region)
-	updatePollutionPopup(region)
+	updateTrashRemovalRate(region)
+	updatePollutionDetails(region)
 
 
 # Fires after GlobalResources has already toggled its pinnedRegion. We just
@@ -100,20 +119,22 @@ func updateResources(region: RegionData):
 	var limit := 0
 	for entry in region.resourceChances: #sets labels based on region's resource chances
 		if entry.chance > 0.0 and limit < 4: 
-			var label = Label.new() 
+			var res_name: String = entry.resource.capitalize()
+			var label := Label.new()
 			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			label.text = "%s: %d%%" % [entry.resource.capitalize(), entry.chance*100]
-			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			label.text = "%s: %d%%" % [res_name, int(entry.chance * 100.0 + 0.5)]
+			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			label.autowrap_mode = TextServer.AUTOWRAP_OFF
 			resource_grid.add_child(label)
-			
-			var rate_label = Label.new()
+
+			var rate_label := Label.new()
 			rate_label.name = entry.resource.to_lower() + "_rate"
 			rate_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			rate_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			rate_label.text = "%s/S: 0" % entry.resource.capitalize()
-			rate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			rate_label.text = "%s: 0.00/s" % res_name
+			rate_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 			rate_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			production_grid.add_child(rate_label)
 			
@@ -123,19 +144,20 @@ func updateResources(region: RegionData):
 # Deterministic per-region resource rate. Each robot picks one resource per
 # trash unit weighted by region.resourceChances, then deposits resourceReturn
 # of it; expected per-second contribution of robot R to resource X is
-# count * productionRate * chance(X) * resourceReturn(R). Updated only when
-# robot composition changes, not on a polling timer.
+# count * productionRate * global_mult * chance(X) * resourceReturn(R).
+# Updated only when robot composition or relevant tech/pollution tier changes — not each frame.
 func updateResourceRates(region: RegionData):
 	var rates: Dictionary = {}
 	for entry in region.resourceChances:
 		rates[entry.resource.to_lower()] = 0.0
 
 	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
+	var global_mult: float = TechTree.get_global_production_multiplier()
 	for robot in region.assignedRobots:
 		var count: int = int(region.assignedRobots[robot])
 		if count <= 0:
 			continue
-		var trash_per_sec: float = float(count) * float(robot.productionRate) * pollution_mult
+		var trash_per_sec: float = float(count) * float(robot.productionRate) * pollution_mult * global_mult
 		var per_unit_return: float = float(robot.resourceReturn)
 		for entry in region.resourceChances:
 			var key := entry.resource.to_lower()
@@ -147,7 +169,31 @@ func updateResourceRates(region: RegionData):
 		if child.name.ends_with("_rate"):
 			var resource_name: String = child.name.replace("_rate", "")
 			var rate: float = rates.get(resource_name, 0.0)
-			child.text = "%s/S: %.2f" % [resource_name.capitalize(), rate]
+			var cap: String = resource_name.capitalize()
+			child.text = "%s: %.2f/s" % [cap, rate]
+
+
+# Trash units cleared/sec from assigned robots — matches GameManager progress
+# while debris remains; zeros out when trash is depleted.
+func updateTrashRemovalRate(region: RegionData) -> void:
+	if trash_removal_trend == null:
+		return
+	if region.trash <= 0 or region.assignedRobots.is_empty():
+		trash_removal_trend.text = "Clearance: 0/s"
+		trash_removal_trend.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+		return
+
+	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
+	var global_mult: float = TechTree.get_global_production_multiplier()
+	var rate := 0.0
+	for robot in region.assignedRobots:
+		var count: int = int(region.assignedRobots[robot])
+		if count <= 0:
+			continue
+		rate += float(count) * float(robot.productionRate) * pollution_mult * global_mult
+
+	trash_removal_trend.text = "Clearance: %.1f/s" % rate
+	trash_removal_trend.add_theme_color_override("font_color", Color(0.72, 0.86, 1.0))
 
 
 func updateProgress(region: RegionData):
@@ -183,9 +229,11 @@ func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 		updateRobots(region)
 		updateResourceRates(region)
 		updatePollutionTrend(region)
+		updateTrashRemovalRate(region)
 
-@onready var region_pollution: TextureRect = $"Info/T&PContainer/Trash&Pollution/RegionPollution"
-@onready var pollution_trend: Label = $"Info/T&PContainer/Trash&Pollution/PollutionTrend"
+@onready var region_pollution: TextureRect = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionFaceRow/RegionPollution"
+@onready var pollution_value_left: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueLeft"
+@onready var pollution_value_right: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueRight"
 @export var pollutionAtlas: Texture2D
 var pollutionIconSize := Vector2(44, 44)
 var pollutionIconSpacing := 8
@@ -210,7 +258,7 @@ func onPollutionUpdated(updated_region: RegionData):
 	if updated_region != currentRegion:
 		return
 	updatePollution(updated_region)
-	updatePollutionPopup(updated_region)
+	updatePollutionDetails(updated_region)
 	# Production multiplier is bracket-based, so the displayed rates only need
 	# to refresh when the level changes — not on every +1 pollution tick.
 	var new_level := int(updated_region.getPollutionLevel())
@@ -218,13 +266,30 @@ func onPollutionUpdated(updated_region: RegionData):
 		currentPollutionLevel = new_level
 		updateResourceRates(updated_region)
 		updatePollutionTrend(updated_region)
+		updateTrashRemovalRate(updated_region)
 
 
-# Net pollution per second this region accrues at the current robot assignment,
-# while there is trash to process. Pollution is independent of productionRate
-# and the pollution-level multiplier — each robot contributes its raw
-# pollutionEffect/sec, with cleaner_scalar applied to negative effects.
-func updatePollutionTrend(region: RegionData):
+# Net pollution per second from assigned robots (while trash remains). Refreshes
+# the value row under the pollution bar together with return multiplier.
+func updatePollutionTrend(region: RegionData) -> void:
+	_refresh_pollution_value_row(region)
+
+
+@onready var pollution_display: Control = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay"
+@onready var pollution_progress: ProgressBar = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay/PollutionProgress"
+@onready var pollution_progress_label: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay/PollutionProgressLabel"
+
+
+func _refresh_pollution_value_row(region: RegionData) -> void:
+	if pollution_value_left == null or pollution_value_right == null:
+		return
+
+	var level := region.getPollutionLevel()
+	var mult: float = GlobalResources.getPollutionProductionMultiplier(level)
+	var mult_str: String = str(mult) + "x"
+	pollution_value_left.text = "Return: %s" % mult_str
+	pollution_value_left.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
+
 	var cleaner_scalar: float = TechTree.get_cleaner_strength_scalar()
 	var rate := 0.0
 	for robot in region.assignedRobots:
@@ -237,48 +302,28 @@ func updatePollutionTrend(region: RegionData):
 		rate += float(count) * effect
 
 	var sign_str := ""
-	var color: Color
+	var tr_color: Color
 	if rate > 0.0:
 		sign_str = "+"
-		color = Color(1.0, 0.45, 0.45)
+		tr_color = Color(1.0, 0.45, 0.45)
 	elif rate < 0.0:
-		color = Color(0.45, 1.0, 0.55)
+		tr_color = Color(0.45, 1.0, 0.55)
 	else:
-		color = Color(0.7, 0.7, 0.7)
+		tr_color = Color(0.75, 0.78, 0.82)
 
-	pollution_trend.text = "%s%.1f/s" % [sign_str, rate]
-	pollution_trend.add_theme_color_override("font_color", color)
-
-
-@onready var pollution_level_label: Label = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/Level/PollutionLevelLabel"
-@onready var pollution_popup: Panel = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup"
-@onready var pollution_progress: ProgressBar = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/PollutionDisplay/PollutionProgress"
-@onready var pollution_progress_label: Label = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/PollutionDisplay/PollutionProgressLabel"
-@onready var pollution_return_label: Label = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/Return/PollutionReturnLabel"
+	var rate_str: String = "%s%.1f/s" % [sign_str, rate]
+	pollution_value_right.text = "Poll/s: %s" % rate_str
+	pollution_value_right.add_theme_color_override("font_color", tr_color)
 
 
-func _on_region_pollution_mouse_entered():
-	pollution_popup.show()
-
-
-func _on_region_pollution_mouse_exited():
-	pollution_popup.hide()
-
-
-func updatePollutionPopup(region: RegionData):
-	var level := region.getPollutionLevel()
-	var pollutionName := region.getPollutionName()
-	
-	pollution_level_label.text = str(pollutionName)
-	pollution_level_label.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
-	
+func updatePollutionDetails(region: RegionData) -> void:
 	pollution_progress.max_value = region.maxPollution
 	pollution_progress.value = region.pollution
-	
-	pollution_progress_label.text = "%d / %d" % [region.pollution, region.maxPollution]
-	
-	pollution_return_label.text =str(GlobalResources.getPollutionProductionMultiplier(level)) + "x"
-	pollution_return_label.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
+	if pollution_progress_label != null:
+		pollution_progress_label.text = "%d / %d" % [region.pollution, region.maxPollution]
+	if pollution_display != null:
+		pollution_display.tooltip_text = "%s tier — return multiplier applies to debris processed here." % region.getPollutionName()
+	_refresh_pollution_value_row(region)
 
 
 func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu

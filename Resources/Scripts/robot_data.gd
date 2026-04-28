@@ -18,3 +18,4 @@ extends Resource
 @export var productionRate: float
 @export var resourceReturn: float
 @export var pollutionEffect: float
+@export var worksInWater: bool = true

@@ -5,7 +5,9 @@
 [ext_resource type="Resource" uid="uid://ctcgqgq4l0h7i" path="res://Resources/Robots/BasicCleaner.tres" id="3_basic"]
 [ext_resource type="Resource" uid="uid://dmv27qvtekpft" path="res://Resources/Robots/Atomizer.tres" id="4_atom"]
 [ext_resource type="Resource" uid="uid://d37tih08vormy" path="res://Resources/Robots/Recycler.tres" id="5_recy"]
+[ext_resource type="Resource" uid="uid://b8incr9r471wat0" path="res://Resources/Robots/Incinerator.tres" id="6_inci"]
+[ext_resource type="Resource" uid="uid://c9plntr3ducatm1" path="res://Resources/Robots/PollutionReducer.tres" id="7_pred"]
 
 [resource]
 script = ExtResource("1_coll")
-robots = Array[ExtResource("2_robot")]([ExtResource("3_basic"), ExtResource("4_atom"), ExtResource("5_recy")])
+robots = Array[ExtResource("2_robot")]([ExtResource("3_basic"), ExtResource("4_atom"), ExtResource("5_recy"), ExtResource("6_inci"), ExtResource("7_pred")])

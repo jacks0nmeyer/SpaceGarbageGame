@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RobotData" format=3 uid="uid://dmv27qvtekpft"]
+[gd_resource type="Resource" script_class="RobotData" format=3 uid="uid://cg8gnfwdae0y2"]
 
 [ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_robot"]
 [ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="2_cost"]
@@ -6,23 +6,25 @@
 [sub_resource type="Resource" id="Resource_cost1"]
 script = ExtResource("2_cost")
 resource = "junk"
-amount = 3000
+amount = 6000
 metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [sub_resource type="Resource" id="Resource_cost2"]
 script = ExtResource("2_cost")
 resource = "scrap"
-amount = 50
+amount = 300
 metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [resource]
 script = ExtResource("1_robot")
-robotName = "Atomizer"
-description = "Tears through debris quickly but wastes most of what it grabs. Slightly polluting."
+robotName = "Incinerator"
+description = "Maximum throughput burner. Extremely polluting — cannot operate in aquatic regions."
 unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
-costIncrease = 1.15
-size = 2
-productionRate = 4.0
-resourceReturn = 0.4
-pollutionEffect = 6.0
+costIncrease = 1.2
+amount = 0
+size = 3
+productionRate = 8.0
+resourceReturn = 0.3
+pollutionEffect = 14.0
+worksInWater = false
 metadata/_custom_type_script = "uid://8cstlrx4ytgo"

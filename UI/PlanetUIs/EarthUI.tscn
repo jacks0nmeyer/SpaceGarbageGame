@@ -170,9 +170,9 @@ region = ExtResource("10_58dan")
 layout_mode = 3
 anchors_preset = 0
 offset_left = 35.0
-offset_top = 200.0
-offset_right = 260.0
-offset_bottom = 500.0
+offset_top = 172.0
+offset_right = 287.0
+offset_bottom = 538.0
 
 [node name="RegionInformation" parent="RegionInformationLayer/Container" unique_id=1090157542 instance=ExtResource("13_in0od")]
 layout_mode = 0
@@ -183,7 +183,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 0.0
 offset_top = 0.0
-offset_right = 225.0
-offset_bottom = 300.0
+offset_right = 252.0
+offset_bottom = 366.0
 grow_horizontal = 1
 grow_vertical = 1
