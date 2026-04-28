@@ -312,7 +312,7 @@ func _refresh_pollution_value_row(region: RegionData) -> void:
 		tr_color = Color(0.75, 0.78, 0.82)
 
 	var rate_str: String = "%s%.1f/s" % [sign_str, rate]
-	pollution_value_right.text = "Poll/s: %s" % rate_str
+	pollution_value_right.text = "Pollution/s: %s" % rate_str
 	pollution_value_right.add_theme_color_override("font_color", tr_color)
 
 

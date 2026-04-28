@@ -27,7 +27,6 @@ robotName = "Pollution Reducer"
 description = "Industrial scrubber — slow throughput but powerfully draws down regional pollution per unit cleared."
 unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2"), SubResource("Resource_cost3")])
 costIncrease = 1.2
-amount = 0
 size = 3
 productionRate = 0.2
 resourceReturn = 1.5

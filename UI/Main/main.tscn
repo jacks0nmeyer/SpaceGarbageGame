@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
 [ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
 [ext_resource type="PackedScene" uid="uid://cwqdac8yngpi8" path="res://WIP/TechTree/tech_tree.tscn" id="7_techtree"]
-[ext_resource type="Script" path="res://UI/Main/main.gd" id="8_main"]
+[ext_resource type="Script" uid="uid://bgrn6bq8w2vei" path="res://UI/Main/main.gd" id="8_main"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -53,7 +53,6 @@ layout_mode = 1
 
 [node name="RobotUI" parent="." unique_id=1500000001 instance=ExtResource("6_robotui")]
 layout_mode = 1
-anchors_preset = 11
 offset_left = 0.0
 
 [node name="RobotsButton" type="Button" parent="." unique_id=1500000002]
