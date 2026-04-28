@@ -5,6 +5,11 @@ extends Node
 # drag-drop UI is in place. Should be left false on commit.
 const DEBUG_AUTO_ASSIGN_ROBOT: bool = false
 
+# When true, `_process` skips the robot production loop (Main pause button /
+# spacebar). The scene tree keeps running so menus, region UI, and assignment
+# stay interactive.
+var production_paused: bool = false
+
 # Robot production loop. Walks every region in the solar system each frame,
 # accumulating progress for each (region, robot type) pair based on the robot's
 # productionRate and the count assigned. When at least one whole unit of work
@@ -175,6 +180,8 @@ func _debug_auto_assign() -> void:
 
 
 func _process(delta: float) -> void:
+	if production_paused:
+		return
 	var solar_system: SolarSystemData = GlobalResources.solarSystem
 	if solar_system == null:
 		return

@@ -92,6 +92,7 @@ func load_from_user(path: String = DEFAULT_SAVE_PATH) -> bool:
 func reset_to_new_game() -> void:
 	_delete_save_file()
 	TechTree.unlockedLevels.clear()
+	GameManager.production_paused = false
 	GameManager.clear_carry_state()
 	GlobalResources.apply_new_game_inventory()
 	_apply_template_from_disk()

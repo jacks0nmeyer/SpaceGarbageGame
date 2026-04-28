@@ -1,6 +1,6 @@
 extends Control
 
-# Coordinator for the top-level Main scene. Two responsibilities:
+# Coordinator for the top-level Main scene. Responsibilities:
 #
 # 1. Hide the planet UI (EarthUI + its CanvasLayer-hosted region popup + the
 #    static globe sprite) while the tech tree panel is open, so the tree
@@ -16,7 +16,9 @@ extends Control
 #
 # 3. Pause + Menu live on SaveHUDLayer (CanvasLayer layer 50) so they stay
 #    above EarthUI's RegionInformationLayer and anchor bottom-left. Menu
-#    holds Save, Reset, and (debug builds) dev godmode.
+#    holds Save, Reset, and (debug builds) dev godmode. Pause only stops
+#    GameManager robot production (`production_paused`); the scene tree is
+#    not frozen so UI stays usable. Spacebar toggles the same pause state.
 
 const MENU_ID_SAVE := 0
 const MENU_ID_RESET := 1
@@ -50,10 +52,27 @@ func _ready() -> void:
 
 	SaveGame.consume_post_reset_refresh()
 
+	_refresh_pause_button_text()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_SPACE:
+			_toggle_production_pause()
+			get_viewport().set_input_as_handled()
+
+
+func _toggle_production_pause() -> void:
+	GameManager.production_paused = not GameManager.production_paused
+	_refresh_pause_button_text()
+
+
+func _refresh_pause_button_text() -> void:
+	pause_button.text = "Resume" if GameManager.production_paused else "Pause"
+
 
 func _on_pause_pressed() -> void:
-	get_tree().paused = not get_tree().paused
-	pause_button.text = "Resume" if get_tree().paused else "Pause"
+	_toggle_production_pause()
 
 
 func _rebuild_menu_strip() -> void:

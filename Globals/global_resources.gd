@@ -232,6 +232,18 @@ func unassignOne(robot: RobotData, region: RegionData) -> void:
 	GlobalSignals.robotUnassigned.emit(robot, region)
 
 
+# Remove every assigned `robot` from `region` in one step (Robots tab:
+# Shift+right-click a row). Emits `robotUnassigned` once if anything changed.
+func unassignAllOfType(robot: RobotData, region: RegionData) -> void:
+	if robot == null or region == null:
+		return
+	var current: int = int(region.assignedRobots.get(robot, 0))
+	if current <= 0:
+		return
+	region.assignedRobots.erase(robot)
+	GlobalSignals.robotUnassigned.emit(robot, region)
+
+
 #Total count of a given robot type currently assigned across every region.
 func assignedTotal(robot: RobotData) -> int:
 	if robot == null or solarSystem == null:

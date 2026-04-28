@@ -40,7 +40,7 @@ func _build() -> void:
 
 	var remove_btn := Button.new()
 	remove_btn.text = "−"
-	remove_btn.tooltip_text = "Unassign one (or right-click the row)"
+	remove_btn.tooltip_text = "Unassign one (right-click row). Shift+right-click: unassign all of this type."
 	remove_btn.custom_minimum_size = Vector2(24, 24)
 	remove_btn.focus_mode = Control.FOCUS_NONE
 	remove_btn.pressed.connect(_unassign_one)
@@ -51,13 +51,17 @@ func _unassign_one() -> void:
 	GlobalResources.unassignOne(robot, region)
 
 
-# Right-click anywhere on the row also unassigns one. Drag-back-to-Owned still
-# works on left-click + drag via _get_drag_data.
+# Right-click unassigns one; Shift+right-click clears every bot of this type
+# in the region. Drag-back-to-Owned still works on left-click + drag via
+# _get_drag_data.
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton \
 			and event.pressed \
 			and event.button_index == MOUSE_BUTTON_RIGHT:
-		_unassign_one()
+		if event.shift_pressed:
+			GlobalResources.unassignAllOfType(robot, region)
+		else:
+			_unassign_one()
 		accept_event()
 
 
