@@ -14,8 +14,13 @@ extends Control
 #    ESC are the canonical close paths); the *other* button stays visible
 #    but non-interactive.
 #
-# 3. Pause / Save / Reset live on SaveHUDLayer (CanvasLayer layer 50) so they
-#    stay above EarthUI's RegionInformationLayer and anchor bottom-left.
+# 3. Pause + Menu live on SaveHUDLayer (CanvasLayer layer 50) so they stay
+#    above EarthUI's RegionInformationLayer and anchor bottom-left. Menu
+#    holds Save, Reset, and (debug builds) dev godmode.
+
+const MENU_ID_SAVE := 0
+const MENU_ID_RESET := 1
+const MENU_ID_DEV_GODMODE := 2
 
 @onready var background: Panel = $Background
 @onready var globe: TextureRect = $Background/GlobeTexture
@@ -26,8 +31,7 @@ extends Control
 @onready var tech_tree: Control = $TechTree
 @onready var research_button: Button = $ResearchButton
 @onready var pause_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/PauseButton
-@onready var save_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/SaveButton
-@onready var reset_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/ResetButton
+@onready var menu_button: MenuButton = $SaveHUDLayer/HudRoot/SaveStrip/MenuButton
 @onready var reset_confirm: ConfirmationDialog = $SaveHUDLayer/ResetConfirm
 
 
@@ -38,8 +42,10 @@ func _ready() -> void:
 	tech_tree.panelClosed.connect(_on_tech_tree_closed)
 
 	pause_button.pressed.connect(_on_pause_pressed)
-	save_button.pressed.connect(_on_save_pressed)
-	reset_button.pressed.connect(_on_reset_pressed)
+	var menu_popup: PopupMenu = menu_button.get_popup()
+	menu_popup.id_pressed.connect(_on_menu_id_pressed)
+	_rebuild_menu_strip()
+
 	reset_confirm.confirmed.connect(_on_reset_confirmed)
 
 	SaveGame.consume_post_reset_refresh()
@@ -50,12 +56,25 @@ func _on_pause_pressed() -> void:
 	pause_button.text = "Resume" if get_tree().paused else "Pause"
 
 
-func _on_save_pressed() -> void:
-	SaveGame.save_to_user()
+func _rebuild_menu_strip() -> void:
+	var menu_popup: PopupMenu = menu_button.get_popup()
+	menu_popup.clear()
+	menu_popup.add_item("Save now", MENU_ID_SAVE)
+	menu_popup.add_item("Reset game…", MENU_ID_RESET)
+	if OS.is_debug_build():
+		menu_popup.add_separator()
+		menu_popup.add_item("Dev: max resources", MENU_ID_DEV_GODMODE)
 
 
-func _on_reset_pressed() -> void:
-	reset_confirm.popup_centered()
+func _on_menu_id_pressed(id: int) -> void:
+	match id:
+		MENU_ID_SAVE:
+			SaveGame.save_to_user()
+		MENU_ID_RESET:
+			reset_confirm.popup_centered()
+		MENU_ID_DEV_GODMODE:
+			if OS.is_debug_build():
+				GlobalResources.apply_dev_godmode_inventory()
 
 
 func _on_reset_confirmed() -> void:

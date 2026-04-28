@@ -124,7 +124,6 @@ tooltip_text = "Pollution tier (face matches severity)."
 custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 texture = SubResource("AtlasTexture_3thv7")
-flip_h = true
 
 [node name="PollutionDisplay" type="Control" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1922294673]
 custom_minimum_size = Vector2(0, 32)

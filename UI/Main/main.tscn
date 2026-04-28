@@ -104,7 +104,7 @@ anchor_right = 0.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = -44.0
-offset_right = 268.0
+offset_right = 200.0
 offset_bottom = -8.0
 grow_vertical = 0
 
@@ -112,13 +112,10 @@ grow_vertical = 0
 layout_mode = 2
 text = "Pause"
 
-[node name="SaveButton" type="Button" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000007]
+[node name="MenuButton" type="MenuButton" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000007]
 layout_mode = 2
-text = "Save"
-
-[node name="ResetButton" type="Button" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000008]
-layout_mode = 2
-text = "Reset"
+text = "Menu"
+switch_on_hover = false
 
 [node name="ResetConfirm" type="ConfirmationDialog" parent="SaveHUDLayer" unique_id=1500000009]
 process_mode = 3

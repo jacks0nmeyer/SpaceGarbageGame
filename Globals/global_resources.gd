@@ -1,13 +1,23 @@
 extends Node
 
-# Shipped new-game inventory (also used after Reset). DEV seeds live here until
-# you tune release defaults.
+# New-game / reset inventory (SaveGame also fills missing keys from this).
 const DEFAULT_PLAYER_RESOURCES: Dictionary = {
-	"junk": 100000,
-	"scrap": 50000,
+	"junk": 0,
+	"scrap": 0,
 	"plastic": 0,
 	"glass": 0,
-	"research": 50,
+	"research": 0,
+}
+
+# Editor/debug only — applied from Main menu (not used on reset).
+# Generous stacks for robot purchases, region unlocks (e.g. 10k glass), and
+# costIncrease scaling while iterating.
+const DEV_GODMODE_PLAYER_RESOURCES: Dictionary = {
+	"junk": 1_000_000,
+	"scrap": 500_000,
+	"plastic": 100_000,
+	"glass": 100_000,
+	"research": 500,
 }
 
 const DEFAULT_MULTIPLIERS: Dictionary = {
@@ -166,6 +176,11 @@ func apply_new_game_inventory() -> void:
 	globalMultiplier = 1
 	multipliers = DEFAULT_MULTIPLIERS.duplicate()
 	pinnedRegion = null
+	GlobalSignals.resourcesUpdated.emit(playerResources)
+
+
+func apply_dev_godmode_inventory() -> void:
+	playerResources = DEV_GODMODE_PLAYER_RESOURCES.duplicate()
 	GlobalSignals.resourcesUpdated.emit(playerResources)
 
 
