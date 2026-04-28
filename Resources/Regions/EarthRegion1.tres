@@ -24,7 +24,6 @@ resourceChances = Array[ExtResource("1_oeg67")]([SubResource("Resource_xy24g"), 
 robot_capacity = 4
 trash = 100000
 maxTrash = 100000
-pollution = 2600
 maxPollution = 10000
 description = "Now known as \"The Big Crapple\", the trash center of the universe. Still has lots of rats."
 texture_normal = ExtResource("4_48ii6")

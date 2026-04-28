@@ -39,13 +39,13 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_ua7df")
 
-[node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
+[node name="EarthUI" parent="." unique_id=1975476536 instance=ExtResource("3_vhxei")]
 layout_mode = 1
 
 [node name="ResourceUI(Temp)" parent="." unique_id=684933601 instance=ExtResource("5_rsogr")]
 layout_mode = 1
 
-[node name="EarthUI" parent="." unique_id=1975476536 instance=ExtResource("3_vhxei")]
+[node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
 layout_mode = 1
 
 [node name="RobotUI" parent="." unique_id=1500000001 instance=ExtResource("6_robotui")]

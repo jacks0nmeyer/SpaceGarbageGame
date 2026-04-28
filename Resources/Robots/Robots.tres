@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://b83ephiu43yv1" path="res://Resources/Scripts/robot_collection.gd" id="1_coll"]
 [ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="2_robot"]
-[ext_resource type="Resource" path="res://Resources/Robots/BasicCleaner.tres" id="3_basic"]
-[ext_resource type="Resource" path="res://Resources/Robots/Atomizer.tres" id="4_atom"]
-[ext_resource type="Resource" path="res://Resources/Robots/Recycler.tres" id="5_recy"]
+[ext_resource type="Resource" uid="uid://ctcgqgq4l0h7i" path="res://Resources/Robots/BasicCleaner.tres" id="3_basic"]
+[ext_resource type="Resource" uid="uid://dmv27qvtekpft" path="res://Resources/Robots/Atomizer.tres" id="4_atom"]
+[ext_resource type="Resource" uid="uid://d37tih08vormy" path="res://Resources/Robots/Recycler.tres" id="5_recy"]
 
 [resource]
 script = ExtResource("1_coll")

@@ -18,5 +18,4 @@ costIncrease = 1.15
 size = 1
 productionRate = 1.0
 resourceReturn = 1.0
-pollutionEffect = 0
 metadata/_custom_type_script = "uid://8cstlrx4ytgo"

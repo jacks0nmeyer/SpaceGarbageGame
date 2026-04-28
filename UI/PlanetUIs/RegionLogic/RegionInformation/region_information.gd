@@ -48,6 +48,7 @@ func _switch_to(region: RegionData):
 	updateRobots(region)
 	updatePollution(region)
 	updatePollutionTrend(region)
+	updatePollutionPopup(region)
 
 
 # Fires after GlobalResources has already toggled its pinnedRegion. We just
@@ -209,6 +210,7 @@ func onPollutionUpdated(updated_region: RegionData):
 	if updated_region != currentRegion:
 		return
 	updatePollution(updated_region)
+	updatePollutionPopup(updated_region)
 	# Production multiplier is bracket-based, so the displayed rates only need
 	# to refresh when the level changes — not on every +1 pollution tick.
 	var new_level := int(updated_region.getPollutionLevel())
@@ -243,6 +245,37 @@ func updatePollutionTrend(region: RegionData):
 
 	pollution_trend.text = "%s%.1f/s" % [sign_str, rate]
 	pollution_trend.add_theme_color_override("font_color", color)
+
+
+@onready var pollution_level_label: Label = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/Level/PollutionLevelLabel"
+@onready var pollution_popup: Panel = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup"
+@onready var pollution_progress: ProgressBar = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/PollutionDisplay/PollutionProgress"
+@onready var pollution_progress_label: Label = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/PollutionDisplay/PollutionProgressLabel"
+@onready var pollution_return_label: Label = $"Info/T&PContainer/Trash&Pollution/RegionPollution/PollutionPopup/PopupMargin/PopupVbox/Return/PollutionReturnLabel"
+
+
+func _on_region_pollution_mouse_entered():
+	pollution_popup.show()
+
+
+func _on_region_pollution_mouse_exited():
+	pollution_popup.hide()
+
+
+func updatePollutionPopup(region: RegionData):
+	var level := region.getPollutionLevel()
+	var pollutionName := region.getPollutionName()
+	
+	pollution_level_label.text = str(pollutionName)
+	pollution_level_label.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
+	
+	pollution_progress.max_value = region.maxPollution
+	pollution_progress.value = region.pollution
+	
+	pollution_progress_label.text = "%d / %d" % [region.pollution, region.maxPollution]
+	
+	pollution_return_label.text =str(GlobalResources.getPollutionProductionMultiplier(level)) + "x"
+	pollution_return_label.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
 
 
 func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu

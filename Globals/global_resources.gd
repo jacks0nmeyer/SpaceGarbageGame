@@ -35,6 +35,16 @@ func getPollutionLevel(pollution: float) -> PollutionLevel:
 		return PollutionLevel.CRITICAL
 
 
+func getPollutionColor(level: PollutionLevel) -> Color:
+	match level:
+		PollutionLevel.CLEAN: return Color(0.388, 0.78, 0.302, 1.0)
+		PollutionLevel.LOW: return Color(0.996, 0.906, 0.38, 1.0)
+		PollutionLevel.MODERATE: return Color(0.996, 0.682, 0.204, 1.0)
+		PollutionLevel.HIGH: return Color(0.969, 0.463, 0.133, 1.0)
+		PollutionLevel.CRITICAL: return Color(0.894, 0.231, 0.267, 1.0)
+		_: return Color.WHITE
+
+
 func getPollutionName(level: PollutionLevel) -> String:
 	return PollutionLevel.keys()[level].capitalize()
 
