@@ -9,10 +9,48 @@ const ROBOTS_PATH: String = "res://Resources/Robots/Robots.tres"
 
 var _post_reset_emit_save_loaded: bool = false
 
+# Snapshots taken once at startup (before save load) for "New game" reset.
+# SolarSystemData.duplicate(true) does NOT duplicate external RegionData .tres
+# instances — they stay aliased to GlobalResources — so we store per-region
+# Resource.duplicate(true) and plain dicts for planet/robot runtime fields.
+var _pristine_regions: Dictionary = {}
+var _pristine_planet_meta: Dictionary = {}
+var _pristine_robot_amounts: Dictionary = {}
+
 
 func _ready() -> void:
+	_capture_pristine_template()
 	if load_from_user():
 		call_deferred("_emit_refresh_after_load")
+
+
+func _capture_pristine_template() -> void:
+	_pristine_regions.clear()
+	_pristine_planet_meta.clear()
+	_pristine_robot_amounts.clear()
+
+	var ss: SolarSystemData = GlobalResources.solarSystem
+	if ss != null:
+		for planet in ss.planets:
+			var ppath: String = planet.resource_path
+			if not ppath.is_empty():
+				_pristine_planet_meta[ppath] = {
+					"cumulativeTrashCleaned": planet.cumulativeTrashCleaned,
+					"cumulativeMilestonesAwarded": planet.cumulativeMilestonesAwarded,
+				}
+			for region in planet.regions:
+				var rpath: String = region.resource_path
+				if rpath.is_empty():
+					continue
+				_pristine_regions[rpath] = region.duplicate(true) as RegionData
+
+	var coll: RobotCollection = GlobalResources.robots
+	if coll != null:
+		for bot in coll.robots:
+			var bpath: String = bot.resource_path
+			if bpath.is_empty():
+				continue
+			_pristine_robot_amounts[bpath] = int(bot.amount)
 
 
 func consume_post_reset_refresh() -> bool:
@@ -204,37 +242,38 @@ func _apply_snapshot(root: Dictionary) -> bool:
 
 
 func _apply_template_from_disk() -> void:
-	var tpl_ss: SolarSystemData = ResourceLoader.load(
-		SOLAR_SYSTEM_PATH, "", ResourceLoader.CACHE_MODE_IGNORE
-	) as SolarSystemData
-	var tpl_robots: RobotCollection = ResourceLoader.load(
-		ROBOTS_PATH, "", ResourceLoader.CACHE_MODE_IGNORE
-	) as RobotCollection
-	if tpl_ss == null or tpl_robots == null:
-		push_error("SaveGame: failed to load template world/robots")
+	if _pristine_regions.is_empty():
+		push_error("SaveGame: pristine region snapshot missing; cannot reset world state")
 		return
 
-	for tpl_p in tpl_ss.planets:
-		var live_p: PlanetData = _find_planet_by_path(tpl_p.resource_path)
+	for ppath: String in _pristine_planet_meta:
+		var live_p: PlanetData = _find_planet_by_path(ppath)
 		if live_p == null:
 			continue
-		live_p.cumulativeTrashCleaned = tpl_p.cumulativeTrashCleaned
-		live_p.cumulativeMilestonesAwarded = tpl_p.cumulativeMilestonesAwarded
-		for tpl_r in tpl_p.regions:
-			var live_r: RegionData = _find_region_by_path(tpl_r.resource_path)
-			if live_r == null:
-				continue
-			live_r.locked = tpl_r.locked
-			live_r.trash = tpl_r.trash
-			live_r.pollution = tpl_r.pollution
-			live_r.researchMilestonesAwarded = tpl_r.researchMilestonesAwarded
-			live_r.assignedRobots.clear()
+		var meta: Variant = _pristine_planet_meta[ppath]
+		if typeof(meta) == TYPE_DICTIONARY:
+			var md: Dictionary = meta
+			live_p.cumulativeTrashCleaned = int(md.get("cumulativeTrashCleaned", 0))
+			live_p.cumulativeMilestonesAwarded = int(md.get("cumulativeMilestonesAwarded", 0))
 
-	for tpl_bot in tpl_robots.robots:
-		var live_bot: RobotData = _find_robot_by_path(tpl_bot.resource_path)
+	for rpath: String in _pristine_regions:
+		var pr: RegionData = _pristine_regions[rpath] as RegionData
+		if pr == null:
+			continue
+		var live_r: RegionData = _find_region_by_path(rpath)
+		if live_r == null:
+			continue
+		live_r.locked = pr.locked
+		live_r.trash = pr.trash
+		live_r.pollution = pr.pollution
+		live_r.researchMilestonesAwarded = pr.researchMilestonesAwarded
+		live_r.assignedRobots.clear()
+
+	for bpath: String in _pristine_robot_amounts:
+		var live_bot: RobotData = _find_robot_by_path(bpath)
 		if live_bot == null:
 			continue
-		live_bot.amount = tpl_bot.amount
+		live_bot.amount = int(_pristine_robot_amounts[bpath])
 
 
 func _apply_planets_array(arr: Variant) -> void:

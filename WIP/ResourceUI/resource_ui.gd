@@ -4,14 +4,25 @@ extends GridContainer
 # from session start). Other resources only render once they've been earned.
 const ALWAYS_SHOW: PackedStringArray = ["research"]
 
+var _viewport: Viewport
+
 
 func _ready():
 	GlobalSignals.resourcesUpdated.connect(onResourcesUpdated)
-	get_viewport().size_changed.connect(_schedule_fit_root_height)
+	_viewport = get_viewport()
+	if _viewport != null:
+		_viewport.size_changed.connect(_schedule_fit_root_height)
 	onResourcesUpdated(GlobalResources.playerResources)
 
 
+func _exit_tree() -> void:
+	if is_instance_valid(_viewport) and _viewport.size_changed.is_connected(_schedule_fit_root_height):
+		_viewport.size_changed.disconnect(_schedule_fit_root_height)
+
+
 func _schedule_fit_root_height() -> void:
+	if not is_inside_tree():
+		return
 	if get_child_count() > 0:
 		call_deferred("_fit_root_height")
 
@@ -48,13 +59,26 @@ func _format_amount(n: int) -> String:
 
 
 func _fit_root_height() -> void:
+	if not is_inside_tree():
+		return
 	var margin: MarginContainer = get_parent() as MarginContainer
 	if margin == null:
 		return
 	var root: Control = margin.get_parent() as Control
 	if root == null:
 		return
-	await get_tree().process_frame
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.process_frame
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
+	margin = get_parent() as MarginContainer
+	if not is_instance_valid(margin):
+		return
+	root = margin.get_parent() as Control
+	if not is_instance_valid(root):
+		return
 	var top: int = int(margin.get_theme_constant("margin_top", "MarginContainer"))
 	var bottom: int = int(margin.get_theme_constant("margin_bottom", "MarginContainer"))
 	var inner_h: float = maxf(get_minimum_size().y, size.y)
