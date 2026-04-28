@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://csspqfobi52eo"]
 
 [ext_resource type="Script" uid="uid://douk4ce8wdirc" path="res://WIP/RobotUI/robot_ui.gd" id="1_su03b"]
-[ext_resource type="Script" path="res://WIP/RobotUI/owned_tab.gd" id="2_owned"]
+[ext_resource type="Script" uid="uid://ce2go3y62fs8q" path="res://WIP/RobotUI/owned_tab.gd" id="2_owned"]
 
 [node name="RobotUI" type="Control" unique_id=461547080]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 3
-anchors_preset = 9
+anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +15,7 @@ grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("1_su03b")
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=230491617]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,38 +23,40 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Margin" type="MarginContainer" parent="Panel"]
+[node name="Margin" type="MarginContainer" parent="Panel" unique_id=364482744]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 8
 
-[node name="Vbox" type="VBoxContainer" parent="Panel/Margin"]
+[node name="Vbox" type="VBoxContainer" parent="Panel/Margin" unique_id=1675235954]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="TitleRow" type="HBoxContainer" parent="Panel/Margin/Vbox"]
+[node name="TitleRow" type="HBoxContainer" parent="Panel/Margin/Vbox" unique_id=2025993159]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Panel/Margin/Vbox/TitleRow"]
+[node name="Title" type="Label" parent="Panel/Margin/Vbox/TitleRow" unique_id=1181960050]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Robots"
 horizontal_alignment = 1
 
-[node name="CloseButton" type="Button" parent="Panel/Margin/Vbox/TitleRow"]
+[node name="CloseButton" type="Button" parent="Panel/Margin/Vbox/TitleRow" unique_id=1293864260]
 layout_mode = 2
 text = "X"
 
-[node name="Tabs" type="TabContainer" parent="Panel/Margin/Vbox"]
+[node name="Tabs" type="TabContainer" parent="Panel/Margin/Vbox" unique_id=2051556666]
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 0
 
-[node name="Buy" type="Control" parent="Panel/Margin/Vbox/Tabs"]
+[node name="Buy" type="Control" parent="Panel/Margin/Vbox/Tabs" unique_id=1008024732]
 layout_mode = 2
+metadata/_tab_index = 0
 
-[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox/Tabs/Buy"]
+[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox/Tabs/Buy" unique_id=1755274936]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,17 +64,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Buy/Scroll"]
+[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Buy/Scroll" unique_id=1886987227]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="Owned" type="Control" parent="Panel/Margin/Vbox/Tabs"]
+[node name="Owned" type="Control" parent="Panel/Margin/Vbox/Tabs" unique_id=1733965231]
 visible = false
 layout_mode = 2
 script = ExtResource("2_owned")
+metadata/_tab_index = 1
 
-[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox/Tabs/Owned"]
+[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox/Tabs/Owned" unique_id=1181110568]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -80,7 +83,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Owned/Scroll"]
+[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Owned/Scroll" unique_id=1062268852]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
