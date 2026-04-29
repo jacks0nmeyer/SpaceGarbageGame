@@ -2,7 +2,7 @@ extends TextureRect
 
 @export var planet: PlanetData
 @export var pollutionAtlas: Texture2D
-var iconSize := Vector2(76, 48)
+var iconSize := Vector2(76, 56)
 var iconSpacing := 20
 
 func _ready():

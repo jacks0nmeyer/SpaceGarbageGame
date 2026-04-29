@@ -23,5 +23,5 @@ theme_override_constants/margin_top = 10
 
 [node name="ResourceGridContainer" type="GridContainer" parent="MarginContainer" unique_id=1337105768]
 layout_mode = 2
-columns = 6
+columns = 3
 script = ExtResource("1_07p5t")

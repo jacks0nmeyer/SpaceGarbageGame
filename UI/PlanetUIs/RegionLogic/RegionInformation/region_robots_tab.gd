@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends MarginContainer
 
 # Drop target inside RegionInformation's Robots tab. Accepts the same payload
 # shape as the Region drop target ({"robot": RobotData, "from_region": ...})

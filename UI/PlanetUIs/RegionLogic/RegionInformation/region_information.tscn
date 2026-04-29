@@ -9,257 +9,50 @@ atlas = ExtResource("2_gtqb7")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3thv7"]
 atlas = ExtResource("2_gtqb7")
-region = Rect2(192, 4, 76, 48)
+region = Rect2(192, 0, 76, 56)
 
 [node name="RegionInformation" type="TabContainer" unique_id=1090157542]
 custom_minimum_size = Vector2(252, 312)
 anchors_preset = -1
-anchor_left = 0.034
-anchor_top = 0.165
-anchor_right = 0.218
+anchor_left = 0.017
+anchor_top = 0.263
+anchor_right = 0.25
 anchor_bottom = 0.745
-offset_left = 0.43999863
-offset_top = -0.28
-offset_right = -0.35202026
-offset_bottom = -0.18
+offset_left = -0.38801765
+offset_top = 0.15600586
+offset_bottom = -0.17999268
 grow_horizontal = 2
 grow_vertical = 2
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 script = ExtResource("1_3thv7")
 pollutionAtlas = SubResource("AtlasTexture_k0jtr")
 
-[node name="Info" type="VBoxContainer" parent="." unique_id=470652075]
+[node name="Info" type="MarginContainer" parent="." unique_id=1064253453]
+visible = false
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 8
 metadata/_tab_index = 0
 
-[node name="Separator" type="Control" parent="Info" unique_id=1559653874]
-custom_minimum_size = Vector2(0, 2)
+[node name="InfoVbox" type="VBoxContainer" parent="Info" unique_id=470652075]
 layout_mode = 2
+theme_override_constants/separation = 2
 
-[node name="RegionName" type="Label" parent="Info" unique_id=806487147]
+[node name="RegionName" type="Label" parent="Info/InfoVbox" unique_id=806487147]
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Region Name"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HeaderSeparator" type="HSeparator" parent="Info" unique_id=991001019]
+[node name="HeaderSeparator" type="HSeparator" parent="Info/InfoVbox" unique_id=991001019]
 layout_mode = 2
 
-[node name="T&PContainer" type="MarginContainer" parent="Info" unique_id=1332196174]
-layout_mode = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 3
-theme_override_constants/margin_bottom = 2
-
-[node name="StatusVBox" type="VBoxContainer" parent="Info/T&PContainer" unique_id=235274414]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="TrashSection" type="VBoxContainer" parent="Info/T&PContainer/StatusVBox" unique_id=235274415]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="TrashSectionTitle" type="Label" parent="Info/T&PContainer/StatusVBox/TrashSection" unique_id=991001010]
-layout_mode = 2
-text = "Trash"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TrashDisplay" type="Control" parent="Info/T&PContainer/StatusVBox/TrashSection" unique_id=1134774856]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TrashBar" type="ProgressBar" parent="Info/T&PContainer/StatusVBox/TrashSection/TrashDisplay" unique_id=2052773542]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-show_percentage = false
-
-[node name="TrashDisplay" type="Label" parent="Info/T&PContainer/StatusVBox/TrashSection/TrashDisplay" unique_id=1805094995]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "TEST"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TrashRemovalTrend" type="Label" parent="Info/T&PContainer/StatusVBox/TrashSection" unique_id=991001001]
-layout_mode = 2
-tooltip_text = "Trash cleared per second while debris remains here (scaled by pollution tier and tech)."
-text = "Clearance: 0/s"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TrashPollutionSeparator" type="HSeparator" parent="Info/T&PContainer/StatusVBox" unique_id=991001020]
-layout_mode = 2
-
-[node name="PollutionSection" type="VBoxContainer" parent="Info/T&PContainer/StatusVBox" unique_id=235274416]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="PollutionSectionTitle" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=991001011]
-layout_mode = 2
-text = "Pollution"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PollutionFaceRow" type="CenterContainer" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1162175420]
-layout_mode = 2
-tooltip_text = "Pollution tier (face matches severity)."
-
-[node name="RegionPollution" type="TextureRect" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionFaceRow" unique_id=302454693]
-custom_minimum_size = Vector2(44, 44)
-layout_mode = 2
-texture = SubResource("AtlasTexture_3thv7")
-flip_h = true
-
-[node name="PollutionDisplay" type="Control" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1922294673]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-tooltip_text = "Regional pollution fill. Return multiplier and net poll/s update from tier and assigned robots (while debris remains)."
-
-[node name="PollutionProgress" type="ProgressBar" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay" unique_id=48878627]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-show_percentage = false
-
-[node name="PollutionProgressLabel" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay" unique_id=1544059311]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-tooltip_text = "Current pollution amount vs maximum."
-text = "0 / 10,000"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PollutionValuesRow" type="HBoxContainer" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1162175422]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="PollutionValueLeft" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow" unique_id=1083392533]
-layout_mode = 2
-size_flags_horizontal = 3
-tooltip_text = "Resource return multiplier for cleanup (pollution tier)."
-text = "Return: 1.0x"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="PollutionValueRight" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow" unique_id=1027049924]
-layout_mode = 2
-size_flags_horizontal = 3
-tooltip_text = "Net regional pollution change per second from assigned robots (while debris remains)."
-text = "Poll/s: ±0/s"
-horizontal_alignment = 1
-vertical_alignment = 1
-clip_text = true
-
-[node name="HarvestHeader" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=991001012]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-text = "Debris & Harvest"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Separator2" type="HSeparator" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=971708238]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-
-[node name="ResourceGrid" type="GridContainer" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=593768345]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 3
-columns = 2
-
-[node name="RegionResources" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/ResourceGrid" unique_id=1576660521]
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Junk: 90%"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RegionResources3" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/ResourceGrid" unique_id=1913616321]
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Junk: 90%"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RegionResources2" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/ResourceGrid" unique_id=478095851]
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Scrap: 10%"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Separator3" type="HSeparator" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=960582988]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-
-[node name="ProductionGrid" type="GridContainer" parent="Info/T&PContainer/StatusVBox/PollutionSection" unique_id=1782527383]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 2
-columns = 2
-
-[node name="RegionProduction" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/ProductionGrid" unique_id=876500397]
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Junk/S: Temp"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RegionProduction2" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/ProductionGrid" unique_id=997688977]
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Scrap/S: Temp"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RegionProduction3" type="Label" parent="Info/T&PContainer/StatusVBox/PollutionSection/ProductionGrid" unique_id=1705661912]
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Scrap/S: Temp"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Separator4" type="HSeparator" parent="Info" unique_id=56092117]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-
-[node name="DescContainer" type="MarginContainer" parent="Info" unique_id=779318952]
+[node name="DescMargins" type="MarginContainer" parent="Info/InfoVbox" unique_id=779318952]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 3
@@ -267,80 +60,310 @@ theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 2
 
-[node name="Region Description" type="Label" parent="Info/DescContainer" unique_id=1224420622]
+[node name="RegionDescription" type="Label" parent="Info/InfoVbox/DescMargins" unique_id=1224420622]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_vertical = 1
 text = "This is an example of a region description, it would probably say something about this long, this demonstration is just for looks. "
-autowrap_mode = 2
+autowrap_mode = 3
 
-[node name="Robots" type="VBoxContainer" parent="." unique_id=1158874029]
-visible = false
+[node name="ResourcesHeaderLabel" type="Label" parent="Info/InfoVbox" unique_id=991001012]
 layout_mode = 2
-theme_override_constants/separation = 6
-script = ExtResource("2_robotstab")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Available Resources"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator2" type="HSeparator" parent="Info/InfoVbox" unique_id=971708238]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="ResourceGrid" type="GridContainer" parent="Info/InfoVbox" unique_id=593768345]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 3
+columns = 2
+
+[node name="RegionResources" type="Label" parent="Info/InfoVbox/ResourceGrid" unique_id=1576660521]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Junk: 90%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionResources3" type="Label" parent="Info/InfoVbox/ResourceGrid" unique_id=1913616321]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Junk: 90%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionResources2" type="Label" parent="Info/InfoVbox/ResourceGrid" unique_id=478095851]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scrap: 10%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProductionHeaderLabel" type="Label" parent="Info/InfoVbox" unique_id=1810180301]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Current Production"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator3" type="HSeparator" parent="Info/InfoVbox" unique_id=960582988]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="ProductionGrid" type="GridContainer" parent="Info/InfoVbox" unique_id=1782527383]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="RegionProduction" type="Label" parent="Info/InfoVbox/ProductionGrid" unique_id=876500397]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Junk/S: Temp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionProduction2" type="Label" parent="Info/InfoVbox/ProductionGrid" unique_id=997688977]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scrap/S: Temp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RegionProduction3" type="Label" parent="Info/InfoVbox/ProductionGrid" unique_id=1705661912]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scrap/S: Temp"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Trash" type="MarginContainer" parent="." unique_id=1332196174]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 8
 metadata/_tab_index = 1
 
-[node name="Margin" type="MarginContainer" parent="Robots" unique_id=903660517]
+[node name="TrashVbox" type="VBoxContainer" parent="Trash" unique_id=341221743]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 5
 
-[node name="Vbox" type="VBoxContainer" parent="Robots/Margin" unique_id=1292539404]
+[node name="TrashSection" type="VBoxContainer" parent="Trash/TrashVbox" unique_id=235274415]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TrashHeaderLabel" type="Label" parent="Trash/TrashVbox/TrashSection" unique_id=991001010]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Trash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TrashDisplay" type="Control" parent="Trash/TrashVbox/TrashSection" unique_id=1134774856]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TrashBar" type="ProgressBar" parent="Trash/TrashVbox/TrashSection/TrashDisplay" unique_id=2052773542]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+show_percentage = false
+
+[node name="TrashDisplay" type="Label" parent="Trash/TrashVbox/TrashSection/TrashDisplay" unique_id=1805094995]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "100,000 / 100,000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TrashRemovalTrend" type="Label" parent="Trash/TrashVbox/TrashSection" unique_id=991001001]
+layout_mode = 2
+tooltip_text = "Trash cleared per second while debris remains here (scaled by pollution tier and tech)."
+mouse_filter = 0
+text = "Clearance: 0/s"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TrashPollutionSeparator" type="HSeparator" parent="Trash/TrashVbox" unique_id=991001020]
+layout_mode = 2
+
+[node name="PollutionSection" type="VBoxContainer" parent="Trash/TrashVbox" unique_id=235274416]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PollutionHeaderLabel" type="Label" parent="Trash/TrashVbox/PollutionSection" unique_id=991001011]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Pollution"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PollutionFaceRow" type="HBoxContainer" parent="Trash/TrashVbox/PollutionSection" unique_id=1513712795]
+layout_mode = 2
+tooltip_text = "Pollution tier (face matches severity)."
+alignment = 1
+
+[node name="RegionPollution" type="TextureRect" parent="Trash/TrashVbox/PollutionSection/PollutionFaceRow" unique_id=302454693]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+texture = SubResource("AtlasTexture_3thv7")
+flip_h = true
+
+[node name="Separation" type="Control" parent="Trash/TrashVbox/PollutionSection/PollutionFaceRow" unique_id=763982545]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+
+[node name="PollutionLevel" type="Label" parent="Trash/TrashVbox/PollutionSection/PollutionFaceRow" unique_id=1500083087]
+custom_minimum_size = Vector2(76, 0)
+layout_mode = 2
+size_flags_vertical = 1
+text = "STATUS:
+MODERATE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PollutionDisplay" type="Control" parent="Trash/TrashVbox/PollutionSection" unique_id=1922294673]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tooltip_text = "Regional pollution fill. Return multiplier and net poll/s update from tier and assigned robots (while debris remains)."
+
+[node name="PollutionProgress" type="ProgressBar" parent="Trash/TrashVbox/PollutionSection/PollutionDisplay" unique_id=48878627]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+show_percentage = false
+
+[node name="PollutionProgressLabel" type="Label" parent="Trash/TrashVbox/PollutionSection/PollutionDisplay" unique_id=1544059311]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0 / 10,000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PollutionValuesRow" type="HBoxContainer" parent="Trash/TrashVbox/PollutionSection" unique_id=1162175422]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PollutionReturn" type="Label" parent="Trash/TrashVbox/PollutionSection/PollutionValuesRow" unique_id=1083392533]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Resource return multiplier for cleanup (pollution tier)."
+mouse_filter = 0
+text = "Return: 1.0x"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="PollutionChange" type="Label" parent="Trash/TrashVbox/PollutionSection/PollutionValuesRow" unique_id=1027049924]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Net regional pollution change per second from assigned robots (while debris remains)."
+mouse_filter = 0
+text = "Pollution/s: ±0/s"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Robots" type="MarginContainer" parent="." unique_id=1781565227]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 8
+script = ExtResource("2_robotstab")
+metadata/_tab_index = 2
+
+[node name="RobotsVbox" type="VBoxContainer" parent="Robots" unique_id=1292539404]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="SlotsLabel" type="Label" parent="Robots/Margin/Vbox" unique_id=187229381]
+[node name="SlotsLabel" type="Label" parent="Robots/RobotsVbox" unique_id=187229381]
 layout_mode = 2
 text = "Slots: 0 / 0"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Robots/Margin/Vbox" unique_id=1728086068]
+[node name="HSeparator" type="HSeparator" parent="Robots/RobotsVbox" unique_id=1728086068]
 layout_mode = 2
 
-[node name="Scroll" type="ScrollContainer" parent="Robots/Margin/Vbox" unique_id=157092631]
+[node name="Scroll" type="ScrollContainer" parent="Robots/RobotsVbox" unique_id=157092631]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Rows" type="VBoxContainer" parent="Robots/Margin/Vbox/Scroll" unique_id=1559123982]
+[node name="Rows" type="VBoxContainer" parent="Robots/RobotsVbox/Scroll" unique_id=1559123982]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="EmptyLabel" type="Label" parent="Robots/Margin/Vbox" unique_id=560230378]
+[node name="AssignmentLabel" type="Label" parent="Robots/RobotsVbox" unique_id=560230378]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "No robots assigned. Drag from the Robots panel."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Buildings" type="VBoxContainer" parent="." unique_id=1158874030]
+[node name="Buildings" type="MarginContainer" parent="." unique_id=903660518]
 visible = false
 layout_mode = 2
-theme_override_constants/separation = 6
-metadata/_tab_index = 2
-
-[node name="Margin" type="MarginContainer" parent="Buildings" unique_id=903660518]
-layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 8
+theme_override_constants/margin_left = 6
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
+theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 8
+metadata/_tab_index = 3
 
-[node name="EmptyLabel" type="Label" parent="Buildings/Margin" unique_id=560230379]
+[node name="BuildingsVbox" type="VBoxContainer" parent="Buildings" unique_id=1158874030]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="EmptyLabel" type="Label" parent="Buildings/BuildingsVbox" unique_id=560230379]
 layout_mode = 2
 text = "No buildings yet."
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
 [node name="X" type="Control" parent="." unique_id=1343383403]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 4
 
 [connection signal="tab_clicked" from="." to="." method="_on_tab_clicked"]

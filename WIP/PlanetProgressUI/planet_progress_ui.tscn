@@ -7,7 +7,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_760yj"]
 atlas = ExtResource("1_hw0da")
-region = Rect2(192, 4, 76, 48)
+region = Rect2(192, 0, 76, 56)
 
 [node name="PlanetProgressUI(Temp)" type="Control" unique_id=421246737]
 custom_minimum_size = Vector2(375, 40)
