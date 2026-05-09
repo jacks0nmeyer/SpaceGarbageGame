@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="BuildingData" format=3]
+[gd_resource type="Resource" script_class="BuildingData" format=3 uid="uid://dk4n3a17x6qbe"]
 
-[ext_resource type="Script" path="res://Resources/Scripts/building_data.gd" id="1_building"]
-[ext_resource type="Script" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="2_cost"]
+[ext_resource type="Script" uid="uid://btdj4heuelbec" path="res://Resources/Scripts/building_data.gd" id="1_building"]
+[ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="2_cost"]
 
 [sub_resource type="Resource" id="Resource_cost1"]
 script = ExtResource("2_cost")
@@ -13,7 +13,3 @@ script = ExtResource("1_building")
 buildingName = "Storehouse"
 description = "Buffers resources gathered from this region. Click to process or staff a robot to automate."
 unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
-amount = 0
-size = 1
-storage_capacity = 100
-process_amount = 10
