@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c2b7ytgk0wn7b" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_information.gd" id="1_3thv7"]
 [ext_resource type="Texture2D" uid="uid://cl1xhpc0kr3vf" path="res://Art/Misc/PollutionDisplay.png" id="2_gtqb7"]
 [ext_resource type="Script" uid="uid://bjr110mr08hb2" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_robots_tab.gd" id="2_robotstab"]
+[ext_resource type="Script" path="res://UI/PlanetUIs/RegionLogic/RegionInformation/region_buildings_tab.gd" id="3_buildingstab"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k0jtr"]
 atlas = ExtResource("2_gtqb7")
@@ -320,21 +321,43 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
+script = ExtResource("3_buildingstab")
 metadata/_tab_index = 2
 
 [node name="Margin" type="MarginContainer" parent="Buildings" unique_id=903660518]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
 
-[node name="EmptyLabel" type="Label" parent="Buildings/Margin" unique_id=560230379]
+[node name="Vbox" type="VBoxContainer" parent="Buildings/Margin" unique_id=1292539405]
 layout_mode = 2
-text = "No buildings yet."
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="SlotsLabel" type="Label" parent="Buildings/Margin/Vbox" unique_id=187229382]
+layout_mode = 2
+text = "Slots: 0 / 0"
 horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Buildings/Margin/Vbox" unique_id=1728086069]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Buildings/Margin/Vbox" unique_id=157092632]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Rows" type="VBoxContainer" parent="Buildings/Margin/Vbox/Scroll" unique_id=1559123983]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="EmptyLabel" type="Label" parent="Buildings/Margin/Vbox" unique_id=560230379]
+layout_mode = 2
+text = "No buildings assigned. Drag from the Buildings panel."
+horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="X" type="Control" parent="." unique_id=1343383403]

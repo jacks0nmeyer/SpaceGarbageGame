@@ -32,6 +32,8 @@ const MENU_ID_DEV_GODMODE := 2
 @onready var robots_button: Button = $RobotsButton
 @onready var tech_tree: Control = $TechTree
 @onready var research_button: Button = $ResearchButton
+@onready var building_ui: Control = $BuildingUI
+@onready var buildings_button: Button = $BuildingsButton
 @onready var pause_button: Button = $SaveHUDLayer/HudRoot/SaveStrip/PauseButton
 @onready var menu_button: MenuButton = $SaveHUDLayer/HudRoot/SaveStrip/MenuButton
 @onready var reset_confirm: ConfirmationDialog = $SaveHUDLayer/ResetConfirm
@@ -42,6 +44,8 @@ func _ready() -> void:
 	robot_ui.panelClosed.connect(_on_robot_ui_closed)
 	tech_tree.panelOpened.connect(_on_tech_tree_opened)
 	tech_tree.panelClosed.connect(_on_tech_tree_closed)
+	building_ui.panelOpened.connect(_on_building_ui_opened)
+	building_ui.panelClosed.connect(_on_building_ui_closed)
 
 	pause_button.pressed.connect(_on_pause_pressed)
 	var menu_popup: PopupMenu = menu_button.get_popup()
@@ -103,23 +107,39 @@ func _on_reset_confirmed() -> void:
 func _on_robot_ui_opened() -> void:
 	robots_button.hide()
 	research_button.disabled = true
+	buildings_button.disabled = true
 
 
 func _on_robot_ui_closed() -> void:
 	robots_button.show()
 	research_button.disabled = false
+	buildings_button.disabled = false
 
 
 func _on_tech_tree_opened() -> void:
 	research_button.hide()
 	robots_button.disabled = true
+	buildings_button.disabled = true
 	_set_planet_ui_visible(false)
 
 
 func _on_tech_tree_closed() -> void:
 	research_button.show()
 	robots_button.disabled = false
+	buildings_button.disabled = false
 	_set_planet_ui_visible(true)
+
+
+func _on_building_ui_opened() -> void:
+	buildings_button.hide()
+	robots_button.disabled = true
+	research_button.disabled = true
+
+
+func _on_building_ui_closed() -> void:
+	buildings_button.show()
+	robots_button.disabled = false
+	research_button.disabled = false
 
 
 func _set_planet_ui_visible(v: bool) -> void:

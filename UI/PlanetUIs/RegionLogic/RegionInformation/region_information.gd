@@ -10,6 +10,9 @@ extends TabContainer
 @onready var slots_label: Label = $Robots/Margin/Vbox/SlotsLabel
 @onready var assigned_rows: VBoxContainer = $Robots/Margin/Vbox/Scroll/Rows
 @onready var empty_label: Label = $Robots/Margin/Vbox/EmptyLabel
+@onready var building_slots_label: Label = $Buildings/Margin/Vbox/SlotsLabel
+@onready var building_rows: VBoxContainer = $Buildings/Margin/Vbox/Scroll/Rows
+@onready var building_empty_label: Label = $Buildings/Margin/Vbox/EmptyLabel
 
 
 func _ready():
@@ -21,6 +24,12 @@ func _ready():
 	GlobalSignals.regionPollutionUpdated.connect(onPollutionUpdated)
 	GlobalSignals.techUnlocked.connect(_on_tech_changed)
 	GlobalSignals.saveLoaded.connect(_on_save_loaded)
+	GlobalSignals.buildingAssigned.connect(_on_building_pair_changed)
+	GlobalSignals.buildingUnassigned.connect(_on_building_pair_changed)
+	GlobalSignals.buildingStorageUpdated.connect(_on_building_storage_updated)
+	GlobalSignals.buildingWorkerAssigned.connect(_on_building_worker_changed)
+	GlobalSignals.buildingWorkerUnassigned.connect(_on_building_worker_changed)
+	GlobalSignals.robotPurchased.connect(_on_robot_purchased)
 	var bar := get_tab_bar()
 	if bar:
 		bar.clip_tabs = false
@@ -71,6 +80,7 @@ func _switch_to(region: RegionData):
 	updateResourceRates(region)
 	updateProgress(region)
 	updateRobots(region)
+	updateBuildings(region)
 	updatePollution(region)
 	updateTrashRemovalRate(region)
 	updatePollutionDetails(region)
@@ -236,6 +246,75 @@ func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 		updateResourceRates(region)
 		updatePollutionTrend(region)
 		updateTrashRemovalRate(region)
+	# Robot count change (anywhere) affects every visible building's
+	# "+ button" availability — refresh worker rows in the current region.
+	if currentRegion != null:
+		_refresh_all_building_workers()
+
+
+# Rebuild the assigned-building rows (called on region switch or whenever the
+# building composition changes — buildingAssigned / buildingUnassigned).
+func updateBuildings(region: RegionData):
+	for child in building_rows.get_children():
+		building_rows.remove_child(child)
+		child.queue_free()
+
+	var used := region.assignedBuildingSlotsUsed()
+	building_slots_label.text = "Slots: %d / %d" % [used, region.building_capacity]
+
+	var any := false
+	for b in region.assignedBuildings:
+		var count: int = int(region.assignedBuildings[b])
+		if count <= 0:
+			continue
+		any = true
+		var row := AssignedBuildingRow.new()
+		row.name = "row_" + b.resource_path.get_file().get_basename()
+		building_rows.add_child(row)
+		row.setup(b, region, count)
+
+	building_empty_label.visible = not any
+
+
+func _on_building_pair_changed(_b: BuildingData, region: RegionData):
+	if region == currentRegion:
+		updateBuildings(region)
+
+
+func _on_building_storage_updated(region: RegionData, b: BuildingData):
+	if region != currentRegion:
+		return
+	# In-place refresh — don't rebuild rows (storage signals fire often).
+	for child in building_rows.get_children():
+		if child is AssignedBuildingRow and child.building == b:
+			child.refresh_storage()
+			return
+
+
+func _on_building_worker_changed(_robot: RobotData, region: RegionData, b: BuildingData):
+	if region != currentRegion:
+		return
+	# A worker change for THIS building updates that row, but every row's
+	# "+ button" availability depends on global unassignedCount, so refresh
+	# all rows' worker controls.
+	for child in building_rows.get_children():
+		if child is AssignedBuildingRow:
+			if child.building == b:
+				child.refresh_workers()
+			else:
+				child.refresh_workers()
+
+
+func _on_robot_purchased(_robot: RobotData) -> void:
+	# A new robot enters the unassigned pool — refresh "+" availability.
+	if currentRegion != null:
+		_refresh_all_building_workers()
+
+
+func _refresh_all_building_workers() -> void:
+	for child in building_rows.get_children():
+		if child is AssignedBuildingRow:
+			child.refresh_workers()
 
 @onready var region_pollution: TextureRect = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionFaceRow/RegionPollution"
 @onready var pollution_value_left: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueLeft"

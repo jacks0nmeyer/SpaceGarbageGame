@@ -22,6 +22,7 @@ script = ExtResource("2_mk2uv")
 regionName = "New Junk City"
 resourceChances = Array[ExtResource("1_oeg67")]([SubResource("Resource_xy24g"), SubResource("Resource_mk2uv")])
 robot_capacity = 4
+building_capacity = 3
 trash = 100000
 maxTrash = 100000
 maxPollution = 10000

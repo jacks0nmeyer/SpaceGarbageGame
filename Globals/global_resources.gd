@@ -187,6 +187,7 @@ func apply_dev_godmode_inventory() -> void:
 #Trash Logic
 var solarSystem: SolarSystemData = preload("res://Resources/SolarSystem/SolarSystem.tres")
 var robots: RobotCollection = preload("res://Resources/Robots/Robots.tres")
+var buildings: BuildingCollection = preload("res://Resources/Buildings/Buildings.tres")
 
 # Currently pinned region for the info panel. While non-null, hover-driven
 # retargeting is disabled and only this region accepts robot drops.
@@ -255,11 +256,157 @@ func assignedTotal(robot: RobotData) -> int:
 	return total
 
 
-#Total minus assigned. Never goes below zero.
+#Total minus assigned (in regions) and staffed (in buildings). Never below zero.
 func unassignedCount(robot: RobotData) -> int:
 	if robot == null:
 		return 0
-	return max(0, robot.amount - assignedTotal(robot))
+	return max(0, robot.amount - assignedTotal(robot) - staffedTotal(robot))
+
+
+# --- Buildings ----------------------------------------------------------------
+
+func assignOneBuilding(b: BuildingData, target: RegionData, from_region: RegionData = null) -> void:
+	if b == null or target == null:
+		return
+	if from_region != null and from_region != target:
+		var src: int = int(from_region.assignedBuildings.get(b, 0))
+		if src <= 1:
+			from_region.assignedBuildings.erase(b)
+		else:
+			from_region.assignedBuildings[b] = src - 1
+		_enforce_worker_cap(from_region, b)
+		GlobalSignals.buildingUnassigned.emit(b, from_region)
+	target.assignedBuildings[b] = int(target.assignedBuildings.get(b, 0)) + 1
+	GlobalSignals.buildingAssigned.emit(b, target)
+
+
+func unassignOneBuilding(b: BuildingData, region: RegionData) -> void:
+	if b == null or region == null:
+		return
+	var current: int = int(region.assignedBuildings.get(b, 0))
+	if current <= 0:
+		return
+	if current <= 1:
+		region.assignedBuildings.erase(b)
+		region.buildingStorage.erase(b)
+	else:
+		region.assignedBuildings[b] = current - 1
+	_enforce_worker_cap(region, b)
+	GlobalSignals.buildingUnassigned.emit(b, region)
+
+
+func unassignAllOfTypeBuilding(b: BuildingData, region: RegionData) -> void:
+	if b == null or region == null:
+		return
+	var current: int = int(region.assignedBuildings.get(b, 0))
+	if current <= 0:
+		return
+	region.assignedBuildings.erase(b)
+	region.buildingStorage.erase(b)
+	_enforce_worker_cap(region, b)
+	GlobalSignals.buildingUnassigned.emit(b, region)
+
+
+func assignedBuildingTotal(b: BuildingData) -> int:
+	if b == null or solarSystem == null:
+		return 0
+	var total := 0
+	for planet in solarSystem.planets:
+		for region in planet.regions:
+			total += int(region.assignedBuildings.get(b, 0))
+	return total
+
+
+func unassignedBuildingCount(b: BuildingData) -> int:
+	if b == null:
+		return 0
+	return max(0, b.amount - assignedBuildingTotal(b))
+
+
+# Click-driven processing — pushes processed resources into playerResources.
+func processBuildingClicked(region: RegionData, b: BuildingData) -> void:
+	if region == null or b == null:
+		return
+	var moved: Dictionary = region.processBuilding(b)
+	if moved.is_empty():
+		return
+	for res in moved:
+		gotResource(res, int(moved[res]))
+	GlobalSignals.buildingStorageUpdated.emit(region, b)
+
+
+# --- Building workers ---------------------------------------------------------
+
+func staffedTotal(robot: RobotData) -> int:
+	if robot == null or solarSystem == null:
+		return 0
+	var total := 0
+	for planet in solarSystem.planets:
+		for region in planet.regions:
+			for b in region.buildingWorkers:
+				total += int(region.buildingWorkers[b].get(robot, 0))
+	return total
+
+
+func staffOneWorker(robot: RobotData, region: RegionData, b: BuildingData) -> bool:
+	if robot == null or region == null or b == null:
+		return false
+	if not region.canStaff(b):
+		return false
+	if unassignedCount(robot) <= 0:
+		return false
+	if not region.buildingWorkers.has(b):
+		region.buildingWorkers[b] = {}
+	region.buildingWorkers[b][robot] = int(region.buildingWorkers[b].get(robot, 0)) + 1
+	GlobalSignals.buildingWorkerAssigned.emit(robot, region, b)
+	return true
+
+
+func unstaffOneWorker(robot: RobotData, region: RegionData, b: BuildingData) -> bool:
+	if robot == null or region == null or b == null:
+		return false
+	if not region.buildingWorkers.has(b):
+		return false
+	var current: int = int(region.buildingWorkers[b].get(robot, 0))
+	if current <= 0:
+		return false
+	if current <= 1:
+		region.buildingWorkers[b].erase(robot)
+		if region.buildingWorkers[b].is_empty():
+			region.buildingWorkers.erase(b)
+	else:
+		region.buildingWorkers[b][robot] = current - 1
+	GlobalSignals.buildingWorkerUnassigned.emit(robot, region, b)
+	return true
+
+
+# Picks the first owned robot type with unassignedCount > 0 and staffs one.
+func staffAnyAvailable(region: RegionData, b: BuildingData) -> bool:
+	if region == null or b == null or robots == null:
+		return false
+	if not region.canStaff(b):
+		return false
+	for robot in robots.robots:
+		if unassignedCount(robot) > 0:
+			return staffOneWorker(robot, region, b)
+	return false
+
+
+# Removes excess workers if assignedBuildings[b] dropped below workerCount.
+# Emits one buildingWorkerUnassigned per worker removed.
+func _enforce_worker_cap(region: RegionData, b: BuildingData) -> void:
+	if region == null or b == null:
+		return
+	if not region.buildingWorkers.has(b):
+		return
+	var cap: int = region.workerCap(b)
+	while region.workerCount(b) > cap:
+		var workers: Dictionary = region.buildingWorkers.get(b, {})
+		if workers.is_empty():
+			break
+		var any_robot = workers.keys()[0]
+		if not unstaffOneWorker(any_robot, region, b):
+			break
 
 func getPlanetTrash(planet: PlanetData) -> int:
 	return planet.getTotalTrash()

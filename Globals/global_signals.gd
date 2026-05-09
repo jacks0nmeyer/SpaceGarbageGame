@@ -44,3 +44,21 @@ signal researchMilestoneAwarded(region: RegionData, points: int, planet: PlanetD
 
 @warning_ignore("unused_signal")
 signal saveLoaded
+
+@warning_ignore("unused_signal")
+signal buildingPurchased(building: BuildingData)
+
+@warning_ignore("unused_signal")
+signal buildingAssigned(building: BuildingData, region: RegionData)
+
+@warning_ignore("unused_signal")
+signal buildingUnassigned(building: BuildingData, region: RegionData)
+
+@warning_ignore("unused_signal")
+signal buildingStorageUpdated(region: RegionData, building: BuildingData)
+
+@warning_ignore("unused_signal")
+signal buildingWorkerAssigned(robot: RobotData, region: RegionData, building: BuildingData)
+
+@warning_ignore("unused_signal")
+signal buildingWorkerUnassigned(robot: RobotData, region: RegionData, building: BuildingData)

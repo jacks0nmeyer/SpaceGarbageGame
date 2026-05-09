@@ -35,6 +35,7 @@ script = ExtResource("2_47ajp")
 regionName = "Great Ocean Garbage Patch"
 resourceChances = Array[ExtResource("1_l8qkq")]([SubResource("Resource_l8qkq"), SubResource("Resource_0el8t"), SubResource("Resource_sgrt1"), SubResource("Resource_8vxu6")])
 robot_capacity = 4
+building_capacity = 3
 isWater = true
 trash = 400000
 maxTrash = 400000

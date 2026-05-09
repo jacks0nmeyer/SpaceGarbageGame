@@ -2,7 +2,7 @@ extends Node
 
 ## JSON save/load under `user://`. Autoload order: after TechTree.
 
-const SAVE_VERSION: int = 1
+const SAVE_VERSION: int = 2
 const DEFAULT_SAVE_PATH: String = "user://save.json"
 const SOLAR_SYSTEM_PATH: String = "res://Resources/SolarSystem/SolarSystem.tres"
 const ROBOTS_PATH: String = "res://Resources/Robots/Robots.tres"
@@ -16,6 +16,7 @@ var _post_reset_emit_save_loaded: bool = false
 var _pristine_regions: Dictionary = {}
 var _pristine_planet_meta: Dictionary = {}
 var _pristine_robot_amounts: Dictionary = {}
+var _pristine_building_amounts: Dictionary = {}
 
 
 func _ready() -> void:
@@ -28,6 +29,7 @@ func _capture_pristine_template() -> void:
 	_pristine_regions.clear()
 	_pristine_planet_meta.clear()
 	_pristine_robot_amounts.clear()
+	_pristine_building_amounts.clear()
 
 	var ss: SolarSystemData = GlobalResources.solarSystem
 	if ss != null:
@@ -51,6 +53,14 @@ func _capture_pristine_template() -> void:
 			if bpath.is_empty():
 				continue
 			_pristine_robot_amounts[bpath] = int(bot.amount)
+
+	var bcoll: BuildingCollection = GlobalResources.buildings
+	if bcoll != null:
+		for b in bcoll.buildings:
+			var bp: String = b.resource_path
+			if bp.is_empty():
+				continue
+			_pristine_building_amounts[bp] = int(b.amount)
 
 
 func consume_post_reset_refresh() -> bool:
@@ -128,6 +138,14 @@ func _build_snapshot() -> Dictionary:
 				continue
 			robots_arr.append({"path": bot.resource_path, "amount": int(bot.amount)})
 
+	var buildings_arr: Array = []
+	var bcoll: BuildingCollection = GlobalResources.buildings
+	if bcoll != null:
+		for b in bcoll.buildings:
+			if b.resource_path.is_empty():
+				continue
+			buildings_arr.append({"path": b.resource_path, "amount": int(b.amount)})
+
 	var tech_unlocks: Dictionary = {}
 	for tech in TechTree.unlockedLevels:
 		if tech == null:
@@ -149,6 +167,7 @@ func _build_snapshot() -> Dictionary:
 			"pinned_region_path": pinned_path,
 		},
 		"robots": robots_arr,
+		"buildings": buildings_arr,
 		"tech": tech_unlocks,
 		"planets": _collect_planets_array(),
 		"carry": GameManager.get_carry_snapshot(),
@@ -168,6 +187,29 @@ func _collect_planets_array() -> Array:
 				if robot.resource_path.is_empty():
 					continue
 				assigned[robot.resource_path] = int(region.assignedRobots[robot])
+			var assigned_buildings: Dictionary = {}
+			for b in region.assignedBuildings:
+				if b.resource_path.is_empty():
+					continue
+				assigned_buildings[b.resource_path] = int(region.assignedBuildings[b])
+			var building_storage: Dictionary = {}
+			for b in region.buildingStorage:
+				if b.resource_path.is_empty():
+					continue
+				var inner: Dictionary = {}
+				for res_key in region.buildingStorage[b]:
+					inner[str(res_key)] = int(region.buildingStorage[b][res_key])
+				building_storage[b.resource_path] = inner
+			var building_workers: Dictionary = {}
+			for b in region.buildingWorkers:
+				if b.resource_path.is_empty():
+					continue
+				var winner: Dictionary = {}
+				for robot in region.buildingWorkers[b]:
+					if robot.resource_path.is_empty():
+						continue
+					winner[robot.resource_path] = int(region.buildingWorkers[b][robot])
+				building_workers[b.resource_path] = winner
 			reg_arr.append({
 				"path": region.resource_path,
 				"locked": region.locked,
@@ -175,6 +217,9 @@ func _collect_planets_array() -> Array:
 				"pollution": region.pollution,
 				"researchMilestonesAwarded": region.researchMilestonesAwarded,
 				"assigned": assigned,
+				"assignedBuildings": assigned_buildings,
+				"buildingStorage": building_storage,
+				"buildingWorkers": building_workers,
 			})
 		out.append({
 			"path": planet.resource_path,
@@ -228,6 +273,7 @@ func _apply_snapshot(root: Dictionary) -> bool:
 
 	_apply_planets_array(root.get("planets", []))
 	_apply_robots_array(root.get("robots", []))
+	_apply_buildings_array(root.get("buildings", []))
 
 	var carry_raw: Variant = root.get("carry", {})
 	if typeof(carry_raw) == TYPE_DICTIONARY:
@@ -269,12 +315,21 @@ func _apply_template_from_disk() -> void:
 		live_r.pollution = pr.pollution
 		live_r.researchMilestonesAwarded = pr.researchMilestonesAwarded
 		live_r.assignedRobots.clear()
+		live_r.assignedBuildings.clear()
+		live_r.buildingStorage.clear()
+		live_r.buildingWorkers.clear()
 
 	for bpath: String in _pristine_robot_amounts:
 		var live_bot: RobotData = _find_robot_by_path(bpath)
 		if live_bot == null:
 			continue
 		live_bot.amount = int(_pristine_robot_amounts[bpath])
+
+	for bpath2: String in _pristine_building_amounts:
+		var live_b: BuildingData = _find_building_by_path(bpath2)
+		if live_b == null:
+			continue
+		live_b.amount = int(_pristine_building_amounts[bpath2])
 
 
 func _apply_planets_array(arr: Variant) -> void:
@@ -314,6 +369,55 @@ func _apply_planets_array(arr: Variant) -> void:
 					if cnt > 0:
 						region.assignedRobots[bot] = cnt
 
+			region.assignedBuildings.clear()
+			region.buildingStorage.clear()
+			region.buildingWorkers.clear()
+
+			var asgb: Variant = rd.get("assignedBuildings", {})
+			if typeof(asgb) == TYPE_DICTIONARY:
+				for bpath in asgb:
+					var b: BuildingData = _find_building_by_path(str(bpath))
+					if b == null:
+						continue
+					var bcnt: int = int(asgb[bpath])
+					if bcnt > 0:
+						region.assignedBuildings[b] = bcnt
+
+			var stg: Variant = rd.get("buildingStorage", {})
+			if typeof(stg) == TYPE_DICTIONARY:
+				for bpath in stg:
+					var b2: BuildingData = _find_building_by_path(str(bpath))
+					if b2 == null:
+						continue
+					var inner_raw: Variant = stg[bpath]
+					if typeof(inner_raw) != TYPE_DICTIONARY:
+						continue
+					var inner: Dictionary = {}
+					for res_key in inner_raw:
+						inner[str(res_key).to_lower()] = int(inner_raw[res_key])
+					if not inner.is_empty():
+						region.buildingStorage[b2] = inner
+
+			var wrk: Variant = rd.get("buildingWorkers", {})
+			if typeof(wrk) == TYPE_DICTIONARY:
+				for bpath in wrk:
+					var b3: BuildingData = _find_building_by_path(str(bpath))
+					if b3 == null:
+						continue
+					var winner_raw: Variant = wrk[bpath]
+					if typeof(winner_raw) != TYPE_DICTIONARY:
+						continue
+					var winner: Dictionary = {}
+					for bot_path in winner_raw:
+						var bot2: RobotData = _find_robot_by_path(str(bot_path))
+						if bot2 == null:
+							continue
+						var wcnt: int = int(winner_raw[bot_path])
+						if wcnt > 0:
+							winner[bot2] = wcnt
+					if not winner.is_empty():
+						region.buildingWorkers[b3] = winner
+
 
 func _apply_robots_array(arr: Variant) -> void:
 	if typeof(arr) != TYPE_ARRAY:
@@ -326,6 +430,31 @@ func _apply_robots_array(arr: Variant) -> void:
 		if bot == null:
 			continue
 		bot.amount = int(d.get("amount", 0))
+
+
+func _apply_buildings_array(arr: Variant) -> void:
+	if typeof(arr) != TYPE_ARRAY:
+		return
+	for item in arr:
+		if typeof(item) != TYPE_DICTIONARY:
+			continue
+		var d: Dictionary = item
+		var b: BuildingData = _find_building_by_path(str(d.get("path", "")))
+		if b == null:
+			continue
+		b.amount = int(d.get("amount", 0))
+
+
+func _find_building_by_path(path: String) -> BuildingData:
+	if path.is_empty():
+		return null
+	var coll: BuildingCollection = GlobalResources.buildings
+	if coll == null:
+		return null
+	for b in coll.buildings:
+		if b.resource_path == path:
+			return b
+	return null
 
 
 func _find_planet_by_path(path: String) -> PlanetData:
@@ -391,4 +520,8 @@ func _emit_refresh_after_load() -> void:
 	if coll != null:
 		for bot in coll.robots:
 			GlobalSignals.robotPurchased.emit(bot)
+	var bcoll: BuildingCollection = GlobalResources.buildings
+	if bcoll != null:
+		for b in bcoll.buildings:
+			GlobalSignals.buildingPurchased.emit(b)
 	GlobalSignals.saveLoaded.emit()

@@ -31,12 +31,19 @@ var _progress: Dictionary = {}
 var _resource_carry: Dictionary = {}
 # Dictionary[RegionData -> Dictionary[RobotData -> float]]
 var _pollution_carry_per_robot: Dictionary = {}
+# Dictionary[RegionData -> Dictionary[BuildingData -> float]] — auto-process progress
+var _building_progress: Dictionary = {}
+
+# Seconds between auto-process actions per staffed worker. Each worker fires
+# one BuildingData.process_amount drain on this period.
+const AUTO_PROCESS_PERIOD: float = 2.0
 
 
 func clear_carry_state() -> void:
 	_progress.clear()
 	_resource_carry.clear()
 	_pollution_carry_per_robot.clear()
+	_building_progress.clear()
 
 
 ## Serializable snapshot: outer keys are region resource_path strings; inner
@@ -196,7 +203,7 @@ func _process(delta: float) -> void:
 		for region in planet.regions:
 			if region.locked:
 				continue
-			if region.assignedRobots.is_empty():
+			if region.assignedRobots.is_empty() and region.buildingWorkers.is_empty() and (pollution_decay == 0 or region.pollution <= 0):
 				continue
 
 			var changes := _tick_region(region, planet, delta, global_mult, cleaner_scalar, pollution_decay)
@@ -227,10 +234,17 @@ func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_m
 			region.pollution = decayed
 			pollution_changed = true
 
-	if region.trash <= 0:
+	# Storage updates accumulated across both deposit and auto-process passes,
+	# emitted once per affected building at the end of the tick.
+	var storage_dirty: Dictionary = {}
+
+	if region.trash <= 0 or region.assignedRobots.is_empty():
 		_progress[region] = region_progress
 		_resource_carry[region] = region_carry
 		_pollution_carry_per_robot[region] = region_pollution_carry
+		_run_auto_process(region, delta, storage_dirty)
+		for b in storage_dirty:
+			GlobalSignals.buildingStorageUpdated.emit(region, b)
 		return {"trash": trash_changed, "pollution": pollution_changed}
 
 	var pollution_mult: float = GlobalResources.getPollutionProductionMultiplier(region.getPollutionLevel())
@@ -257,7 +271,11 @@ func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_m
 			var pooled: float = region_carry.get(key, 0.0) + float(robot.resourceReturn)
 			var whole: int = int(floor(pooled))
 			if whole > 0:
-				GlobalResources.gotResource(key, whole)
+				for _i in range(whole):
+					var deposited_into = region.depositResource(key)
+					if deposited_into != null:
+						storage_dirty[deposited_into] = true
+					# else: storage full or no buildings — drop discarded
 				pooled -= float(whole)
 			region_carry[key] = pooled
 
@@ -288,4 +306,35 @@ func _tick_region(region: RegionData, planet: PlanetData, delta: float, global_m
 	_progress[region] = region_progress
 	_resource_carry[region] = region_carry
 	_pollution_carry_per_robot[region] = region_pollution_carry
+
+	_run_auto_process(region, delta, storage_dirty)
+	for b in storage_dirty:
+		GlobalSignals.buildingStorageUpdated.emit(region, b)
+
 	return {"trash": trash_changed, "pollution": pollution_changed}
+
+
+# Drains storage on a per-(region, building) tick: each staffed worker fires
+# one BuildingData.process_amount drain every AUTO_PROCESS_PERIOD seconds.
+# Marks affected buildings in `storage_dirty` so the caller emits the signal.
+func _run_auto_process(region: RegionData, delta: float, storage_dirty: Dictionary) -> void:
+	if region.buildingWorkers.is_empty():
+		return
+	var per_region: Dictionary = _building_progress.get(region, {})
+	for b in region.buildingWorkers:
+		var workers: int = region.workerCount(b)
+		if workers <= 0:
+			continue
+		var progress: float = per_region.get(b, 0.0)
+		progress += float(workers) * delta / AUTO_PROCESS_PERIOD
+		while progress >= 1.0:
+			progress -= 1.0
+			var moved: Dictionary = region.processBuilding(b)
+			if moved.is_empty():
+				progress = 0.0
+				break
+			for res in moved:
+				GlobalResources.gotResource(str(res), int(moved[res]))
+			storage_dirty[b] = true
+		per_region[b] = progress
+	_building_progress[region] = per_region
