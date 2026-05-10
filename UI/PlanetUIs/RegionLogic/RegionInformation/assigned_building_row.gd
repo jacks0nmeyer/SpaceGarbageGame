@@ -193,36 +193,49 @@ func _get_drag_data(_pos: Vector2):
 	return {"building": building, "from_region": region}
 
 
-# Accept robot drag payloads to staff workers. Two cases:
-# - {robot, from_region: null} (drag from Owned card) → staff one
-# - {robot, from_region: region} (drag from this region's Robots tab) → atomic
-#   move: unassign from region.assignedRobots, then staff in this building
+# Accept two drag payload shapes:
+# - {robot, from_region: ...}    — staff a worker in this building.
+#   * from_region null   → drag from Owned card → staff one
+#   * from_region == region → drag from this region's Robots tab → atomic
+#     move: unassign from region.assignedRobots, then staff
+# - {building, from_region: ...} — assign another building of any type into
+#   this region. Forwards to the same logic as region_buildings_tab so that
+#   drops over an existing row don't get swallowed (Godot's drop propagation
+#   up the parent chain is unreliable when an inner control rejects the
+#   payload).
 func _can_drop_data(_pos: Vector2, data) -> bool:
-	if typeof(data) != TYPE_DICTIONARY:
+	if typeof(data) != TYPE_DICTIONARY or not data.has("from_region"):
 		return false
-	if not data.has("robot") or not data.has("from_region"):
+	if region == null or region.locked:
 		return false
-	if not (data["robot"] is RobotData):
-		return false
-	if region == null or building == null or region.locked:
-		return false
-	if not region.canStaff(building):
-		return false
-	var from_region = data["from_region"]
-	if from_region == null:
-		return GlobalResources.unassignedCount(data["robot"]) > 0
-	if from_region != region:
-		return false
-	# Same-region transfer: must currently be assigned as a cleaner here
-	return int(region.assignedRobots.get(data["robot"], 0)) > 0
+	if data.has("robot") and data["robot"] is RobotData:
+		if building == null or not region.canStaff(building):
+			return false
+		var from_region = data["from_region"]
+		if from_region == null:
+			return GlobalResources.unassignedCount(data["robot"]) > 0
+		if from_region != region:
+			return false
+		return int(region.assignedRobots.get(data["robot"], 0)) > 0
+	if data.has("building") and data["building"] is BuildingData:
+		var b: BuildingData = data["building"]
+		var from_region = data["from_region"]
+		if from_region == region:
+			return false
+		if from_region == null and GlobalResources.unassignedBuildingCount(b) <= 0:
+			return false
+		return region.canFitBuilding(b)
+	return false
 
 
 func _drop_data(_pos: Vector2, data) -> void:
-	var robot: RobotData = data["robot"]
-	var from_region = data["from_region"]
-	if from_region == region:
-		# Transfer from cleaner to staffer in one motion
-		GlobalResources.unassignOne(robot, region)
-		GlobalResources.staffOneWorker(robot, region, building)
-	else:
-		GlobalResources.staffOneWorker(robot, region, building)
+	if data.has("robot"):
+		var robot: RobotData = data["robot"]
+		var from_region = data["from_region"]
+		if from_region == region:
+			GlobalResources.unassignOne(robot, region)
+			GlobalResources.staffOneWorker(robot, region, building)
+		else:
+			GlobalResources.staffOneWorker(robot, region, building)
+	elif data.has("building"):
+		GlobalResources.assignOneBuilding(data["building"], region, data["from_region"])

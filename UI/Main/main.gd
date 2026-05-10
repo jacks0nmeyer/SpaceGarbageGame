@@ -54,6 +54,9 @@ func _ready() -> void:
 
 	reset_confirm.confirmed.connect(_on_reset_confirmed)
 
+	GlobalSignals.robotPanelRequested.connect(_on_robot_panel_requested)
+	GlobalSignals.buildingPanelRequested.connect(_on_building_panel_requested)
+
 	SaveGame.consume_post_reset_refresh()
 
 	_refresh_pause_button_text()
@@ -104,42 +107,63 @@ func _on_reset_confirmed() -> void:
 	SaveGame.reset_to_new_game()
 
 
+# All three sub-menu trigger buttons get hidden together while any panel is
+# open. Hiding (rather than just disabling) removes them from the z-stack so
+# they can't render in front of the open panel and can't swallow clicks.
+# Each panel owns its own close path (in-panel X / ESC), so the trigger
+# buttons aren't needed while a panel is up.
+func _set_menu_buttons_visible(v: bool) -> void:
+	robots_button.visible = v
+	research_button.visible = v
+	buildings_button.visible = v
+
+
 func _on_robot_ui_opened() -> void:
-	robots_button.hide()
-	research_button.disabled = true
-	buildings_button.disabled = true
+	_set_menu_buttons_visible(false)
 
 
 func _on_robot_ui_closed() -> void:
-	robots_button.show()
-	research_button.disabled = false
-	buildings_button.disabled = false
+	_set_menu_buttons_visible(true)
 
 
 func _on_tech_tree_opened() -> void:
-	research_button.hide()
-	robots_button.disabled = true
-	buildings_button.disabled = true
+	_set_menu_buttons_visible(false)
 	_set_planet_ui_visible(false)
 
 
 func _on_tech_tree_closed() -> void:
-	research_button.show()
-	robots_button.disabled = false
-	buildings_button.disabled = false
+	_set_menu_buttons_visible(true)
 	_set_planet_ui_visible(true)
 
 
 func _on_building_ui_opened() -> void:
-	buildings_button.hide()
-	robots_button.disabled = true
-	research_button.disabled = true
+	_set_menu_buttons_visible(false)
 
 
 func _on_building_ui_closed() -> void:
-	buildings_button.show()
-	robots_button.disabled = false
-	research_button.disabled = false
+	_set_menu_buttons_visible(true)
+
+
+# Region info panel's Robots / Buildings tabs request that the matching
+# inventory panel pop open on the right. If the *other* inventory panel is
+# already open we close it first (mutual exclusion); if the requested panel
+# is already open we leave it alone (clicking the tab again shouldn't toggle
+# it shut). Tech tree isn't checked because EarthUI is hidden while the tree
+# is open, so region tabs can't be clicked from that state.
+func _on_robot_panel_requested() -> void:
+	if robot_ui.visible:
+		return
+	if building_ui.visible:
+		building_ui.toggle()
+	robot_ui.toggle()
+
+
+func _on_building_panel_requested() -> void:
+	if building_ui.visible:
+		return
+	if robot_ui.visible:
+		robot_ui.toggle()
+	building_ui.toggle()
 
 
 func _set_planet_ui_visible(v: bool) -> void:

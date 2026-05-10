@@ -13,3 +13,4 @@ script = ExtResource("1_building")
 buildingName = "Storehouse"
 description = "Buffers resources gathered from this region. Click to process or staff a robot to automate."
 unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
+storage_capacity = 1000

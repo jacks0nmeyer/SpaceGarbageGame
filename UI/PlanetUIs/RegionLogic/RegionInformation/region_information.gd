@@ -14,6 +14,19 @@ extends TabContainer
 @onready var building_rows: VBoxContainer = $Buildings/Margin/Vbox/Scroll/Rows
 @onready var building_empty_label: Label = $Buildings/Margin/Vbox/EmptyLabel
 
+# Idle-fade: panel quietly fades out when the player is just glancing past
+# regions and isn't doing anything that would care about info. Any "activity"
+# (region hover, mouse on panel, sub-menu interaction, drag-drop) resets the
+# countdown. Pin overrides everything — pinned panels never fade.
+const IDLE_TIMEOUT_S: float = 3.0
+const FADE_DURATION_S: float = 0.4
+
+var _idle_timer: Timer
+var _fade_tween: Tween
+var _robot_ui_ref: Control
+var _building_ui_ref: Control
+var _mouse_inside: bool = false
+
 
 func _ready():
 	GlobalSignals.regionHovered.connect(onRegionHovered)
@@ -35,6 +48,26 @@ func _ready():
 		bar.clip_tabs = false
 		bar.add_theme_font_size_override(&"font_size", 15)
 	hide()
+
+	_idle_timer = Timer.new()
+	_idle_timer.one_shot = true
+	_idle_timer.wait_time = IDLE_TIMEOUT_S
+	_idle_timer.timeout.connect(_on_idle_timeout)
+	add_child(_idle_timer)
+
+	mouse_entered.connect(_on_panel_mouse_entered)
+	mouse_exited.connect(_on_panel_mouse_exited)
+	visibility_changed.connect(_on_visibility_changed)
+
+	# Cache the right-side inventory panels so the timeout check can defer
+	# fading while the player has either of them open.
+	var main_node: Node = get_tree().root.get_node_or_null("Main")
+	if main_node != null:
+		_robot_ui_ref = main_node.get_node_or_null("RobotUI")
+		_building_ui_ref = main_node.get_node_or_null("BuildingUI")
+
+	GlobalSignals.robotPanelRequested.connect(_kick_idle_timer)
+	GlobalSignals.buildingPanelRequested.connect(_kick_idle_timer)
 
 
 func _on_tech_changed(_tech: TechData) -> void:
@@ -70,6 +103,7 @@ func onRegionHovered(region: RegionData):
 	show()
 	if region != currentRegion:
 		_switch_to(region)
+	_kick_idle_timer()
 
 
 func _switch_to(region: RegionData):
@@ -95,8 +129,10 @@ func _on_pin_toggled(_region: RegionData):
 		show()
 		if pinned != currentRegion:
 			_switch_to(pinned)
+			_kick_idle_timer()
 			return
 	_refresh_pin_indicator()
+	_kick_idle_timer()
 
 
 func _refresh_pin_indicator():
@@ -250,6 +286,7 @@ func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 	# "+ button" availability — refresh worker rows in the current region.
 	if currentRegion != null:
 		_refresh_all_building_workers()
+	_kick_idle_timer()
 
 
 # Rebuild the assigned-building rows (called on region switch or whenever the
@@ -279,6 +316,7 @@ func updateBuildings(region: RegionData):
 func _on_building_pair_changed(_b: BuildingData, region: RegionData):
 	if region == currentRegion:
 		updateBuildings(region)
+	_kick_idle_timer()
 
 
 func _on_building_storage_updated(region: RegionData, b: BuildingData):
@@ -411,8 +449,88 @@ func updatePollutionDetails(region: RegionData) -> void:
 	_refresh_pollution_value_row(region)
 
 
-func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu
-	if tab == 3:
+func _on_tab_clicked(tab: int):
+	# Tab 1 (Robots) / 2 (Buildings) auto-open their right-side inventory
+	# panel so the drag source is visible alongside the drop target. The
+	# panel stays open after the player switches back to Info — they close
+	# it explicitly via its own X.
+	# Tab 3 ("X") closes this whole panel and unpins.
+	if tab == 1:
+		GlobalSignals.robotPanelRequested.emit()
+	elif tab == 2:
+		GlobalSignals.buildingPanelRequested.emit()
+	elif tab == 3:
 		if GlobalResources.pinnedRegion != null:
 			GlobalSignals.regionPinToggled.emit(GlobalResources.pinnedRegion)
 		hide()
+	_kick_idle_timer()
+
+
+# --- Idle fade ---------------------------------------------------------------
+
+func _kick_idle_timer() -> void:
+	# Any sign of activity bumps the countdown to a fresh IDLE_TIMEOUT_S and
+	# snaps any in-progress fade back to fully opaque.
+	_cancel_fade()
+	if not is_visible_in_tree():
+		return
+	if currentRegion != null and GlobalResources.pinnedRegion == currentRegion:
+		_idle_timer.stop()
+		return
+	_idle_timer.start()
+
+
+func _cancel_fade() -> void:
+	if _fade_tween != null and _fade_tween.is_valid():
+		_fade_tween.kill()
+	_fade_tween = null
+	modulate.a = 1.0
+
+
+func _on_idle_timeout() -> void:
+	# If anything still counts as "in use" when the countdown expires, just
+	# kick it again — no need to fade now.
+	if not is_visible_in_tree():
+		return
+	if currentRegion != null and GlobalResources.pinnedRegion == currentRegion:
+		return
+	if _mouse_inside:
+		_idle_timer.start()
+		return
+	if (_robot_ui_ref != null and _robot_ui_ref.visible) \
+			or (_building_ui_ref != null and _building_ui_ref.visible):
+		_idle_timer.start()
+		return
+	_fade_out()
+
+
+func _fade_out() -> void:
+	_cancel_fade()
+	_fade_tween = create_tween()
+	_fade_tween.tween_property(self, "modulate:a", 0.0, FADE_DURATION_S)
+	_fade_tween.tween_callback(_on_fade_finished)
+
+
+func _on_fade_finished() -> void:
+	hide()
+	modulate.a = 1.0
+	_fade_tween = null
+
+
+func _on_panel_mouse_entered() -> void:
+	_mouse_inside = true
+	_cancel_fade()
+	_idle_timer.stop()
+
+
+func _on_panel_mouse_exited() -> void:
+	_mouse_inside = false
+	_kick_idle_timer()
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_kick_idle_timer()
+	else:
+		_idle_timer.stop()
+		_cancel_fade()

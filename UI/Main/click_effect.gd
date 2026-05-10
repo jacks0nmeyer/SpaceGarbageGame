@@ -1,9 +1,9 @@
 extends CanvasLayer
 
-# Spawns a small burst of fading pixels at the cursor on left-click. Uses
-# `_input` so it fires before any control consumes the event, and so the
-# burst appears regardless of which UI element was clicked. Particles are
-# anchored at the spawn position — they don't follow the cursor.
+# Spawns a small burst of fading pixels at a click position. Driven by
+# GlobalSignals.regionClicked so the effect only fires for gameplay clicks
+# on regions — not menu/UI button presses. Particles are anchored at the
+# spawn position and don't follow the cursor.
 
 const PARTICLE_COUNT := 8
 const PARTICLE_SIZE := Vector2(4, 4)
@@ -12,11 +12,8 @@ const PARTICLE_DURATION := 0.35
 const PARTICLE_COLOR := Color(1, 1, 1, 1)
 
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton \
-			and event.pressed \
-			and event.button_index == MOUSE_BUTTON_LEFT:
-		_spawn_burst(event.position)
+func _ready() -> void:
+	GlobalSignals.regionClicked.connect(_spawn_burst)
 
 
 func _spawn_burst(pos: Vector2) -> void:

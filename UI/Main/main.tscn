@@ -7,9 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
 [ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
 [ext_resource type="PackedScene" uid="uid://cwqdac8yngpi8" path="res://WIP/TechTree/tech_tree.tscn" id="7_techtree"]
-[ext_resource type="PackedScene" path="res://WIP/BuildingUI/building_ui.tscn" id="9_buildingui"]
 [ext_resource type="Script" uid="uid://bgrn6bq8w2vei" path="res://UI/Main/main.gd" id="8_main"]
-[ext_resource type="Script" path="res://UI/Main/click_effect.gd" id="10_click"]
+[ext_resource type="PackedScene" path="res://WIP/BuildingUI/building_ui.tscn" id="9_buildingui"]
+[ext_resource type="Script" uid="uid://dkkw85r2dv4qo" path="res://UI/Main/click_effect.gd" id="10_click"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -48,7 +48,6 @@ texture = ExtResource("2_ua7df")
 layout_mode = 1
 
 [node name="ResourceUI(Temp)" parent="." unique_id=684933601 instance=ExtResource("5_rsogr")]
-layout_mode = 1
 
 [node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
 layout_mode = 1
@@ -119,9 +118,7 @@ mouse_filter = 2
 process_mode = 3
 layout_mode = 1
 anchors_preset = 2
-anchor_left = 0.0
 anchor_top = 1.0
-anchor_right = 0.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = -44.0
@@ -136,7 +133,6 @@ text = "Pause"
 [node name="MenuButton" type="MenuButton" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000007]
 layout_mode = 2
 text = "Menu"
-switch_on_hover = false
 
 [node name="ResetConfirm" type="ConfirmationDialog" parent="SaveHUDLayer" unique_id=1500000009]
 process_mode = 3

@@ -46,6 +46,15 @@ signal researchMilestoneAwarded(region: RegionData, points: int, planet: PlanetD
 signal saveLoaded
 
 @warning_ignore("unused_signal")
+signal regionClicked(position: Vector2)
+
+@warning_ignore("unused_signal")
+signal robotPanelRequested
+
+@warning_ignore("unused_signal")
+signal buildingPanelRequested
+
+@warning_ignore("unused_signal")
 signal buildingPurchased(building: BuildingData)
 
 @warning_ignore("unused_signal")
