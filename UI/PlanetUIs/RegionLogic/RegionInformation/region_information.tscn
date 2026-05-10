@@ -294,6 +294,15 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
+[node name="RegionNameLabel" type="Label" parent="Robots/Margin/Vbox"]
+layout_mode = 2
+text = "Region Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeaderSeparator" type="HSeparator" parent="Robots/Margin/Vbox"]
+layout_mode = 2
+
 [node name="SlotsLabel" type="Label" parent="Robots/Margin/Vbox" unique_id=187229381]
 layout_mode = 2
 text = "Slots: 0 / 0"
@@ -336,6 +345,15 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 4
+
+[node name="RegionNameLabel" type="Label" parent="Buildings/Margin/Vbox"]
+layout_mode = 2
+text = "Region Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeaderSeparator" type="HSeparator" parent="Buildings/Margin/Vbox"]
+layout_mode = 2
 
 [node name="SlotsLabel" type="Label" parent="Buildings/Margin/Vbox" unique_id=187229382]
 layout_mode = 2

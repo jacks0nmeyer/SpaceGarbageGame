@@ -7,9 +7,11 @@ extends TabContainer
 @onready var resource_grid: GridContainer = $"Info/T&PContainer/StatusVBox/PollutionSection/ResourceGrid"
 @onready var production_grid: GridContainer = $"Info/T&PContainer/StatusVBox/PollutionSection/ProductionGrid"
 @onready var region_description: Label = $"Info/DescContainer/Region Description"
+@onready var robots_region_name: Label = $Robots/Margin/Vbox/RegionNameLabel
 @onready var slots_label: Label = $Robots/Margin/Vbox/SlotsLabel
 @onready var assigned_rows: VBoxContainer = $Robots/Margin/Vbox/Scroll/Rows
 @onready var empty_label: Label = $Robots/Margin/Vbox/EmptyLabel
+@onready var buildings_region_name: Label = $Buildings/Margin/Vbox/RegionNameLabel
 @onready var building_slots_label: Label = $Buildings/Margin/Vbox/SlotsLabel
 @onready var building_rows: VBoxContainer = $Buildings/Margin/Vbox/Scroll/Rows
 @onready var building_empty_label: Label = $Buildings/Margin/Vbox/EmptyLabel
@@ -142,14 +144,14 @@ func _refresh_pin_indicator():
 	var prefix := ""
 	if GlobalResources.pinnedRegion == currentRegion:
 		prefix = "📌 "
-	region_name.text = prefix + currentRegion.regionName
+	var display_name := prefix + currentRegion.regionName
+	region_name.text = display_name
+	robots_region_name.text = display_name
+	buildings_region_name.text = display_name
 
 
 func updateInfo(region: RegionData):
-	var prefix := ""
-	if GlobalResources.pinnedRegion == region:
-		prefix = "📌 "
-	region_name.text = prefix + region.regionName
+	_refresh_pin_indicator()
 	if region.locked == true:
 		region_description.text = region.lockedDescription
 	else:
