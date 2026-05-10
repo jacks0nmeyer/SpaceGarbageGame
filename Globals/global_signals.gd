@@ -71,3 +71,6 @@ signal buildingWorkerAssigned(robot: RobotData, region: RegionData, building: Bu
 
 @warning_ignore("unused_signal")
 signal buildingWorkerUnassigned(robot: RobotData, region: RegionData, building: BuildingData)
+
+@warning_ignore("unused_signal")
+signal purchaseAlertChanged(category: String, active: bool)

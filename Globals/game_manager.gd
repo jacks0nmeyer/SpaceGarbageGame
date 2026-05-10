@@ -46,6 +46,29 @@ func clear_carry_state() -> void:
 	_building_progress.clear()
 
 
+# Read-only view of the current 0..1 fill toward the next produced unit for
+# this (region, robot) pair. Returns 0.0 when nothing is in flight. Cheap —
+# two dict lookups — so safe to poll per-frame from UI rows.
+func get_robot_progress(region: RegionData, robot: RobotData) -> float:
+	if region == null or robot == null:
+		return 0.0
+	var inner: Variant = _progress.get(region, null)
+	if typeof(inner) != TYPE_DICTIONARY:
+		return 0.0
+	return clamp(float((inner as Dictionary).get(robot, 0.0)), 0.0, 1.0)
+
+
+# Read-only view of the auto-process timer (0..1) for this (region, building).
+# Mirrors get_robot_progress — UI rows poll it per frame.
+func get_building_progress(region: RegionData, building: BuildingData) -> float:
+	if region == null or building == null:
+		return 0.0
+	var inner: Variant = _building_progress.get(region, null)
+	if typeof(inner) != TYPE_DICTIONARY:
+		return 0.0
+	return clamp(float((inner as Dictionary).get(building, 0.0)), 0.0, 1.0)
+
+
 ## Serializable snapshot: outer keys are region resource_path strings; inner
 ## robot keys are robot resource_path strings. resource_carry inner keys are
 ## lowercase resource strings.

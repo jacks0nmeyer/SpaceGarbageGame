@@ -57,6 +57,8 @@ func _ready() -> void:
 	GlobalSignals.robotPanelRequested.connect(_on_robot_panel_requested)
 	GlobalSignals.buildingPanelRequested.connect(_on_building_panel_requested)
 
+	GlobalSignals.purchaseAlertChanged.connect(_on_purchase_alert_changed)
+
 	SaveGame.consume_post_reset_refresh()
 
 	_refresh_pause_button_text()
@@ -120,28 +122,76 @@ func _set_menu_buttons_visible(v: bool) -> void:
 
 func _on_robot_ui_opened() -> void:
 	_set_menu_buttons_visible(false)
+	PurchaseAlerts.notify_panel_opened(PurchaseAlerts.CATEGORY_ROBOT)
 
 
 func _on_robot_ui_closed() -> void:
 	_set_menu_buttons_visible(true)
+	PurchaseAlerts.notify_panel_closed(PurchaseAlerts.CATEGORY_ROBOT)
 
 
 func _on_tech_tree_opened() -> void:
 	_set_menu_buttons_visible(false)
 	_set_planet_ui_visible(false)
+	PurchaseAlerts.notify_panel_opened(PurchaseAlerts.CATEGORY_TECH)
 
 
 func _on_tech_tree_closed() -> void:
 	_set_menu_buttons_visible(true)
 	_set_planet_ui_visible(true)
+	PurchaseAlerts.notify_panel_closed(PurchaseAlerts.CATEGORY_TECH)
 
 
 func _on_building_ui_opened() -> void:
 	_set_menu_buttons_visible(false)
+	PurchaseAlerts.notify_panel_opened(PurchaseAlerts.CATEGORY_BUILDING)
 
 
 func _on_building_ui_closed() -> void:
 	_set_menu_buttons_visible(true)
+	PurchaseAlerts.notify_panel_closed(PurchaseAlerts.CATEGORY_BUILDING)
+
+
+# Pulses the menu button matching the alert category. Buttons are hidden while
+# their panel is open, but tween targets stay valid — the pulse just isn't
+# visible during that time.
+func _on_purchase_alert_changed(category: String, active: bool) -> void:
+	var btn: Button = _alert_button_for(category)
+	if btn == null:
+		return
+	if active:
+		_start_button_pulse(btn)
+	else:
+		_stop_button_pulse(btn)
+
+
+func _alert_button_for(category: String) -> Button:
+	match category:
+		PurchaseAlerts.CATEGORY_ROBOT: return robots_button
+		PurchaseAlerts.CATEGORY_BUILDING: return buildings_button
+		PurchaseAlerts.CATEGORY_TECH: return research_button
+	return null
+
+
+const _ALERT_PULSE_META := "alert_pulse_tween"
+const _ALERT_PULSE_COLOR := Color(1.55, 1.55, 0.45, 1.0)
+
+
+func _start_button_pulse(btn: Button) -> void:
+	_stop_button_pulse(btn)
+	var tween := create_tween().set_loops()
+	tween.tween_property(btn, "modulate", _ALERT_PULSE_COLOR, 0.5).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(btn, "modulate", Color.WHITE, 0.5).set_trans(Tween.TRANS_SINE)
+	btn.set_meta(_ALERT_PULSE_META, tween)
+
+
+func _stop_button_pulse(btn: Button) -> void:
+	if btn.has_meta(_ALERT_PULSE_META):
+		var t: Variant = btn.get_meta(_ALERT_PULSE_META)
+		if t is Tween and is_instance_valid(t):
+			(t as Tween).kill()
+		btn.remove_meta(_ALERT_PULSE_META)
+	btn.modulate = Color.WHITE
 
 
 # Region info panel's Robots / Buildings tabs request that the matching

@@ -40,6 +40,9 @@ func unlock():
 	
 	
 func _on_pressed():
+	# Re-emit hover so the info panel re-opens if it had faded out while the
+	# cursor sat on this region (mouse_entered only fires on actual entry).
+	GlobalSignals.regionHovered.emit(region)
 	GlobalSignals.regionClicked.emit(get_viewport().get_mouse_position())
 	var amount: int = TechTree.get_click_trash_amount()
 	var double_resources: bool = randf() < TechTree.get_click_double_chance()

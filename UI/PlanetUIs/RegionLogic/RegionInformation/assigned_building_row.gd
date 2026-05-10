@@ -18,6 +18,14 @@ var process_button: Button
 var workers_label: Label
 var workers_minus: Button
 var workers_plus: Button
+var storage_row: HBoxContainer
+
+# Auto-process progress (0..1) for the bar drawn behind the Stored row. Polled
+# in _process from GameManager.get_building_progress; redrawn only when it
+# moves enough to be visible. Gated on workerCount > 0 — no worker, no bar.
+var _last_progress: float = 0.0
+const _PROGRESS_REDRAW_EPSILON: float = 0.005
+const _PROGRESS_FILL_COLOR: Color = Color(0.45, 0.85, 1.0, 0.18)
 
 
 func setup(p_building: BuildingData, p_region: RegionData, p_count: int) -> void:
@@ -63,7 +71,7 @@ func _build() -> void:
 	top.add_child(remove_btn)
 
 	# Storage row: "Stored: X / Y" + Process button
-	var storage_row := HBoxContainer.new()
+	storage_row = HBoxContainer.new()
 	storage_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vbox.add_child(storage_row)
 
@@ -157,6 +165,26 @@ func _on_workers_minus() -> void:
 		return
 	var any_robot = region.buildingWorkers[building].keys()[0]
 	GlobalResources.unstaffOneWorker(any_robot, region, building)
+
+
+func _process(_delta: float) -> void:
+	if building == null or region == null:
+		return
+	var p: float = 0.0
+	if region.workerCount(building) > 0:
+		p = GameManager.get_building_progress(region, building)
+	if absf(p - _last_progress) >= _PROGRESS_REDRAW_EPSILON \
+			or (p == 0.0 and _last_progress != 0.0):
+		_last_progress = p
+		queue_redraw()
+
+
+func _draw() -> void:
+	if _last_progress <= 0.0 or storage_row == null:
+		return
+	var row_rect := Rect2(storage_row.position, storage_row.size)
+	row_rect.size.x *= _last_progress
+	draw_rect(row_rect, _PROGRESS_FILL_COLOR)
 
 
 func _gui_input(event: InputEvent) -> void:

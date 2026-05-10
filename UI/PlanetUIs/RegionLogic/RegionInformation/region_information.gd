@@ -68,6 +68,7 @@ func _ready():
 
 	GlobalSignals.robotPanelRequested.connect(_kick_idle_timer)
 	GlobalSignals.buildingPanelRequested.connect(_kick_idle_timer)
+	GlobalSignals.regionClicked.connect(_on_region_clicked)
 
 
 func _on_tech_changed(_tech: TechData) -> void:
@@ -467,6 +468,10 @@ func _on_tab_clicked(tab: int):
 
 
 # --- Idle fade ---------------------------------------------------------------
+
+func _on_region_clicked(_pos: Vector2) -> void:
+	_kick_idle_timer()
+
 
 func _kick_idle_timer() -> void:
 	# Any sign of activity bumps the countdown to a fresh IDLE_TIMEOUT_S and
