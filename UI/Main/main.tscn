@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
 [ext_resource type="PackedScene" uid="uid://cwqdac8yngpi8" path="res://WIP/TechTree/tech_tree.tscn" id="7_techtree"]
 [ext_resource type="Script" uid="uid://bgrn6bq8w2vei" path="res://UI/Main/main.gd" id="8_main"]
+[ext_resource type="PackedScene" path="res://WIP/BuildingUI/building_ui.tscn" id="9_buildingui"]
+[ext_resource type="Script" uid="uid://dkkw85r2dv4qo" path="res://UI/Main/click_effect.gd" id="10_click"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -46,7 +48,6 @@ texture = ExtResource("2_ua7df")
 layout_mode = 1
 
 [node name="ResourceUI(Temp)" parent="." unique_id=684933601 instance=ExtResource("5_rsogr")]
-layout_mode = 1
 
 [node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
 layout_mode = 1
@@ -76,11 +77,68 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -120.0
+offset_top = 88.0
+offset_right = -8.0
+offset_bottom = 120.0
+grow_horizontal = 0
+text = "Research"
+
+[node name="BuildingUI" parent="." unique_id=1500000020 instance=ExtResource("9_buildingui")]
+layout_mode = 1
+
+[node name="BuildingsButton" type="Button" parent="." unique_id=1500000021]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
 offset_top = 48.0
 offset_right = -8.0
 offset_bottom = 80.0
 grow_horizontal = 0
-text = "Research"
+text = "Buildings"
+
+[node name="ClickEffectLayer" type="CanvasLayer" parent="." unique_id=1500000030]
+layer = 100
+script = ExtResource("10_click")
+
+[node name="SaveHUDLayer" type="CanvasLayer" parent="." unique_id=1500000010]
+layer = 50
+
+[node name="HudRoot" type="Control" parent="SaveHUDLayer" unique_id=1500000011]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SaveStrip" type="HBoxContainer" parent="SaveHUDLayer/HudRoot" unique_id=1500000005]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -44.0
+offset_right = 200.0
+offset_bottom = -8.0
+grow_vertical = 0
+
+[node name="PauseButton" type="Button" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000006]
+layout_mode = 2
+text = "Pause"
+
+[node name="MenuButton" type="MenuButton" parent="SaveHUDLayer/HudRoot/SaveStrip" unique_id=1500000007]
+layout_mode = 2
+text = "Menu"
+
+[node name="ResetConfirm" type="ConfirmationDialog" parent="SaveHUDLayer" unique_id=1500000009]
+process_mode = 3
+ok_button_text = "Reset"
+dialog_text = "Start a new game? This will delete your save file and reset all progress."
 
 [connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]
 [connection signal="pressed" from="ResearchButton" to="TechTree" method="toggle"]
+[connection signal="pressed" from="BuildingsButton" to="BuildingUI" method="toggle"]

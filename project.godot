@@ -20,6 +20,8 @@ GlobalResources="*uid://2f0nb0e8s0k5"
 GameManager="*uid://b1yalpfu8jobt"
 GlobalSignals="*uid://bqql6k1irdmri"
 TechTree="*uid://bhrrgwvxsit54"
+PurchaseAlerts="*res://Globals/purchase_alerts.gd"
+SaveGame="*uid://c8k2savegame01"
 
 [dotnet]
 

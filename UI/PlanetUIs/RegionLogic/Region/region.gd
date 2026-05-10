@@ -20,11 +20,17 @@ func _ready():
 		self.disabled = true
 	
 	GlobalSignals.regionUnlocked.connect(onRegionUnlock)
+	GlobalSignals.saveLoaded.connect(_on_save_loaded)
 
 
 func onRegionUnlock(current_region: RegionData):
 	if current_region == region:
 		unlock()
+
+
+func _on_save_loaded() -> void:
+	if region != null:
+		self.disabled = region.locked
 
 
 func unlock():
@@ -34,6 +40,10 @@ func unlock():
 	
 	
 func _on_pressed():
+	# Re-emit hover so the info panel re-opens if it had faded out while the
+	# cursor sat on this region (mouse_entered only fires on actual entry).
+	GlobalSignals.regionHovered.emit(region)
+	GlobalSignals.regionClicked.emit(get_viewport().get_mouse_position())
 	var amount: int = TechTree.get_click_trash_amount()
 	var double_resources: bool = randf() < TechTree.get_click_double_chance()
 	GlobalResources.regionGotResource(region, planet, amount, double_resources)
@@ -61,11 +71,13 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 
 
-# Drag-drop assignment. Payload shape:
-#   {"robot": RobotData, "from_region": RegionData|null}
-# A null from_region means the drag came from the Owned tab. A non-null
-# from_region means the player is moving an already-assigned robot from one
-# region to another; we decrement the source before incrementing here.
+# Drag-drop assignment. Two payload shapes are accepted:
+#   {"robot":    RobotData,    "from_region": RegionData|null}
+#   {"building": BuildingData, "from_region": RegionData|null}
+# A null from_region means the drag came from the corresponding Owned tab.
+# A non-null from_region means the player is moving an already-assigned
+# robot/building from one region to another; the source is decremented inside
+# GlobalResources.assignOne / assignOneBuilding.
 func _can_drop_data(_pos: Vector2, data) -> bool:
 	if region == null or region.locked:
 		return false
@@ -74,19 +86,26 @@ func _can_drop_data(_pos: Vector2, data) -> bool:
 		return false
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
-	if not data.has("robot") or not data.has("from_region"):
-		return false
-	var robot = data["robot"]
-	if not (robot is RobotData):
+	if not data.has("from_region"):
 		return false
 	var from_region = data["from_region"]
 	if from_region == region:
 		return false
-	if from_region == null:
-		if GlobalResources.unassignedCount(robot) <= 0:
+	if data.has("robot") and data["robot"] is RobotData:
+		var robot: RobotData = data["robot"]
+		if from_region == null and GlobalResources.unassignedCount(robot) <= 0:
 			return false
-	return region.canFit(robot)
+		return region.canFit(robot)
+	if data.has("building") and data["building"] is BuildingData:
+		var b: BuildingData = data["building"]
+		if from_region == null and GlobalResources.unassignedBuildingCount(b) <= 0:
+			return false
+		return region.canFitBuilding(b)
+	return false
 
 
 func _drop_data(_pos: Vector2, data) -> void:
-	GlobalResources.assignOne(data["robot"], region, data["from_region"])
+	if data.has("robot"):
+		GlobalResources.assignOne(data["robot"], region, data["from_region"])
+	elif data.has("building"):
+		GlobalResources.assignOneBuilding(data["building"], region, data["from_region"])

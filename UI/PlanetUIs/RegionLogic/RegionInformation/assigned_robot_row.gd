@@ -9,6 +9,13 @@ var robot: RobotData
 var region: RegionData
 var count: int = 0
 
+# Cached production progress (0..1) for the row's background fill. Polled in
+# _process from GameManager.get_robot_progress and redrawn only when it moves
+# enough to be visible — avoids a queue_redraw every frame.
+var _last_progress: float = 0.0
+const _PROGRESS_REDRAW_EPSILON: float = 0.005
+const _PROGRESS_FILL_COLOR: Color = Color(0.45, 0.85, 1.0, 0.18)
+
 
 func setup(p_robot: RobotData, p_region: RegionData, p_count: int) -> void:
 	robot = p_robot
@@ -40,7 +47,7 @@ func _build() -> void:
 
 	var remove_btn := Button.new()
 	remove_btn.text = "−"
-	remove_btn.tooltip_text = "Unassign one (or right-click the row)"
+	remove_btn.tooltip_text = "Unassign one (right-click row). Shift+right-click: unassign all of this type."
 	remove_btn.custom_minimum_size = Vector2(24, 24)
 	remove_btn.focus_mode = Control.FOCUS_NONE
 	remove_btn.pressed.connect(_unassign_one)
@@ -51,13 +58,36 @@ func _unassign_one() -> void:
 	GlobalResources.unassignOne(robot, region)
 
 
-# Right-click anywhere on the row also unassigns one. Drag-back-to-Owned still
-# works on left-click + drag via _get_drag_data.
+func _process(_delta: float) -> void:
+	if robot == null or region == null:
+		return
+	var p: float = 0.0
+	if region.trash > 0:
+		p = GameManager.get_robot_progress(region, robot)
+	if absf(p - _last_progress) >= _PROGRESS_REDRAW_EPSILON \
+			or (p == 0.0 and _last_progress != 0.0):
+		_last_progress = p
+		queue_redraw()
+
+
+func _draw() -> void:
+	if _last_progress <= 0.0:
+		return
+	var width: float = size.x * _last_progress
+	draw_rect(Rect2(0.0, 0.0, width, size.y), _PROGRESS_FILL_COLOR)
+
+
+# Right-click unassigns one; Shift+right-click clears every bot of this type
+# in the region. Drag-back-to-Owned still works on left-click + drag via
+# _get_drag_data.
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton \
 			and event.pressed \
 			and event.button_index == MOUSE_BUTTON_RIGHT:
-		_unassign_one()
+		if event.shift_pressed:
+			GlobalResources.unassignAllOfType(robot, region)
+		else:
+			_unassign_one()
 		accept_event()
 
 

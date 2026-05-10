@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BuildingCollection" format=3]
+
+[ext_resource type="Script" path="res://Resources/Scripts/building_collection.gd" id="1_coll"]
+[ext_resource type="Script" path="res://Resources/Scripts/building_data.gd" id="2_building"]
+[ext_resource type="Resource" path="res://Resources/Buildings/Storehouse.tres" id="3_store"]
+[ext_resource type="Resource" path="res://Resources/Buildings/Warehouse.tres" id="4_ware"]
+
+[resource]
+script = ExtResource("1_coll")
+buildings = Array[ExtResource("2_building")]([ExtResource("3_store"), ExtResource("4_ware")])

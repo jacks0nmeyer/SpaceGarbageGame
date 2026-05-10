@@ -1,0 +1,89 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://WIP/BuildingUI/building_ui.gd" id="1_su03b"]
+
+[node name="BuildingUI" type="Control"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -420.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1_su03b")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="Vbox" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleRow" type="HBoxContainer" parent="Panel/Margin/Vbox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/Margin/Vbox/TitleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Buildings"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Panel/Margin/Vbox/TitleRow"]
+layout_mode = 2
+text = "X"
+
+[node name="Tabs" type="TabContainer" parent="Panel/Margin/Vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Buy" type="Control" parent="Panel/Margin/Vbox/Tabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox/Tabs/Buy"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Buy/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Owned" type="Control" parent="Panel/Margin/Vbox/Tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/Margin/Vbox/Tabs/Owned"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Owned/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[connection signal="pressed" from="Panel/Margin/Vbox/TitleRow/CloseButton" to="." method="toggle"]

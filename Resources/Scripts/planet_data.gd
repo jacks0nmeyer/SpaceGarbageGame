@@ -17,6 +17,13 @@ func getTotalTrash() -> int:
 	return total
 
 
+func getTotalMaxTrash() -> int:
+	var total := 0
+	for region in regions:
+		total += region.maxTrash
+	return total
+
+
 func getTotalPollution() -> int:
 	if regions.is_empty():
 		return 0

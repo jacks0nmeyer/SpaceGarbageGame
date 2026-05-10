@@ -29,6 +29,7 @@ script = ExtResource("2_qmlwg")
 regionName = "Region 2"
 resourceChances = Array[ExtResource("1_u832g")]([SubResource("Resource_tv6ve"), SubResource("Resource_tyvks"), SubResource("Resource_ggpym")])
 robot_capacity = 4
+building_capacity = 3
 trash = 200000
 maxTrash = 200000
 pollution = 2000

@@ -29,6 +29,7 @@ script = ExtResource("2_15bi2")
 regionName = "Sahara Dump"
 resourceChances = Array[ExtResource("1_qpyfh")]([SubResource("Resource_qpyfh"), SubResource("Resource_jl0rf"), SubResource("Resource_eif7m")])
 robot_capacity = 4
+building_capacity = 3
 trash = 300000
 maxTrash = 300000
 pollution = 4200

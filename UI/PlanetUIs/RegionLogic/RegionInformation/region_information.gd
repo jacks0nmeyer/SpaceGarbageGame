@@ -1,15 +1,33 @@
 extends TabContainer
 
-@onready var region_name: Label = $Info/InfoVbox/RegionName
-@onready var trash_bar: ProgressBar = $Trash/TrashVbox/TrashSection/TrashDisplay/TrashBar
-@onready var trash_display: Label = $Trash/TrashVbox/TrashSection/TrashDisplay/TrashDisplay
-@onready var trash_removal_trend: Label = $Trash/TrashVbox/TrashSection/TrashRemovalTrend
-@onready var resource_grid: GridContainer = $Info/InfoVbox/ResourceGrid
-@onready var production_grid: GridContainer = $Info/InfoVbox/ProductionGrid
-@onready var region_description: Label = $Info/InfoVbox/DescMargins/RegionDescription
-@onready var slots_label: Label = $Robots/RobotsVbox/SlotsLabel
-@onready var assigned_rows: VBoxContainer = $Robots/RobotsVbox/Scroll/Rows
-@onready var assignment_label: Label = $Robots/RobotsVbox/AssignmentLabel
+@onready var region_name: Label = $Info/RegionName
+@onready var trash_bar: ProgressBar = $"Info/T&PContainer/StatusVBox/TrashSection/TrashDisplay/TrashBar"
+@onready var trash_display: Label = $"Info/T&PContainer/StatusVBox/TrashSection/TrashDisplay/TrashDisplay"
+@onready var trash_removal_trend: Label = $"Info/T&PContainer/StatusVBox/TrashSection/TrashRemovalTrend"
+@onready var resource_grid: GridContainer = $"Info/T&PContainer/StatusVBox/PollutionSection/ResourceGrid"
+@onready var production_grid: GridContainer = $"Info/T&PContainer/StatusVBox/PollutionSection/ProductionGrid"
+@onready var region_description: Label = $"Info/DescContainer/Region Description"
+@onready var robots_region_name: Label = $Robots/Margin/Vbox/RegionNameLabel
+@onready var slots_label: Label = $Robots/Margin/Vbox/SlotsLabel
+@onready var assigned_rows: VBoxContainer = $Robots/Margin/Vbox/Scroll/Rows
+@onready var empty_label: Label = $Robots/Margin/Vbox/EmptyLabel
+@onready var buildings_region_name: Label = $Buildings/Margin/Vbox/RegionNameLabel
+@onready var building_slots_label: Label = $Buildings/Margin/Vbox/SlotsLabel
+@onready var building_rows: VBoxContainer = $Buildings/Margin/Vbox/Scroll/Rows
+@onready var building_empty_label: Label = $Buildings/Margin/Vbox/EmptyLabel
+
+# Idle-fade: panel quietly fades out when the player is just glancing past
+# regions and isn't doing anything that would care about info. Any "activity"
+# (region hover, mouse on panel, sub-menu interaction, drag-drop) resets the
+# countdown. Pin overrides everything — pinned panels never fade.
+const IDLE_TIMEOUT_S: float = 3.0
+const FADE_DURATION_S: float = 0.4
+
+var _idle_timer: Timer
+var _fade_tween: Tween
+var _robot_ui_ref: Control
+var _building_ui_ref: Control
+var _mouse_inside: bool = false
 
 
 func _ready():
@@ -20,17 +38,50 @@ func _ready():
 	GlobalSignals.regionPinToggled.connect(_on_pin_toggled)
 	GlobalSignals.regionPollutionUpdated.connect(onPollutionUpdated)
 	GlobalSignals.techUnlocked.connect(_on_tech_changed)
+	GlobalSignals.saveLoaded.connect(_on_save_loaded)
+	GlobalSignals.buildingAssigned.connect(_on_building_pair_changed)
+	GlobalSignals.buildingUnassigned.connect(_on_building_pair_changed)
+	GlobalSignals.buildingStorageUpdated.connect(_on_building_storage_updated)
+	GlobalSignals.buildingWorkerAssigned.connect(_on_building_worker_changed)
+	GlobalSignals.buildingWorkerUnassigned.connect(_on_building_worker_changed)
+	GlobalSignals.robotPurchased.connect(_on_robot_purchased)
 	var bar := get_tab_bar()
 	if bar:
 		bar.clip_tabs = false
 		bar.add_theme_font_size_override(&"font_size", 15)
 	hide()
 
+	_idle_timer = Timer.new()
+	_idle_timer.one_shot = true
+	_idle_timer.wait_time = IDLE_TIMEOUT_S
+	_idle_timer.timeout.connect(_on_idle_timeout)
+	add_child(_idle_timer)
+
+	mouse_entered.connect(_on_panel_mouse_entered)
+	mouse_exited.connect(_on_panel_mouse_exited)
+	visibility_changed.connect(_on_visibility_changed)
+
+	# Cache the right-side inventory panels so the timeout check can defer
+	# fading while the player has either of them open.
+	var main_node: Node = get_tree().root.get_node_or_null("Main")
+	if main_node != null:
+		_robot_ui_ref = main_node.get_node_or_null("RobotUI")
+		_building_ui_ref = main_node.get_node_or_null("BuildingUI")
+
+	GlobalSignals.robotPanelRequested.connect(_kick_idle_timer)
+	GlobalSignals.buildingPanelRequested.connect(_kick_idle_timer)
+	GlobalSignals.regionClicked.connect(_on_region_clicked)
+
 
 func _on_tech_changed(_tech: TechData) -> void:
 	if visible and currentRegion != null:
 		updateTrashRemovalRate(currentRegion)
 		updateResourceRates(currentRegion)
+
+
+func _on_save_loaded() -> void:
+	if visible and currentRegion != null:
+		_switch_to(currentRegion)
 
 
 func _on_region_trash_updated(region: RegionData) -> void:
@@ -55,6 +106,7 @@ func onRegionHovered(region: RegionData):
 	show()
 	if region != currentRegion:
 		_switch_to(region)
+	_kick_idle_timer()
 
 
 func _switch_to(region: RegionData):
@@ -65,6 +117,7 @@ func _switch_to(region: RegionData):
 	updateResourceRates(region)
 	updateProgress(region)
 	updateRobots(region)
+	updateBuildings(region)
 	updatePollution(region)
 	updateTrashRemovalRate(region)
 	updatePollutionDetails(region)
@@ -79,8 +132,10 @@ func _on_pin_toggled(_region: RegionData):
 		show()
 		if pinned != currentRegion:
 			_switch_to(pinned)
+			_kick_idle_timer()
 			return
 	_refresh_pin_indicator()
+	_kick_idle_timer()
 
 
 func _refresh_pin_indicator():
@@ -89,14 +144,14 @@ func _refresh_pin_indicator():
 	var prefix := ""
 	if GlobalResources.pinnedRegion == currentRegion:
 		prefix = "📌 "
-	region_name.text = prefix + currentRegion.regionName
+	var display_name := prefix + currentRegion.regionName
+	region_name.text = display_name
+	robots_region_name.text = display_name
+	buildings_region_name.text = display_name
 
 
 func updateInfo(region: RegionData):
-	var prefix := ""
-	if GlobalResources.pinnedRegion == region:
-		prefix = "📌 "
-	region_name.text = prefix + region.regionName
+	_refresh_pin_indicator()
 	if region.locked == true:
 		region_description.text = region.lockedDescription
 	else:
@@ -221,7 +276,7 @@ func updateRobots(region: RegionData):
 		assigned_rows.add_child(row)
 		row.setup(robot, region, count)
 
-	assignment_label.visible = not any
+	empty_label.visible = not any
 
 
 func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
@@ -230,13 +285,83 @@ func _on_robot_pair_changed(_robot: RobotData, region: RegionData):
 		updateResourceRates(region)
 		updatePollutionTrend(region)
 		updateTrashRemovalRate(region)
+	# Robot count change (anywhere) affects every visible building's
+	# "+ button" availability — refresh worker rows in the current region.
+	if currentRegion != null:
+		_refresh_all_building_workers()
+	_kick_idle_timer()
 
-@onready var region_pollution: TextureRect = $Trash/TrashVbox/PollutionSection/PollutionFaceRow/RegionPollution
-@onready var pollution_level: Label = $Trash/TrashVbox/PollutionSection/PollutionFaceRow/PollutionLevel
-@onready var pollution_return: Label = $Trash/TrashVbox/PollutionSection/PollutionValuesRow/PollutionReturn
-@onready var pollution_change: Label = $Trash/TrashVbox/PollutionSection/PollutionValuesRow/PollutionChange
+
+# Rebuild the assigned-building rows (called on region switch or whenever the
+# building composition changes — buildingAssigned / buildingUnassigned).
+func updateBuildings(region: RegionData):
+	for child in building_rows.get_children():
+		building_rows.remove_child(child)
+		child.queue_free()
+
+	var used := region.assignedBuildingSlotsUsed()
+	building_slots_label.text = "Slots: %d / %d" % [used, region.building_capacity]
+
+	var any := false
+	for b in region.assignedBuildings:
+		var count: int = int(region.assignedBuildings[b])
+		if count <= 0:
+			continue
+		any = true
+		var row := AssignedBuildingRow.new()
+		row.name = "row_" + b.resource_path.get_file().get_basename()
+		building_rows.add_child(row)
+		row.setup(b, region, count)
+
+	building_empty_label.visible = not any
+
+
+func _on_building_pair_changed(_b: BuildingData, region: RegionData):
+	if region == currentRegion:
+		updateBuildings(region)
+	_kick_idle_timer()
+
+
+func _on_building_storage_updated(region: RegionData, b: BuildingData):
+	if region != currentRegion:
+		return
+	# In-place refresh — don't rebuild rows (storage signals fire often).
+	for child in building_rows.get_children():
+		if child is AssignedBuildingRow and child.building == b:
+			child.refresh_storage()
+			return
+
+
+func _on_building_worker_changed(_robot: RobotData, region: RegionData, b: BuildingData):
+	if region != currentRegion:
+		return
+	# A worker change for THIS building updates that row, but every row's
+	# "+ button" availability depends on global unassignedCount, so refresh
+	# all rows' worker controls.
+	for child in building_rows.get_children():
+		if child is AssignedBuildingRow:
+			if child.building == b:
+				child.refresh_workers()
+			else:
+				child.refresh_workers()
+
+
+func _on_robot_purchased(_robot: RobotData) -> void:
+	# A new robot enters the unassigned pool — refresh "+" availability.
+	if currentRegion != null:
+		_refresh_all_building_workers()
+
+
+func _refresh_all_building_workers() -> void:
+	for child in building_rows.get_children():
+		if child is AssignedBuildingRow:
+			child.refresh_workers()
+
+@onready var region_pollution: TextureRect = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionFaceRow/RegionPollution"
+@onready var pollution_value_left: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueLeft"
+@onready var pollution_value_right: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionValuesRow/PollutionValueRight"
 @export var pollutionAtlas: Texture2D
-var pollutionIconSize := Vector2(76, 56)
+var pollutionIconSize := Vector2(76, 48)
 var pollutionIconSpacing := 20
 
 
@@ -276,20 +401,20 @@ func updatePollutionTrend(region: RegionData) -> void:
 	_refresh_pollution_value_row(region)
 
 
-@onready var pollution_display: Control = $Trash/TrashVbox/PollutionSection/PollutionDisplay
-@onready var pollution_progress: ProgressBar = $Trash/TrashVbox/PollutionSection/PollutionDisplay/PollutionProgress
-@onready var pollution_progress_label: Label = $Trash/TrashVbox/PollutionSection/PollutionDisplay/PollutionProgressLabel
+@onready var pollution_display: Control = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay"
+@onready var pollution_progress: ProgressBar = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay/PollutionProgress"
+@onready var pollution_progress_label: Label = $"Info/T&PContainer/StatusVBox/PollutionSection/PollutionDisplay/PollutionProgressLabel"
 
 
 func _refresh_pollution_value_row(region: RegionData) -> void:
-	if pollution_return == null or pollution_change == null:
+	if pollution_value_left == null or pollution_value_right == null:
 		return
 
 	var level := region.getPollutionLevel()
 	var mult: float = GlobalResources.getPollutionProductionMultiplier(level)
 	var mult_str: String = str(mult) + "x"
-	pollution_return.text = "Return: %s" % mult_str
-	pollution_return.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
+	pollution_value_left.text = "Return: %s" % mult_str
+	pollution_value_left.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
 
 	var cleaner_scalar: float = TechTree.get_cleaner_strength_scalar()
 	var rate := 0.0
@@ -313,14 +438,13 @@ func _refresh_pollution_value_row(region: RegionData) -> void:
 		tr_color = Color(0.75, 0.78, 0.82)
 
 	var rate_str: String = "%s%.1f/s" % [sign_str, rate]
-	pollution_change.text = "Pollution/s: %s" % rate_str
-	pollution_change.add_theme_color_override("font_color", tr_color)
+	pollution_value_right.text = "Pollution/s: %s" % rate_str
+	pollution_value_right.add_theme_color_override("font_color", tr_color)
 
 
 func updatePollutionDetails(region: RegionData) -> void:
 	pollution_progress.max_value = region.maxPollution
 	pollution_progress.value = region.pollution
-	pollution_level.text = "STATUS:\n%s" % [region.getPollutionName().to_upper()]
 	if pollution_progress_label != null:
 		pollution_progress_label.text = "%d / %d" % [region.pollution, region.maxPollution]
 	if pollution_display != null:
@@ -328,8 +452,92 @@ func updatePollutionDetails(region: RegionData) -> void:
 	_refresh_pollution_value_row(region)
 
 
-func _on_tab_clicked(tab: int): #Lets the "X" tab close the menu
-	if tab == 4:
+func _on_tab_clicked(tab: int):
+	# Tab 1 (Robots) / 2 (Buildings) auto-open their right-side inventory
+	# panel so the drag source is visible alongside the drop target. The
+	# panel stays open after the player switches back to Info — they close
+	# it explicitly via its own X.
+	# Tab 3 ("X") closes this whole panel and unpins.
+	if tab == 1:
+		GlobalSignals.robotPanelRequested.emit()
+	elif tab == 2:
+		GlobalSignals.buildingPanelRequested.emit()
+	elif tab == 3:
 		if GlobalResources.pinnedRegion != null:
 			GlobalSignals.regionPinToggled.emit(GlobalResources.pinnedRegion)
 		hide()
+	_kick_idle_timer()
+
+
+# --- Idle fade ---------------------------------------------------------------
+
+func _on_region_clicked(_pos: Vector2) -> void:
+	_kick_idle_timer()
+
+
+func _kick_idle_timer() -> void:
+	# Any sign of activity bumps the countdown to a fresh IDLE_TIMEOUT_S and
+	# snaps any in-progress fade back to fully opaque.
+	_cancel_fade()
+	if not is_visible_in_tree():
+		return
+	if currentRegion != null and GlobalResources.pinnedRegion == currentRegion:
+		_idle_timer.stop()
+		return
+	_idle_timer.start()
+
+
+func _cancel_fade() -> void:
+	if _fade_tween != null and _fade_tween.is_valid():
+		_fade_tween.kill()
+	_fade_tween = null
+	modulate.a = 1.0
+
+
+func _on_idle_timeout() -> void:
+	# If anything still counts as "in use" when the countdown expires, just
+	# kick it again — no need to fade now.
+	if not is_visible_in_tree():
+		return
+	if currentRegion != null and GlobalResources.pinnedRegion == currentRegion:
+		return
+	if _mouse_inside:
+		_idle_timer.start()
+		return
+	if (_robot_ui_ref != null and _robot_ui_ref.visible) \
+			or (_building_ui_ref != null and _building_ui_ref.visible):
+		_idle_timer.start()
+		return
+	_fade_out()
+
+
+func _fade_out() -> void:
+	_cancel_fade()
+	_fade_tween = create_tween()
+	_fade_tween.tween_property(self, "modulate:a", 0.0, FADE_DURATION_S)
+	_fade_tween.tween_callback(_on_fade_finished)
+
+
+func _on_fade_finished() -> void:
+	hide()
+	modulate.a = 1.0
+	_fade_tween = null
+
+
+func _on_panel_mouse_entered() -> void:
+	_mouse_inside = true
+	_cancel_fade()
+	_idle_timer.stop()
+
+
+func _on_panel_mouse_exited() -> void:
+	_mouse_inside = false
+	_kick_idle_timer()
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		_kick_idle_timer()
+	else:
+		_idle_timer.stop()
+		_cancel_fade()
