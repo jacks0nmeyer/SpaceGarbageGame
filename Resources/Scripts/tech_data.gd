@@ -17,6 +17,7 @@ enum TechEffect {
 	CLICK_TRASH_AMOUNT,          # effectAmount = absolute trash-per-click override (max wins)
 	CLICK_DOUBLE_CHANCE,         # effectAmount = probability (0.0 - 1.0) of 2x resource yield
 	CLICK_POLLUTION_DELTA,       # effectAmount = pollution change per click (e.g. -1)
+	MINING_STRENGTH_DELTA,       # effectAmount = additive asteroid-click damage delta (+1)
 }
 
 @export var id: String = ""

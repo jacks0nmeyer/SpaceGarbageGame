@@ -74,3 +74,15 @@ signal buildingWorkerUnassigned(robot: RobotData, region: RegionData, building: 
 
 @warning_ignore("unused_signal")
 signal purchaseAlertChanged(category: String, active: bool)
+
+@warning_ignore("unused_signal")
+signal asteroidSpawned(asteroid: AsteroidData)
+
+@warning_ignore("unused_signal")
+signal asteroidHit(asteroid: AsteroidData, position: Vector2, damage: int)
+
+@warning_ignore("unused_signal")
+signal asteroidDeflected(asteroid: AsteroidData, position: Vector2)
+
+@warning_ignore("unused_signal")
+signal asteroidBroken(asteroid: AsteroidData, drops: Dictionary)

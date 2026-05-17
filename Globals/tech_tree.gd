@@ -174,6 +174,19 @@ func get_click_double_chance() -> float:
 	return clamp(chance, 0.0, 1.0)
 
 
+# Player's "mining strength" — damage per asteroid click. Base 1; each
+# unlocked MINING_STRENGTH_DELTA tech adds its effectAmount. Asteroids with a
+# minStrengthToCrack above this value cannot be damaged.
+func get_mining_strength() -> int:
+	var s := 1
+	for tech in unlockedLevels:
+		if not is_unlocked(tech):
+			continue
+		if tech.effectKind == TechData.TechEffect.MINING_STRENGTH_DELTA:
+			s += int(tech.effectAmount)
+	return s
+
+
 # Pollution change applied to the region per manual click (negative cleans).
 func get_click_pollution_bonus() -> int:
 	var delta := 0
