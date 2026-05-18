@@ -53,17 +53,15 @@ layout_mode = 1
 [node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
 layout_mode = 1
 
-[node name="AsteroidSpawner" parent="." instance=ExtResource("11_spawn")]
+[node name="AsteroidSpawner" parent="." unique_id=359284471 instance=ExtResource("11_spawn")]
 
-[node name="PanelLayer" type="CanvasLayer" parent="."]
+[node name="PanelLayer" type="CanvasLayer" parent="." unique_id=2019951002]
 layer = 10
 
 [node name="RobotUI" parent="PanelLayer" unique_id=1500000001 instance=ExtResource("6_robotui")]
-layout_mode = 1
 offset_left = 0.0
 
 [node name="RobotsButton" type="Button" parent="PanelLayer" unique_id=1500000002]
-layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -75,10 +73,8 @@ grow_horizontal = 0
 text = "Robots"
 
 [node name="TechTree" parent="PanelLayer" unique_id=1500000003 instance=ExtResource("7_techtree")]
-layout_mode = 1
 
 [node name="ResearchButton" type="Button" parent="PanelLayer" unique_id=1500000004]
-layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -90,10 +86,8 @@ grow_horizontal = 0
 text = "Research"
 
 [node name="BuildingUI" parent="PanelLayer" unique_id=1500000020 instance=ExtResource("9_buildingui")]
-layout_mode = 1
 
 [node name="BuildingsButton" type="Button" parent="PanelLayer" unique_id=1500000021]
-layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0

@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="AsteroidData" format=3]
+[gd_resource type="Resource" script_class="AsteroidData" format=3 uid="uid://cg5w1wh4pm21x"]
 
-[ext_resource type="Script" path="res://Resources/Scripts/asteroid_data.gd" id="1_ast"]
-[ext_resource type="Script" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="2_entry"]
-[ext_resource type="Texture2D" path="res://Art/Asteroids/asteroid_circle.png" id="3_circle"]
-[ext_resource type="Texture2D" path="res://Art/Asteroids/damage_dot.png" id="4_dot"]
+[ext_resource type="Script" uid="uid://dia6c520up0ij" path="res://Resources/Scripts/asteroid_data.gd" id="1_ast"]
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="2_entry"]
+[ext_resource type="Texture2D" uid="uid://dhdx141os8les" path="res://Art/Asteroids/asteroid_circle.png" id="3_circle"]
+[ext_resource type="Texture2D" uid="uid://d06rj04qea1h4" path="res://Art/Asteroids/damage_dot.png" id="4_dot"]
 
 [sub_resource type="Resource" id="Resource_glass"]
 script = ExtResource("2_entry")
@@ -17,7 +17,7 @@ texture = ExtResource("3_circle")
 damageDotTexture = ExtResource("4_dot")
 maxHp = 16
 minStrengthToCrack = 2
-spawnWeight = 0.15
+spawnWeight = 0.05
 speedMin = 40.0
 speedMax = 80.0
 resourceChances = Array[ExtResource("2_entry")]([SubResource("Resource_glass")])
