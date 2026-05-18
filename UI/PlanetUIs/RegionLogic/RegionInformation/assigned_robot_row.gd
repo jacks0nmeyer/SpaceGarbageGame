@@ -103,7 +103,9 @@ func _get_drag_data(_pos: Vector2):
 	if robot.texture != null:
 		var rect := TextureRect.new()
 		rect.texture = robot.texture
-		rect.custom_minimum_size = Vector2(40, 40)
+		rect.custom_minimum_size = Vector2(34, 34)
+		rect.size = Vector2(34, 34)
+		rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hbox.add_child(rect)
 	var label := Label.new()

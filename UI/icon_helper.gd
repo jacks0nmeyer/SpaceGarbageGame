@@ -12,6 +12,8 @@ static func populate(holder: Control, texture: Texture2D, size: Vector2, fallbac
 		var rect := TextureRect.new()
 		rect.texture = texture
 		rect.custom_minimum_size = size
+		rect.size = size
+		rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		holder.add_child(rect)
 	else:

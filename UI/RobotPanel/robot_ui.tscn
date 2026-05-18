@@ -63,6 +63,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_scroll_mode = 0
 
 [node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Buy/Scroll" unique_id=1886987227]
 layout_mode = 2
@@ -82,6 +83,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_scroll_mode = 0
 
 [node name="Rows" type="VBoxContainer" parent="Panel/Margin/Vbox/Tabs/Owned/Scroll" unique_id=1062268852]
 layout_mode = 2

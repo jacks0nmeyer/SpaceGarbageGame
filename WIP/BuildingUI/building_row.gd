@@ -24,7 +24,7 @@ func _ready():
 
 
 func _populate_icon():
-	IconHelper.populate(icon_holder, data.texture, Vector2(32, 32), Color.BLACK)
+	IconHelper.populate(icon_holder, data.texture, Vector2(34, 34), Color.BLACK)
 
 
 func current_cost() -> Dictionary:

@@ -21,7 +21,7 @@ func _ready():
 
 
 func _populate_icon():
-	IconHelper.populate(icon_holder, data.texture, Vector2(40, 40), Color(0.3, 0.3, 0.3))
+	IconHelper.populate(icon_holder, data.texture, Vector2(34, 34), Color(0.3, 0.3, 0.3))
 
 
 func _refresh():
@@ -62,7 +62,9 @@ static func _make_drag_preview(robot: RobotData) -> Control:
 	if robot.texture != null:
 		var rect := TextureRect.new()
 		rect.texture = robot.texture
-		rect.custom_minimum_size = Vector2(40, 40)
+		rect.custom_minimum_size = Vector2(34, 34)
+		rect.size = Vector2(34, 34)
+		rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hbox.add_child(rect)
 	var label := Label.new()
