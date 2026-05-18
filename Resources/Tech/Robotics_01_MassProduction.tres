@@ -12,12 +12,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "mass_production"
-displayName = "Mass Production"
+display_name = "Mass Production"
 description = "Robot purchase cost reduced by 10%."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([])
-effectKind = 2
-effectKey = ""
-effectAmount = 0.9
+effect_kind = 2
+effect_key = ""
+effect_amount = 0.9
 position = Vector2(720, 460)

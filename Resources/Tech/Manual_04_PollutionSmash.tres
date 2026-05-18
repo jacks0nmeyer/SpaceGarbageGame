@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "pollution_smash"
-displayName = "Pollution Smash"
+display_name = "Pollution Smash"
 description = "Each manual click reduces region pollution by 1."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 10
-effectKey = ""
-effectAmount = -1.0
+effect_kind = 10
+effect_key = ""
+effect_amount = -1.0
 position = Vector2(980, 140)

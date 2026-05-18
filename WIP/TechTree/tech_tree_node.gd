@@ -2,7 +2,7 @@ extends TextureButton
 class_name TechTreeNode
 
 # Single tech node in the tree. Data-bound to a TechData via setup() before
-# being added to the tree. Listens for techUnlocked / resourcesUpdated to keep
+# being added to the tree. Listens for tech_unlocked / resources_updated to keep
 # its visual state in sync with affordability and prerequisites.
 
 signal hovered(tech: TechData)
@@ -29,9 +29,9 @@ func _ready() -> void:
 	check_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mouse_entered.connect(_on_hover_in)
 	mouse_exited.connect(_on_hover_out)
-	GlobalSignals.techUnlocked.connect(_on_any_tech_unlocked)
-	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
-	GlobalSignals.saveLoaded.connect(_on_save_loaded)
+	GlobalSignals.tech_unlocked.connect(_on_any_tech_unlocked)
+	GlobalSignals.resources_updated.connect(_on_resources_updated)
+	GlobalSignals.save_loaded.connect(_on_save_loaded)
 	_refresh()
 
 
@@ -50,7 +50,7 @@ func _on_pressed() -> void:
 	if tech == null or TechTree.is_unlocked(tech):
 		return
 	TechTree.unlock(tech)
-	# unlock() emits techUnlocked and updates resources, which triggers _refresh
+	# unlock() emits tech_unlocked and updates resources, which triggers _refresh
 	# via the connected signals.
 
 

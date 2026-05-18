@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "bio_scrubbers"
-displayName = "Bio-Scrubbers"
+display_name = "Bio-Scrubbers"
 description = "Cleaner robots' pollution reduction is 25% stronger."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 7
-effectKey = ""
-effectAmount = 1.25
+effect_kind = 7
+effect_key = ""
+effect_amount = 1.25
 position = Vector2(400, 300)

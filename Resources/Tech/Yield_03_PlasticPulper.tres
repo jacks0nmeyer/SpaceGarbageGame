@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "plastic_pulper"
-displayName = "Plastic Pulper"
+display_name = "Plastic Pulper"
 description = "+15% plastic yield."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 0
-effectKey = "plastic"
-effectAmount = 0.15
+effect_kind = 0
+effect_key = "plastic"
+effect_amount = 0.15
 position = Vector2(140, 140)

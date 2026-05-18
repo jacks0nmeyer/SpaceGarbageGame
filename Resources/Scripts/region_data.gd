@@ -2,47 +2,47 @@ class_name RegionData
 extends Resource
 
 
-@export var regionName: String
+@export var region_name: String
 
 @export_group("Data")
-@export var resourceChances: Array[ResourceEntry] = []
+@export var resource_chances: Array[ResourceEntry] = []
 
 
 @export var building: bool
 @export var robot_capacity: int
 @export var building_capacity: int
-@export var isWater: bool = false
+@export var is_water: bool = false
 
 # Runtime-only mapping of RobotData -> int count of that type assigned here.
 # Mutated at runtime; not persisted into the .tres on disk.
-var assignedRobots: Dictionary = {}
+var assigned_robots: Dictionary = {}
 
 # Runtime-only: BuildingData -> int count of that type assigned to this region.
-var assignedBuildings: Dictionary = {}
+var assigned_buildings: Dictionary = {}
 
 # Runtime-only: BuildingData -> { resource_name (String) -> int stored }.
 # Stored amount per building TYPE in this region — buildings of the same type pool.
-var buildingStorage: Dictionary = {}
+var building_storage: Dictionary = {}
 
 # Runtime-only: BuildingData -> { RobotData -> int worker count } staffing this
-# building type. Capped by assignedBuildings[type] (one worker per building unit).
-var buildingWorkers: Dictionary = {}
+# building type. Capped by assigned_buildings[type] (one worker per building unit).
+var building_workers: Dictionary = {}
 
 # Runtime-only counter (0..4): how many of the per-region 25% RP milestones
 # have already been awarded. Monotonically increases so refilling trash never
 # re-pays.
-var researchMilestonesAwarded: int = 0
+var research_milestones_awarded: int = 0
 
 
 @export var trash: int
-@export var maxTrash: int 
+@export var max_trash: int 
 @export var pollution: int
-@export var maxPollution: int
+@export var max_pollution: int
 
 
 
 @export var description: String
-@export var lockedDescription: String
+@export var locked_description: String
 @export var locked: bool
 
 @export_group("Textures")
@@ -51,39 +51,39 @@ var researchMilestonesAwarded: int = 0
 @export var texture_disabled: Texture2D
 
 
-func getPollutionLevel() -> GlobalResources.PollutionLevel:
-	var percentage := (float(pollution)/float(maxPollution)) * 100.0
-	return GlobalResources.getPollutionLevel(percentage)
+func get_pollution_level() -> GlobalResources.PollutionLevel:
+	var percentage := (float(pollution)/float(max_pollution)) * 100.0
+	return GlobalResources.get_pollution_level(percentage)
 	
 	
-func getPollutionName() -> String:
-	return GlobalResources.getPollutionName(getPollutionLevel())
+func get_pollution_name() -> String:
+	return GlobalResources.get_pollution_name(get_pollution_level())
 
 
-func assignedSlotsUsed() -> int:
+func assigned_slots_used() -> int:
 	var used := 0
-	for robot in assignedRobots:
-		used += int(assignedRobots[robot]) * int(robot.size)
+	for robot in assigned_robots:
+		used += int(assigned_robots[robot]) * int(robot.size)
 	return used
 
 
-func canFit(robot: RobotData) -> bool:
+func can_fit(robot: RobotData) -> bool:
 	if locked:
 		return false
-	if isWater and not robot.worksInWater:
+	if is_water and not robot.works_in_water:
 		return false
 	var size_mod: int = TechTree.get_robot_size_modifier()
 	var effective_size: int = max(1, int(robot.size) + size_mod)
 	var capacity: int = robot_capacity + TechTree.get_region_capacity_bonus()
-	return assignedSlotsUsed() + effective_size <= capacity
+	return assigned_slots_used() + effective_size <= capacity
 
 
-func returnResource(): #outputs a string based on the region's resource chance
-	if resourceChances.is_empty():
+func return_resource(): #outputs a string based on the region's resource chance
+	if resource_chances.is_empty():
 		return ""
 
 	var weights := {}
-	for entry in resourceChances:
+	for entry in resource_chances:
 		if entry.chance > 0.0:
 			weights[entry.resource] = entry.chance
 
@@ -95,61 +95,61 @@ func returnResource(): #outputs a string based on the region's resource chance
 
 # --- Building helpers ---------------------------------------------------------
 
-func assignedBuildingSlotsUsed() -> int:
+func assigned_building_slots_used() -> int:
 	var used := 0
-	for b in assignedBuildings:
-		used += int(assignedBuildings[b]) * int(b.size)
+	for b in assigned_buildings:
+		used += int(assigned_buildings[b]) * int(b.size)
 	return used
 
 
-func canFitBuilding(b: BuildingData) -> bool:
+func can_fit_building(b: BuildingData) -> bool:
 	if locked:
 		return false
-	return assignedBuildingSlotsUsed() + int(b.size) <= building_capacity
+	return assigned_building_slots_used() + int(b.size) <= building_capacity
 
 
-func storedInBuilding(b: BuildingData) -> int:
-	if not buildingStorage.has(b):
+func stored_in_building(b: BuildingData) -> int:
+	if not building_storage.has(b):
 		return 0
 	var total := 0
-	for res in buildingStorage[b]:
-		total += int(buildingStorage[b][res])
+	for res in building_storage[b]:
+		total += int(building_storage[b][res])
 	return total
 
 
-func capacityForBuilding(b: BuildingData) -> int:
-	return int(assignedBuildings.get(b, 0)) * int(b.storage_capacity)
+func capacity_for_building(b: BuildingData) -> int:
+	return int(assigned_buildings.get(b, 0)) * int(b.storage_capacity)
 
 
-func regionHasStorageRoom() -> bool:
-	for b in assignedBuildings:
-		if storedInBuilding(b) < capacityForBuilding(b):
+func region_has_storage_room() -> bool:
+	for b in assigned_buildings:
+		if stored_in_building(b) < capacity_for_building(b):
 			return true
 	return false
 
 
 # Deposits one unit of `res_name` into the first building type with room.
 # Returns the BuildingData it deposited into, or null if discarded.
-func depositResource(res_name: String):
+func deposit_resource(res_name: String):
 	var key := res_name.to_lower()
-	for b in assignedBuildings:
-		if storedInBuilding(b) >= capacityForBuilding(b):
+	for b in assigned_buildings:
+		if stored_in_building(b) >= capacity_for_building(b):
 			continue
-		if not buildingStorage.has(b):
-			buildingStorage[b] = {}
-		buildingStorage[b][key] = int(buildingStorage[b].get(key, 0)) + 1
+		if not building_storage.has(b):
+			building_storage[b] = {}
+		building_storage[b][key] = int(building_storage[b].get(key, 0)) + 1
 		return b
 	return null
 
 
-# Drains up to b.process_amount units total from buildingStorage[b].
+# Drains up to b.process_amount units total from building_storage[b].
 # Round-robin across resource keys so one resource doesn't starve another.
 # Returns { resource_name -> qty_moved }.
-func processBuilding(b: BuildingData) -> Dictionary:
+func process_building(b: BuildingData) -> Dictionary:
 	var moved: Dictionary = {}
-	if not buildingStorage.has(b):
+	if not building_storage.has(b):
 		return moved
-	var pool: Dictionary = buildingStorage[b]
+	var pool: Dictionary = building_storage[b]
 	if pool.is_empty():
 		return moved
 
@@ -174,23 +174,23 @@ func processBuilding(b: BuildingData) -> Dictionary:
 		if int(pool[k]) <= 0:
 			pool.erase(k)
 	if pool.is_empty():
-		buildingStorage.erase(b)
+		building_storage.erase(b)
 
 	return moved
 
 
-func workerCount(b: BuildingData) -> int:
-	if not buildingWorkers.has(b):
+func worker_count(b: BuildingData) -> int:
+	if not building_workers.has(b):
 		return 0
 	var total := 0
-	for r in buildingWorkers[b]:
-		total += int(buildingWorkers[b][r])
+	for r in building_workers[b]:
+		total += int(building_workers[b][r])
 	return total
 
 
-func workerCap(b: BuildingData) -> int:
-	return int(assignedBuildings.get(b, 0))
+func worker_cap(b: BuildingData) -> int:
+	return int(assigned_buildings.get(b, 0))
 
 
-func canStaff(b: BuildingData) -> bool:
-	return workerCount(b) < workerCap(b)
+func can_staff(b: BuildingData) -> bool:
+	return worker_count(b) < worker_cap(b)

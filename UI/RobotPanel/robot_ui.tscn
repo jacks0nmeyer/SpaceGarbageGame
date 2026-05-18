@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://csspqfobi52eo"]
 
-[ext_resource type="Script" uid="uid://douk4ce8wdirc" path="res://WIP/RobotUI/robot_ui.gd" id="1_su03b"]
-[ext_resource type="Script" uid="uid://ce2go3y62fs8q" path="res://WIP/RobotUI/owned_tab.gd" id="2_owned"]
+[ext_resource type="Script" uid="uid://douk4ce8wdirc" path="res://UI/RobotPanel/robot_ui.gd" id="1_su03b"]
+[ext_resource type="Script" uid="uid://ce2go3y62fs8q" path="res://UI/RobotPanel/owned_tab.gd" id="2_owned"]
 
 [node name="RobotUI" type="Control" unique_id=461547080]
 custom_minimum_size = Vector2(420, 0)

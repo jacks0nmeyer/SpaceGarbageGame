@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://WIP/RobotUI/robot_row.gd" id="1_row"]
+[ext_resource type="Script" path="res://UI/RobotPanel/robot_row.gd" id="1_row"]
 
 [node name="RobotRow" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 96)

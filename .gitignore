@@ -10,3 +10,6 @@
 
 # Markdown (notes, Claude memory, etc.)
 *.md
+
+# Godot editor autosave artifacts
+*.tmp

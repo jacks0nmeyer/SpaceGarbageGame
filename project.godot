@@ -22,6 +22,7 @@ GlobalSignals="*uid://bqql6k1irdmri"
 TechTree="*uid://bhrrgwvxsit54"
 PurchaseAlerts="*res://Globals/purchase_alerts.gd"
 SaveGame="*uid://c8k2savegame01"
+ResourceKeys="*res://Globals/resource_keys.gd"
 
 [dotnet]
 
@@ -36,7 +37,6 @@ version_control/autoload_on_startup=true
 
 folder_colors={
 "res://Art/": "red",
-"res://Entities/": "orange",
 "res://Globals/": "yellow",
 "res://Resources/": "green",
 "res://Sound/": "teal",

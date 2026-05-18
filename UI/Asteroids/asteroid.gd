@@ -2,9 +2,9 @@ extends TextureButton
 class_name Asteroid
 
 # A single in-flight asteroid. Drifts horizontally; each click subtracts the
-# player's mining_strength from hp. Below the asteroid's minStrengthToCrack
-# clicks emit asteroidDeflected and do no damage. Breaking awards a bundle of
-# drops via AsteroidData.rollDrops().
+# player's mining_strength from hp. Below the asteroid's min_strength_to_crack
+# clicks emit asteroid_deflected and do no damage. Breaking awards a bundle of
+# drops via AsteroidData.roll_drops().
 
 @export var data: AsteroidData
 
@@ -18,7 +18,7 @@ func _ready() -> void:
 	if data == null:
 		queue_free()
 		return
-	hp = data.maxHp
+	hp = data.max_hp
 	texture_normal = data.texture
 	if texture_normal:
 		var img := texture_normal.get_image()
@@ -55,17 +55,17 @@ func _process(delta: float) -> void:
 func _on_pressed() -> void:
 	var strength: int = TechTree.get_mining_strength()
 	var hit_pos: Vector2 = get_global_mouse_position()
-	if strength < data.minStrengthToCrack:
-		GlobalSignals.asteroidDeflected.emit(data, hit_pos)
+	if strength < data.min_strength_to_crack:
+		GlobalSignals.asteroid_deflected.emit(data, hit_pos)
 		return
 	hp -= strength
-	GlobalSignals.asteroidHit.emit(data, hit_pos, strength)
+	GlobalSignals.asteroid_hit.emit(data, hit_pos, strength)
 	_spawn_damage_dots(strength)
 	if hp <= 0:
-		var drops: Dictionary = data.rollDrops()
+		var drops: Dictionary = data.roll_drops()
 		for res in drops:
-			GlobalResources.gotResource(res, int(drops[res]))
-		GlobalSignals.asteroidBroken.emit(data, drops)
+			GlobalResources.got_resource(res, int(drops[res]))
+		GlobalSignals.asteroid_broken.emit(data, drops)
 		queue_free()
 
 
@@ -73,9 +73,9 @@ func _on_pressed() -> void:
 # asteroid circle. Good enough for placeholder art; rejection-sample by alpha
 # later if the silhouette becomes non-circular.
 func _spawn_damage_dots(amount: int) -> void:
-	if data.damageDotTexture == null or _dot_parent == null:
+	if data.damage_dot_texture == null or _dot_parent == null:
 		return
-	var dot_size: Vector2 = data.damageDotTexture.get_size()
+	var dot_size: Vector2 = data.damage_dot_texture.get_size()
 	# Inscribed square inside the circle: side = diameter / sqrt(2).
 	var inset: float = size.x * (1.0 - 1.0 / sqrt(2.0)) * 0.5
 	var min_x: float = inset
@@ -84,7 +84,7 @@ func _spawn_damage_dots(amount: int) -> void:
 	var max_y: float = size.y - inset - dot_size.y
 	for _i in amount:
 		var dot := TextureRect.new()
-		dot.texture = data.damageDotTexture
+		dot.texture = data.damage_dot_texture
 		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		dot.position = Vector2(randf_range(min_x, max_x), randf_range(min_y, max_y))
 		_dot_parent.add_child(dot)

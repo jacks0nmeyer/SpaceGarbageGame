@@ -1,32 +1,31 @@
 extends TextureRect
 
 @export var planet: PlanetData
-@export var pollutionAtlas: Texture2D
-var iconSize := Vector2(76, 48)
-var iconSpacing := 20
+@export var pollution_atlas: Texture2D
+var icon_size := Vector2(76, 48)
+var icon_spacing := 20
 
 func _ready():
-	GlobalSignals.planetPollutionUpdated.connect(onPlanetPollutionUpdated)
-	updatePollution()
-	updatePollutionPopup()
+	GlobalSignals.planet_pollution_updated.connect(on_planet_pollution_updated)
+	update_pollution()
+	update_pollution_popup()
 	pollution_popup.hide()
-	print("TextureREct size: ", size)
 
-func updatePollution():
-	if pollutionAtlas == null or planet == null:
+func update_pollution():
+	if pollution_atlas == null or planet == null:
 		return
-	var level :=  planet.getPollutionLevel()
-	var step := iconSize.x + iconSpacing
+	var level :=  planet.get_pollution_level()
+	var step := icon_size.x + icon_spacing
 	var atlas := AtlasTexture.new()
-	atlas.atlas =  pollutionAtlas
-	atlas.region = Rect2(step * int(level), 0, iconSize.x, iconSize.y)
+	atlas.atlas =  pollution_atlas
+	atlas.region = Rect2(step * int(level), 0, icon_size.x, icon_size.y)
 	texture = atlas
 	
 	
-func onPlanetPollutionUpdated(updated_planet: PlanetData):
+func on_planet_pollution_updated(updated_planet: PlanetData):
 	if updated_planet == planet:
-		updatePollution()
-		updatePollutionPopup()
+		update_pollution()
+		update_pollution_popup()
 
 
 @onready var pollution_popup: Panel = $PollutionPopup
@@ -36,27 +35,25 @@ func onPlanetPollutionUpdated(updated_planet: PlanetData):
 @onready var pollution_return_label: Label = $PollutionPopup/PopupMargin/PopupVbox/Return/PollutionReturnLabel
 
 
-func updatePollutionPopup():
-	var level := planet.getPollutionLevel()
-	var pollutionName := planet.getPollutionName()
+func update_pollution_popup():
+	var level := planet.get_pollution_level()
+	var pollution_name := planet.get_pollution_name()
 	
-	pollution_level_label.text = str(pollutionName)
-	pollution_level_label.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
+	pollution_level_label.text = str(pollution_name)
+	pollution_level_label.add_theme_color_override("font_color", GlobalResources.get_pollution_color(level))
 	
-	pollution_progress.max_value = planet.getTotalMaxPollution()
-	pollution_progress.value = planet.getTotalPollution()
+	pollution_progress.max_value = planet.get_total_max_pollution()
+	pollution_progress.value = planet.get_total_pollution()
 	
-	pollution_progress_label.text = "%d / %d" % [planet.getTotalPollution(), planet.getTotalMaxPollution()]
+	pollution_progress_label.text = "%d / %d" % [planet.get_total_pollution(), planet.get_total_max_pollution()]
 	
-	pollution_return_label.text =str(GlobalResources.getPollutionProductionMultiplier(level)) + "x"
-	pollution_return_label.add_theme_color_override("font_color", GlobalResources.getPollutionColor(level))
+	pollution_return_label.text =str(GlobalResources.get_pollution_production_multiplier(level)) + "x"
+	pollution_return_label.add_theme_color_override("font_color", GlobalResources.get_pollution_color(level))
 
 
 func _on_mouse_entered() :
 	pollution_popup.show()
-	print("test")
 
 
 func _on_mouse_exited() :
 	pollution_popup.hide()
-	print("test")

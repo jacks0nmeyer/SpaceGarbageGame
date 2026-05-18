@@ -17,12 +17,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [resource]
 script = ExtResource("1_robot")
-robotName = "Atomizer"
+robot_name = "Atomizer"
 description = "Tears through debris quickly but wastes most of what it grabs. Slightly polluting."
-unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
-costIncrease = 1.15
+unlock_cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
+cost_increase = 1.15
 size = 1
-productionRate = 4.0
-resourceReturn = 0.4
-pollutionEffect = 6.0
+production_rate = 4.0
+resource_return = 0.4
+pollution_effect = 6.0
 metadata/_custom_type_script = "uid://8cstlrx4ytgo"

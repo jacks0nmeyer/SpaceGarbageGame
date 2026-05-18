@@ -12,12 +12,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "air_filters_clean"
-displayName = "Air Filters"
+display_name = "Air Filters"
 description = "Improves clean-air bonus: CLEAN 1.10 -> 1.15."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([])
-effectKind = 5
-effectKey = "CLEAN"
-effectAmount = 1.15
+effect_kind = 5
+effect_key = "CLEAN"
+effect_amount = 1.15
 position = Vector2(460, 460)

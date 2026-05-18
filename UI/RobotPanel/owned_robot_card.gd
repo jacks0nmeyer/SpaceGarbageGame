@@ -12,35 +12,23 @@ func _ready():
 	if data == null:
 		return
 	_populate_icon()
-	GlobalSignals.robotPurchased.connect(_on_robot_changed)
-	GlobalSignals.robotAssigned.connect(_on_robot_pair_changed)
-	GlobalSignals.robotUnassigned.connect(_on_robot_pair_changed)
-	GlobalSignals.buildingWorkerAssigned.connect(_on_worker_changed)
-	GlobalSignals.buildingWorkerUnassigned.connect(_on_worker_changed)
+	GlobalSignals.robot_purchased.connect(_on_robot_changed)
+	GlobalSignals.robot_assigned.connect(_on_robot_pair_changed)
+	GlobalSignals.robot_unassigned.connect(_on_robot_pair_changed)
+	GlobalSignals.building_worker_assigned.connect(_on_worker_changed)
+	GlobalSignals.building_worker_unassigned.connect(_on_worker_changed)
 	_refresh()
 
 
 func _populate_icon():
-	for child in icon_holder.get_children():
-		child.queue_free()
-	if data.texture != null:
-		var rect := TextureRect.new()
-		rect.texture = data.texture
-		rect.custom_minimum_size = Vector2(40, 40)
-		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon_holder.add_child(rect)
-	else:
-		var color := ColorRect.new()
-		color.color = Color(0.3, 0.3, 0.3)
-		color.custom_minimum_size = Vector2(40, 40)
-		icon_holder.add_child(color)
+	IconHelper.populate(icon_holder, data.texture, Vector2(40, 40), Color(0.3, 0.3, 0.3))
 
 
 func _refresh():
 	if data == null:
 		return
-	name_label.text = data.robotName
-	var unassigned := GlobalResources.unassignedCount(data)
+	name_label.text = data.robot_name
+	var unassigned := GlobalResources.unassigned_count(data)
 	count_label.text = "Unassigned: %d / Total: %d" % [unassigned, data.amount]
 	visible = data.amount > 0
 
@@ -60,7 +48,7 @@ func _on_worker_changed(_robot, _region, _building):
 func _get_drag_data(_pos):
 	if data == null:
 		return null
-	if GlobalResources.unassignedCount(data) <= 0:
+	if GlobalResources.unassigned_count(data) <= 0:
 		return null
 	set_drag_preview(_make_drag_preview(data))
 	return {"robot": data, "from_region": null}
@@ -78,7 +66,7 @@ static func _make_drag_preview(robot: RobotData) -> Control:
 		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hbox.add_child(rect)
 	var label := Label.new()
-	label.text = robot.robotName
+	label.text = robot.robot_name
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(label)
 	return preview

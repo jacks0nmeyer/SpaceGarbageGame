@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "salvage_eye"
-displayName = "Salvage Eye"
+display_name = "Salvage Eye"
 description = "15% chance for a click to grant double resources."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 9
-effectKey = ""
-effectAmount = 0.15
+effect_kind = 9
+effect_key = ""
+effect_amount = 0.15
 position = Vector2(920, 300)

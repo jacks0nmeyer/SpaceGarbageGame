@@ -12,12 +12,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "reinforced_gloves"
-displayName = "Reinforced Gloves"
+display_name = "Reinforced Gloves"
 description = "Manual clicks remove 2 trash and grant 2 resources."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([])
-effectKind = 8
-effectKey = ""
-effectAmount = 2.0
+effect_kind = 8
+effect_key = ""
+effect_amount = 2.0
 position = Vector2(980, 460)

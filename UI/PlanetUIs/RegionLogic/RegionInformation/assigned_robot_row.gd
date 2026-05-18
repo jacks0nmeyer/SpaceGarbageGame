@@ -40,7 +40,7 @@ func _build() -> void:
 		hbox.add_child(icon)
 
 	var label := Label.new()
-	label.text = "%s x%d" % [robot.robotName, count]
+	label.text = "%s x%d" % [robot.robot_name, count]
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(label)
@@ -55,7 +55,7 @@ func _build() -> void:
 
 
 func _unassign_one() -> void:
-	GlobalResources.unassignOne(robot, region)
+	GlobalResources.unassign_one(robot, region)
 
 
 func _process(_delta: float) -> void:
@@ -85,7 +85,7 @@ func _gui_input(event: InputEvent) -> void:
 			and event.pressed \
 			and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.shift_pressed:
-			GlobalResources.unassignAllOfType(robot, region)
+			GlobalResources.unassign_all_of_type(robot, region)
 		else:
 			_unassign_one()
 		accept_event()
@@ -94,7 +94,7 @@ func _gui_input(event: InputEvent) -> void:
 func _get_drag_data(_pos: Vector2):
 	if robot == null or region == null:
 		return null
-	if int(region.assignedRobots.get(robot, 0)) <= 0:
+	if int(region.assigned_robots.get(robot, 0)) <= 0:
 		return null
 	var preview := PanelContainer.new()
 	var hbox := HBoxContainer.new()
@@ -107,7 +107,7 @@ func _get_drag_data(_pos: Vector2):
 		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hbox.add_child(rect)
 	var label := Label.new()
-	label.text = robot.robotName
+	label.text = robot.robot_name
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(label)
 	set_drag_preview(preview)

@@ -4,12 +4,12 @@ extends Control
 # one TechTreeNode per TechData (positioned via TechData.position), draws a
 # Line2D connector from each prerequisite, and routes hover events to the
 # shared TechPopup. Visibility is toggled by main.tscn's Research button via
-# the same panelOpened/panelClosed pattern RobotUI uses.
+# the same panel_opened/panel_closed pattern RobotUI uses.
 
 const TECH_NODE_SCENE: PackedScene = preload("res://WIP/TechTree/tech_tree_node.tscn")
 
-signal panelOpened
-signal panelClosed
+signal panel_opened
+signal panel_closed
 
 @onready var tech_popup: PopupPanel = $TechPopup
 @onready var popup_label: Label = $TechPopup/Label
@@ -28,10 +28,10 @@ func toggle() -> void:
 	if visible:
 		hide()
 		tech_popup.hide()
-		panelClosed.emit()
+		panel_closed.emit()
 	else:
 		show()
-		panelOpened.emit()
+		panel_opened.emit()
 
 
 # ESC closes the panel. ui_cancel is bound to Escape by default in Godot's
@@ -107,7 +107,7 @@ func _on_node_hovered(tech: TechData) -> void:
 	if tech == null:
 		return
 	var lines: Array[String] = []
-	lines.append(tech.displayName)
+	lines.append(tech.display_name)
 	if tech.description != "":
 		lines.append(tech.description)
 	var cost_parts: Array[String] = []
@@ -121,7 +121,7 @@ func _on_node_hovered(tech: TechData) -> void:
 		var missing: Array[String] = []
 		for prereq in tech.prerequisites:
 			if not TechTree.is_unlocked(prereq):
-				missing.append(prereq.displayName)
+				missing.append(prereq.display_name)
 		if not missing.is_empty():
 			lines.append("Requires: " + ", ".join(missing))
 	popup_label.text = "\n".join(lines)

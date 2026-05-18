@@ -26,16 +26,16 @@ metadata/_custom_type_script = "uid://fqpmooiymym6"
 
 [resource]
 script = ExtResource("2_15bi2")
-regionName = "Sahara Dump"
-resourceChances = Array[ExtResource("1_qpyfh")]([SubResource("Resource_qpyfh"), SubResource("Resource_jl0rf"), SubResource("Resource_eif7m")])
+region_name = "Sahara Dump"
+resource_chances = Array[ExtResource("1_qpyfh")]([SubResource("Resource_qpyfh"), SubResource("Resource_jl0rf"), SubResource("Resource_eif7m")])
 robot_capacity = 4
 building_capacity = 3
 trash = 300000
-maxTrash = 300000
+max_trash = 300000
 pollution = 4200
-maxPollution = 10000
+max_pollution = 10000
 description = "Once the hottest place on Earth, now just the stinkiest. Mounds of trash simmer atop the dunes. "
-lockedDescription = "This region is locked, pay 10,000 Junk and 5,000 Scrap to unlock?"
+locked_description = "This region is locked, pay 10,000 Junk and 5,000 Scrap to unlock?"
 locked = true
 texture_normal = ExtResource("5_m540m")
 texture_hover = ExtResource("3_bitr4")

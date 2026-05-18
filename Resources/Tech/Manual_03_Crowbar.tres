@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "crowbar"
-displayName = "Crowbar"
+display_name = "Crowbar"
 description = "Manual clicks remove 5 trash and grant 5 resources."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 8
-effectKey = ""
-effectAmount = 5.0
+effect_kind = 8
+effect_key = ""
+effect_amount = 5.0
 position = Vector2(1040, 300)

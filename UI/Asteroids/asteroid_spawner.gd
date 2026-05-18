@@ -45,7 +45,7 @@ func _spawn_one() -> void:
 	var tex_size: Vector2 = data.texture.get_size() if data.texture else Vector2(32, 32)
 	# Pick side and velocity sign.
 	var from_left: bool = randf() < 0.5
-	var speed: float = randf_range(data.speedMin, data.speedMax)
+	var speed: float = randf_range(data.speed_min, data.speed_max)
 	var vx: float = speed if from_left else -speed
 	var start_x: float = -tex_size.x - 4.0 if from_left else vp.x + 4.0
 	# Pick Y outside the planet-avoidance band.
@@ -60,14 +60,14 @@ func _spawn_one() -> void:
 	ast.position = Vector2(start_x, y)
 	ast.velocity = Vector2(vx, 0.0)
 	add_child(ast)
-	GlobalSignals.asteroidSpawned.emit(data)
+	GlobalSignals.asteroid_spawned.emit(data)
 
 
 func _pick_asteroid() -> AsteroidData:
 	var weights: Dictionary = {}
 	for a in collection.asteroids:
-		if a != null and a.spawnWeight > 0.0:
-			weights[a] = a.spawnWeight
+		if a != null and a.spawn_weight > 0.0:
+			weights[a] = a.spawn_weight
 	if weights.is_empty():
 		return null
 	# Normalise weights so weighted_random's roll < cumulative test sums to 1.

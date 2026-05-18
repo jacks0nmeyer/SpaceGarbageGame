@@ -40,12 +40,12 @@ const MENU_ID_DEV_GODMODE := 2
 
 
 func _ready() -> void:
-	robot_ui.panelOpened.connect(_on_robot_ui_opened)
-	robot_ui.panelClosed.connect(_on_robot_ui_closed)
-	tech_tree.panelOpened.connect(_on_tech_tree_opened)
-	tech_tree.panelClosed.connect(_on_tech_tree_closed)
-	building_ui.panelOpened.connect(_on_building_ui_opened)
-	building_ui.panelClosed.connect(_on_building_ui_closed)
+	robot_ui.panel_opened.connect(_on_robot_ui_opened)
+	robot_ui.panel_closed.connect(_on_robot_ui_closed)
+	tech_tree.panel_opened.connect(_on_tech_tree_opened)
+	tech_tree.panel_closed.connect(_on_tech_tree_closed)
+	building_ui.panel_opened.connect(_on_building_ui_opened)
+	building_ui.panel_closed.connect(_on_building_ui_closed)
 
 	pause_button.pressed.connect(_on_pause_pressed)
 	var menu_popup: PopupMenu = menu_button.get_popup()
@@ -54,10 +54,10 @@ func _ready() -> void:
 
 	reset_confirm.confirmed.connect(_on_reset_confirmed)
 
-	GlobalSignals.robotPanelRequested.connect(_on_robot_panel_requested)
-	GlobalSignals.buildingPanelRequested.connect(_on_building_panel_requested)
+	GlobalSignals.robot_panel_requested.connect(_on_robot_panel_requested)
+	GlobalSignals.building_panel_requested.connect(_on_building_panel_requested)
 
-	GlobalSignals.purchaseAlertChanged.connect(_on_purchase_alert_changed)
+	GlobalSignals.purchase_alert_changed.connect(_on_purchase_alert_changed)
 
 	SaveGame.consume_post_reset_refresh()
 

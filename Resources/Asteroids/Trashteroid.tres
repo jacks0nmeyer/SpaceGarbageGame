@@ -17,8 +17,8 @@ chance = 0.45
 
 [resource]
 script = ExtResource("1_ast")
-displayName = "Trashteroid"
+display_name = "Trashteroid"
 texture = ExtResource("3_circle")
-damageDotTexture = ExtResource("4_dot")
-spawnWeight = 0.95
-resourceChances = Array[ExtResource("2_entry")]([SubResource("Resource_scrap"), SubResource("Resource_junk")])
+damage_dot_texture = ExtResource("4_dot")
+spawn_weight = 0.95
+resource_chances = Array[ExtResource("2_entry")]([SubResource("Resource_scrap"), SubResource("Resource_junk")])

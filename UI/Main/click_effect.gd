@@ -1,8 +1,8 @@
 extends CanvasLayer
 
 # Spawns a small burst of fading pixels at a click position. Driven by
-# GlobalSignals.regionClicked (white burst) and GlobalSignals.asteroidHit /
-# asteroidDeflected (white and cyan respectively) so the effect only fires
+# GlobalSignals.region_clicked (white burst) and GlobalSignals.asteroid_hit /
+# asteroid_deflected (white and cyan respectively) so the effect only fires
 # for gameplay clicks — not menu/UI button presses. Particles are anchored
 # at the spawn position and don't follow the cursor.
 
@@ -15,9 +15,9 @@ const ASTEROID_DEFLECT_COLOR := Color(0.5, 0.85, 1.0, 1.0)
 
 
 func _ready() -> void:
-	GlobalSignals.regionClicked.connect(_spawn_burst)
-	GlobalSignals.asteroidHit.connect(_on_asteroid_hit)
-	GlobalSignals.asteroidDeflected.connect(_on_asteroid_deflected)
+	GlobalSignals.region_clicked.connect(_spawn_burst)
+	GlobalSignals.asteroid_hit.connect(_on_asteroid_hit)
+	GlobalSignals.asteroid_deflected.connect(_on_asteroid_deflected)
 
 
 func _on_asteroid_hit(_asteroid: AsteroidData, pos: Vector2, _damage: int) -> void:

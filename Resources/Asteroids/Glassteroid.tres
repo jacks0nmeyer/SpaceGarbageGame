@@ -12,14 +12,14 @@ chance = 1.0
 
 [resource]
 script = ExtResource("1_ast")
-displayName = "Glassteroid"
+display_name = "Glassteroid"
 texture = ExtResource("3_circle")
-damageDotTexture = ExtResource("4_dot")
-maxHp = 16
-minStrengthToCrack = 2
-spawnWeight = 0.05
-speedMin = 40.0
-speedMax = 80.0
-resourceChances = Array[ExtResource("2_entry")]([SubResource("Resource_glass")])
-yieldMin = 3
-yieldMax = 6
+damage_dot_texture = ExtResource("4_dot")
+max_hp = 16
+min_strength_to_crack = 2
+spawn_weight = 0.05
+speed_min = 40.0
+speed_max = 80.0
+resource_chances = Array[ExtResource("2_entry")]([SubResource("Resource_glass")])
+yield_min = 3
+yield_max = 6

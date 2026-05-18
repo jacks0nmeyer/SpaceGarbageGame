@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://nas23o6yox7c" path="res://UI/PlanetUIs/EarthUI.tscn" id="3_vhxei"]
 [ext_resource type="PackedScene" uid="uid://b31cvtpmig7ec" path="res://WIP/PlanetProgressUI/planet_progress_ui.tscn" id="4_uqj38"]
 [ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
-[ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
+[ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://UI/RobotPanel/robot_ui.tscn" id="6_robotui"]
 [ext_resource type="PackedScene" uid="uid://cwqdac8yngpi8" path="res://WIP/TechTree/tech_tree.tscn" id="7_techtree"]
 [ext_resource type="Script" uid="uid://bgrn6bq8w2vei" path="res://UI/Main/main.gd" id="8_main"]
 [ext_resource type="PackedScene" path="res://WIP/BuildingUI/building_ui.tscn" id="9_buildingui"]

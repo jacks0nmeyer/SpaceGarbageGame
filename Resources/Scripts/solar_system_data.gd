@@ -3,8 +3,8 @@ class_name SolarSystemData
 
 @export var planets: Array[PlanetData] = []
 
-func getTotalTrash() -> int:
+func get_total_trash() -> int:
 	var total:= 0
 	for planet in planets:
-		total += planet.getTotalTrash()
+		total += planet.get_total_trash()
 	return total

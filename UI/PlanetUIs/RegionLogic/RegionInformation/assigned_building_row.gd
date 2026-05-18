@@ -22,7 +22,7 @@ var storage_row: HBoxContainer
 
 # Auto-process progress (0..1) for the bar drawn behind the Stored row. Polled
 # in _process from GameManager.get_building_progress; redrawn only when it
-# moves enough to be visible. Gated on workerCount > 0 — no worker, no bar.
+# moves enough to be visible. Gated on worker_count > 0 — no worker, no bar.
 var _last_progress: float = 0.0
 const _PROGRESS_REDRAW_EPSILON: float = 0.005
 const _PROGRESS_FILL_COLOR: Color = Color(0.45, 0.85, 1.0, 0.18)
@@ -57,7 +57,7 @@ func _build() -> void:
 		top.add_child(icon)
 
 	var name_label := Label.new()
-	name_label.text = "%s x%d" % [building.buildingName, count]
+	name_label.text = "%s x%d" % [building.building_name, count]
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	top.add_child(name_label)
@@ -119,8 +119,8 @@ func _build() -> void:
 func refresh_storage() -> void:
 	if building == null or region == null or stored_label == null:
 		return
-	var stored: int = region.storedInBuilding(building)
-	var cap: int = region.capacityForBuilding(building)
+	var stored: int = region.stored_in_building(building)
+	var cap: int = region.capacity_for_building(building)
 	stored_label.text = "Stored: %d / %d" % [stored, cap]
 	if process_button != null:
 		process_button.disabled = stored <= 0
@@ -129,8 +129,8 @@ func refresh_storage() -> void:
 func refresh_workers() -> void:
 	if building == null or region == null or workers_label == null:
 		return
-	var workers: int = region.workerCount(building)
-	var cap: int = region.workerCap(building)
+	var workers: int = region.worker_count(building)
+	var cap: int = region.worker_cap(building)
 	workers_label.text = "Workers: %d / %d" % [workers, cap]
 	if workers_plus != null:
 		workers_plus.disabled = (workers >= cap) or (not _any_robot_available())
@@ -143,35 +143,35 @@ func _any_robot_available() -> bool:
 	if coll == null:
 		return false
 	for robot in coll.robots:
-		if GlobalResources.unassignedCount(robot) > 0:
+		if GlobalResources.unassigned_count(robot) > 0:
 			return true
 	return false
 
 
 func _unassign_one() -> void:
-	GlobalResources.unassignOneBuilding(building, region)
+	GlobalResources.unassign_one_building(building, region)
 
 
 func _on_process_pressed() -> void:
-	GlobalResources.processBuildingClicked(region, building)
+	GlobalResources.process_building_clicked(region, building)
 
 
 func _on_workers_plus() -> void:
-	GlobalResources.staffAnyAvailable(region, building)
+	GlobalResources.staff_any_available(region, building)
 
 
 func _on_workers_minus() -> void:
-	if not region.buildingWorkers.has(building):
+	if not region.building_workers.has(building):
 		return
-	var any_robot = region.buildingWorkers[building].keys()[0]
-	GlobalResources.unstaffOneWorker(any_robot, region, building)
+	var any_robot = region.building_workers[building].keys()[0]
+	GlobalResources.unstaff_one_worker(any_robot, region, building)
 
 
 func _process(_delta: float) -> void:
 	if building == null or region == null:
 		return
 	var p: float = 0.0
-	if region.workerCount(building) > 0:
+	if region.worker_count(building) > 0:
 		p = GameManager.get_building_progress(region, building)
 	if absf(p - _last_progress) >= _PROGRESS_REDRAW_EPSILON \
 			or (p == 0.0 and _last_progress != 0.0):
@@ -192,7 +192,7 @@ func _gui_input(event: InputEvent) -> void:
 			and event.pressed \
 			and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.shift_pressed:
-			GlobalResources.unassignAllOfTypeBuilding(building, region)
+			GlobalResources.unassign_all_of_type_building(building, region)
 		else:
 			_unassign_one()
 		accept_event()
@@ -201,7 +201,7 @@ func _gui_input(event: InputEvent) -> void:
 func _get_drag_data(_pos: Vector2):
 	if building == null or region == null:
 		return null
-	if int(region.assignedBuildings.get(building, 0)) <= 0:
+	if int(region.assigned_buildings.get(building, 0)) <= 0:
 		return null
 	var preview := PanelContainer.new()
 	var hbox := HBoxContainer.new()
@@ -214,7 +214,7 @@ func _get_drag_data(_pos: Vector2):
 		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hbox.add_child(rect)
 	var label := Label.new()
-	label.text = building.buildingName
+	label.text = building.building_name
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(label)
 	set_drag_preview(preview)
@@ -225,7 +225,7 @@ func _get_drag_data(_pos: Vector2):
 # - {robot, from_region: ...}    — staff a worker in this building.
 #   * from_region null   → drag from Owned card → staff one
 #   * from_region == region → drag from this region's Robots tab → atomic
-#     move: unassign from region.assignedRobots, then staff
+#     move: unassign from region.assigned_robots, then staff
 # - {building, from_region: ...} — assign another building of any type into
 #   this region. Forwards to the same logic as region_buildings_tab so that
 #   drops over an existing row don't get swallowed (Godot's drop propagation
@@ -237,22 +237,22 @@ func _can_drop_data(_pos: Vector2, data) -> bool:
 	if region == null or region.locked:
 		return false
 	if data.has("robot") and data["robot"] is RobotData:
-		if building == null or not region.canStaff(building):
+		if building == null or not region.can_staff(building):
 			return false
 		var from_region = data["from_region"]
 		if from_region == null:
-			return GlobalResources.unassignedCount(data["robot"]) > 0
+			return GlobalResources.unassigned_count(data["robot"]) > 0
 		if from_region != region:
 			return false
-		return int(region.assignedRobots.get(data["robot"], 0)) > 0
+		return int(region.assigned_robots.get(data["robot"], 0)) > 0
 	if data.has("building") and data["building"] is BuildingData:
 		var b: BuildingData = data["building"]
 		var from_region = data["from_region"]
 		if from_region == region:
 			return false
-		if from_region == null and GlobalResources.unassignedBuildingCount(b) <= 0:
+		if from_region == null and GlobalResources.unassigned_building_count(b) <= 0:
 			return false
-		return region.canFitBuilding(b)
+		return region.can_fit_building(b)
 	return false
 
 
@@ -261,9 +261,9 @@ func _drop_data(_pos: Vector2, data) -> void:
 		var robot: RobotData = data["robot"]
 		var from_region = data["from_region"]
 		if from_region == region:
-			GlobalResources.unassignOne(robot, region)
-			GlobalResources.staffOneWorker(robot, region, building)
+			GlobalResources.unassign_one(robot, region)
+			GlobalResources.staff_one_worker(robot, region, building)
 		else:
-			GlobalResources.staffOneWorker(robot, region, building)
+			GlobalResources.staff_one_worker(robot, region, building)
 	elif data.has("building"):
-		GlobalResources.assignOneBuilding(data["building"], region, data["from_region"])
+		GlobalResources.assign_one_building(data["building"], region, data["from_region"])

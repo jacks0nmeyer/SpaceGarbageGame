@@ -19,21 +19,21 @@ func _can_drop_data(_pos: Vector2, data) -> bool:
 	if from_region == target:
 		return false
 	if from_region == null:
-		if GlobalResources.unassignedBuildingCount(b) <= 0:
+		if GlobalResources.unassigned_building_count(b) <= 0:
 			return false
-	return target.canFitBuilding(b)
+	return target.can_fit_building(b)
 
 
 func _drop_data(_pos: Vector2, data) -> void:
 	var target: RegionData = _current_region()
 	if target == null:
 		return
-	GlobalResources.assignOneBuilding(data["building"], target, data["from_region"])
+	GlobalResources.assign_one_building(data["building"], target, data["from_region"])
 
 
 func _current_region() -> RegionData:
-	# RegionInformation owns currentRegion; we're a direct child of it.
+	# RegionInformation owns current_region; we're a direct child of it.
 	var parent = get_parent()
 	if parent == null:
 		return null
-	return parent.currentRegion
+	return parent.current_region

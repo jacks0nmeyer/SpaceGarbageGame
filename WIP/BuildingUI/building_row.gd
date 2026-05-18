@@ -2,7 +2,7 @@ extends PanelContainer
 class_name BuildingRow
 
 # Buy row for a single BuildingData. Cost is FLAT — no scaling exponent.
-# Mirrors WIP/RobotUI/robot_row.gd minus the costIncrease/tech-scalar math.
+# Mirrors UI/RobotPanel/robot_row.gd minus the cost_increase/tech-scalar math.
 
 @export var data: BuildingData
 
@@ -19,35 +19,20 @@ func _ready():
 		return
 	_populate_icon()
 	buy_button.pressed.connect(_on_buy_pressed)
-	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
+	GlobalSignals.resources_updated.connect(_on_resources_updated)
 	_refresh()
 
 
 func _populate_icon():
-	for child in icon_holder.get_children():
-		child.queue_free()
-	if data.texture != null:
-		var rect := TextureRect.new()
-		rect.texture = data.texture
-		rect.custom_minimum_size = Vector2(32, 32)
-		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon_holder.add_child(rect)
-	else:
-		var color := ColorRect.new()
-		color.color = Color.BLACK
-		color.custom_minimum_size = Vector2(32, 32)
-		icon_holder.add_child(color)
+	IconHelper.populate(icon_holder, data.texture, Vector2(32, 32), Color.BLACK)
 
 
 func current_cost() -> Dictionary:
-	var dict := {}
-	for entry in data.unlockCost:
-		dict[entry.resource] = int(entry.amount)
-	return dict
+	return CostHelper.to_dict(data.unlock_cost)
 
 
 func _refresh():
-	name_label.text = data.buildingName
+	name_label.text = data.building_name
 	desc_label.text = data.description
 	owned_label.text = "Owned: %d" % data.amount
 	var cost := current_cost()
@@ -66,7 +51,7 @@ func _on_buy_pressed():
 	if GlobalResources.purchase(cost):
 		data.amount += 1
 		_refresh()
-		GlobalSignals.buildingPurchased.emit(data)
+		GlobalSignals.building_purchased.emit(data)
 
 
 func _on_resources_updated(_resources: Dictionary):

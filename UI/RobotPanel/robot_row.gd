@@ -16,38 +16,26 @@ func _ready():
 		return
 	_populate_icon()
 	buy_button.pressed.connect(_on_buy_pressed)
-	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
-	GlobalSignals.techUnlocked.connect(_on_tech_unlocked)
+	GlobalSignals.resources_updated.connect(_on_resources_updated)
+	GlobalSignals.tech_unlocked.connect(_on_tech_unlocked)
 	_refresh()
 
 
 func _populate_icon():
-	for child in icon_holder.get_children():
-		child.queue_free()
-	if data.texture != null:
-		var rect := TextureRect.new()
-		rect.texture = data.texture
-		rect.custom_minimum_size = Vector2(32, 32)
-		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon_holder.add_child(rect)
-	else:
-		var color := ColorRect.new()
-		color.color = Color.BLACK
-		color.custom_minimum_size = Vector2(32, 32)
-		icon_holder.add_child(color)
+	IconHelper.populate(icon_holder, data.texture, Vector2(32, 32), Color.BLACK)
 
 
 func current_cost() -> Dictionary:
 	var dict := {}
-	var multiplier: float = pow(data.costIncrease, data.amount)
+	var multiplier: float = pow(data.cost_increase, data.amount)
 	var tech_scalar: float = TechTree.get_robot_cost_scalar()
-	for entry in data.unlockCost:
+	for entry in data.unlock_cost:
 		dict[entry.resource] = max(1, int(round(entry.amount * multiplier * tech_scalar)))
 	return dict
 
 
 func _refresh():
-	name_label.text = data.robotName
+	name_label.text = data.robot_name
 	desc_label.text = data.description
 	owned_label.text = "Owned: %d" % data.amount
 	var cost := current_cost()
@@ -66,7 +54,7 @@ func _on_buy_pressed():
 	if GlobalResources.purchase(cost):
 		data.amount += 1
 		_refresh()
-		GlobalSignals.robotPurchased.emit(data)
+		GlobalSignals.robot_purchased.emit(data)
 
 
 func _on_resources_updated(_resources: Dictionary):

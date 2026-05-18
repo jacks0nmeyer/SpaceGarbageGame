@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "refined_recycling"
-displayName = "Refined Recycling"
+display_name = "Refined Recycling"
 description = "+10% scrap yield."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 0
-effectKey = "scrap"
-effectAmount = 0.1
+effect_kind = 0
+effect_key = "scrap"
+effect_amount = 0.1
 position = Vector2(200, 300)
