@@ -101,7 +101,7 @@ offset_left = -48.0
 offset_top = -55.0
 offset_right = 32.0
 offset_bottom = 49.0
-unlockCost = Array[ExtResource("8_sokf5")]([SubResource("Resource_eb7ci")])
+unlock_cost = Array[ExtResource("8_sokf5")]([SubResource("Resource_eb7ci")])
 region = ExtResource("6_1xbnw")
 
 [node name="EarthRegion3" parent="." unique_id=1156081726 instance=ExtResource("2_30wv6")]
@@ -131,7 +131,7 @@ offset_left = -45.0
 offset_top = -85.0
 offset_right = 35.0
 offset_bottom = 19.0
-unlockCost = Array[ExtResource("8_sokf5")]([SubResource("Resource_egi46"), SubResource("Resource_sokf5")])
+unlock_cost = Array[ExtResource("8_sokf5")]([SubResource("Resource_egi46"), SubResource("Resource_sokf5")])
 region = ExtResource("8_343ht")
 
 [node name="EarthRegion4" parent="." unique_id=355518870 instance=ExtResource("2_30wv6")]
@@ -161,7 +161,7 @@ offset_left = -48.0
 offset_top = -77.0
 offset_right = 32.0
 offset_bottom = 27.0
-unlockCost = Array[ExtResource("8_sokf5")]([SubResource("Resource_in0od"), SubResource("Resource_ekhyl"), SubResource("Resource_jw7fp")])
+unlock_cost = Array[ExtResource("8_sokf5")]([SubResource("Resource_in0od"), SubResource("Resource_ekhyl"), SubResource("Resource_jw7fp")])
 region = ExtResource("10_58dan")
 
 [node name="RegionInformationLayer" type="CanvasLayer" parent="." unique_id=790355808]

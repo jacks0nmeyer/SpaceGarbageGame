@@ -1,20 +1,17 @@
 extends TextureButton
 class_name RegionLock
 
-@export var unlockCost: Array[CostEntry] = []
+@export var unlock_cost: Array[CostEntry] = []
 @export var region: RegionData
 
 
 func cost_dict() -> Dictionary:
-	var dict := {}
-	for entry in unlockCost:
-		dict[entry.resource] = entry.amount
-	return dict
+	return CostHelper.to_dict(unlock_cost)
 	
 
 func _on_pressed():
 	if GlobalResources.purchase(cost_dict()): #purchases if you can afford
-		GlobalSignals.regionUnlocked.emit(region)
+		GlobalSignals.region_unlocked.emit(region)
 		self.queue_free()
 
 

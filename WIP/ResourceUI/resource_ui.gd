@@ -2,17 +2,17 @@ extends GridContainer
 
 # Resources we want pinned even at zero (so the player can see Research Points
 # from session start). Other resources only render once they've been earned.
-const ALWAYS_SHOW: PackedStringArray = ["research"]
+const ALWAYS_SHOW: PackedStringArray = [ResourceKeys.RESEARCH]
 
 var _viewport: Viewport
 
 
 func _ready():
-	GlobalSignals.resourcesUpdated.connect(onResourcesUpdated)
+	GlobalSignals.resources_updated.connect(on_resources_updated)
 	_viewport = get_viewport()
 	if _viewport != null:
 		_viewport.size_changed.connect(_schedule_fit_root_height)
-	onResourcesUpdated(GlobalResources.playerResources)
+	on_resources_updated(GlobalResources.player_resources)
 
 
 func _exit_tree() -> void:
@@ -27,7 +27,7 @@ func _schedule_fit_root_height() -> void:
 		call_deferred("_fit_root_height")
 
 
-func onResourcesUpdated(resources: Dictionary):
+func on_resources_updated(resources: Dictionary):
 	for child in get_children():
 		child.queue_free()
 	for resource in resources:

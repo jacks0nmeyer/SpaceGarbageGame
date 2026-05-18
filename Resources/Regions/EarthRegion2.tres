@@ -26,16 +26,16 @@ metadata/_custom_type_script = "uid://fqpmooiymym6"
 
 [resource]
 script = ExtResource("2_qmlwg")
-regionName = "Region 2"
-resourceChances = Array[ExtResource("1_u832g")]([SubResource("Resource_tv6ve"), SubResource("Resource_tyvks"), SubResource("Resource_ggpym")])
+region_name = "Region 2"
+resource_chances = Array[ExtResource("1_u832g")]([SubResource("Resource_tv6ve"), SubResource("Resource_tyvks"), SubResource("Resource_ggpym")])
 robot_capacity = 4
 building_capacity = 3
 trash = 200000
-maxTrash = 200000
+max_trash = 200000
 pollution = 2000
-maxPollution = 10000
+max_pollution = 10000
 description = "Placeholder"
-lockedDescription = "This region is locked, pay 5000 Junk to unlock?"
+locked_description = "This region is locked, pay 5000 Junk to unlock?"
 locked = true
 texture_normal = ExtResource("5_yfg6c")
 texture_hover = ExtResource("4_ryfej")

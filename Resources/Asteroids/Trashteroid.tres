@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="AsteroidData" format=3 uid="uid://dqxqb4qhu2aww"]
+
+[ext_resource type="Script" uid="uid://dia6c520up0ij" path="res://Resources/Scripts/asteroid_data.gd" id="1_ast"]
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="2_entry"]
+[ext_resource type="Texture2D" uid="uid://dhdx141os8les" path="res://Art/Asteroids/asteroid_circle.png" id="3_circle"]
+[ext_resource type="Texture2D" uid="uid://d06rj04qea1h4" path="res://Art/Asteroids/damage_dot.png" id="4_dot"]
+
+[sub_resource type="Resource" id="Resource_scrap"]
+script = ExtResource("2_entry")
+resource = "scrap"
+chance = 0.55
+
+[sub_resource type="Resource" id="Resource_junk"]
+script = ExtResource("2_entry")
+resource = "junk"
+chance = 0.45
+
+[resource]
+script = ExtResource("1_ast")
+display_name = "Trashteroid"
+texture = ExtResource("3_circle")
+damage_dot_texture = ExtResource("4_dot")
+spawn_weight = 0.95
+resource_chances = Array[ExtResource("2_entry")]([SubResource("Resource_scrap"), SubResource("Resource_junk")])

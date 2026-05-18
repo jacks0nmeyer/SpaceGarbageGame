@@ -28,7 +28,7 @@ grow_vertical = 2
 tab_alignment = 1
 current_tab = 0
 script = ExtResource("1_3thv7")
-pollutionAtlas = SubResource("AtlasTexture_k0jtr")
+pollution_atlas = SubResource("AtlasTexture_k0jtr")
 
 [node name="Info" type="VBoxContainer" parent="." unique_id=470652075]
 layout_mode = 2

@@ -18,7 +18,8 @@
 [ext_resource type="Resource" path="res://Resources/Tech/Manual_02_SalvageEye.tres" id="16_m2"]
 [ext_resource type="Resource" path="res://Resources/Tech/Manual_03_Crowbar.tres" id="17_m3"]
 [ext_resource type="Resource" path="res://Resources/Tech/Manual_04_PollutionSmash.tres" id="18_m4"]
+[ext_resource type="Resource" path="res://Resources/Tech/Mining_01_MiningDrill.tres" id="19_min1"]
 
 [resource]
 script = ExtResource("1_coll")
-techs = Array[ExtResource("2_tech")]([ExtResource("3_y1"), ExtResource("4_y2"), ExtResource("5_y3"), ExtResource("6_y4"), ExtResource("7_e1"), ExtResource("8_e2"), ExtResource("9_e3"), ExtResource("10_e4"), ExtResource("11_r1"), ExtResource("12_r2"), ExtResource("13_r3"), ExtResource("14_r4"), ExtResource("15_m1"), ExtResource("16_m2"), ExtResource("17_m3"), ExtResource("18_m4")])
+techs = Array[ExtResource("2_tech")]([ExtResource("3_y1"), ExtResource("4_y2"), ExtResource("5_y3"), ExtResource("6_y4"), ExtResource("7_e1"), ExtResource("8_e2"), ExtResource("9_e3"), ExtResource("10_e4"), ExtResource("11_r1"), ExtResource("12_r2"), ExtResource("13_r3"), ExtResource("14_r4"), ExtResource("15_m1"), ExtResource("16_m2"), ExtResource("17_m3"), ExtResource("18_m4"), ExtResource("19_min1")])

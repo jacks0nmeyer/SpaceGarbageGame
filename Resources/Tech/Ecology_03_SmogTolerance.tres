@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "smog_tolerance"
-displayName = "Smog Tolerance"
+display_name = "Smog Tolerance"
 description = "HIGH-pollution penalty softened: 0.80 -> 0.90."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 5
-effectKey = "HIGH"
-effectAmount = 0.9
+effect_kind = 5
+effect_key = "HIGH"
+effect_amount = 0.9
 position = Vector2(520, 300)

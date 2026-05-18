@@ -19,11 +19,11 @@ func _ready():
 	if region.locked == true:
 		self.disabled = true
 	
-	GlobalSignals.regionUnlocked.connect(onRegionUnlock)
-	GlobalSignals.saveLoaded.connect(_on_save_loaded)
+	GlobalSignals.region_unlocked.connect(on_region_unlock)
+	GlobalSignals.save_loaded.connect(_on_save_loaded)
 
 
-func onRegionUnlock(current_region: RegionData):
+func on_region_unlock(current_region: RegionData):
 	if current_region == region:
 		unlock()
 
@@ -42,22 +42,22 @@ func unlock():
 func _on_pressed():
 	# Re-emit hover so the info panel re-opens if it had faded out while the
 	# cursor sat on this region (mouse_entered only fires on actual entry).
-	GlobalSignals.regionHovered.emit(region)
-	GlobalSignals.regionClicked.emit(get_viewport().get_mouse_position())
+	GlobalSignals.region_hovered.emit(region)
+	GlobalSignals.region_clicked.emit(get_viewport().get_mouse_position())
 	var amount: int = TechTree.get_click_trash_amount()
 	var double_resources: bool = randf() < TechTree.get_click_double_chance()
-	GlobalResources.regionGotResource(region, planet, amount, double_resources)
+	GlobalResources.region_got_resource(region, planet, amount, double_resources)
 	var pollution_bonus: int = TechTree.get_click_pollution_bonus()
 	if pollution_bonus != 0 and region.pollution > 0:
-		var new_pollution: int = clamp(region.pollution + pollution_bonus, 0, region.maxPollution)
+		var new_pollution: int = clamp(region.pollution + pollution_bonus, 0, region.max_pollution)
 		if new_pollution != region.pollution:
 			region.pollution = new_pollution
-			GlobalSignals.regionPollutionUpdated.emit(region)
-			GlobalSignals.planetPollutionUpdated.emit(planet)
+			GlobalSignals.region_pollution_updated.emit(region)
+			GlobalSignals.planet_pollution_updated.emit(planet)
 
 
 func _on_mouse_entered(): 
-	GlobalSignals.regionHovered.emit(region)
+	GlobalSignals.region_hovered.emit(region)
 
 
 # TextureButton's pressed signal is left-click only by default. Capture
@@ -67,7 +67,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton \
 			and event.pressed \
 			and event.button_index == MOUSE_BUTTON_RIGHT:
-		GlobalSignals.regionPinToggled.emit(region)
+		GlobalSignals.region_pin_toggled.emit(region)
 		accept_event()
 
 
@@ -77,12 +77,12 @@ func _gui_input(event: InputEvent) -> void:
 # A null from_region means the drag came from the corresponding Owned tab.
 # A non-null from_region means the player is moving an already-assigned
 # robot/building from one region to another; the source is decremented inside
-# GlobalResources.assignOne / assignOneBuilding.
+# GlobalResources.assign_one / assign_one_building.
 func _can_drop_data(_pos: Vector2, data) -> bool:
 	if region == null or region.locked:
 		return false
 	# While a region is pinned, only that region accepts drops.
-	if GlobalResources.pinnedRegion != null and GlobalResources.pinnedRegion != region:
+	if GlobalResources.pinned_region != null and GlobalResources.pinned_region != region:
 		return false
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
@@ -93,19 +93,19 @@ func _can_drop_data(_pos: Vector2, data) -> bool:
 		return false
 	if data.has("robot") and data["robot"] is RobotData:
 		var robot: RobotData = data["robot"]
-		if from_region == null and GlobalResources.unassignedCount(robot) <= 0:
+		if from_region == null and GlobalResources.unassigned_count(robot) <= 0:
 			return false
-		return region.canFit(robot)
+		return region.can_fit(robot)
 	if data.has("building") and data["building"] is BuildingData:
 		var b: BuildingData = data["building"]
-		if from_region == null and GlobalResources.unassignedBuildingCount(b) <= 0:
+		if from_region == null and GlobalResources.unassigned_building_count(b) <= 0:
 			return false
-		return region.canFitBuilding(b)
+		return region.can_fit_building(b)
 	return false
 
 
 func _drop_data(_pos: Vector2, data) -> void:
 	if data.has("robot"):
-		GlobalResources.assignOne(data["robot"], region, data["from_region"])
+		GlobalResources.assign_one(data["robot"], region, data["from_region"])
 	elif data.has("building"):
-		GlobalResources.assignOneBuilding(data["building"], region, data["from_region"])
+		GlobalResources.assign_one_building(data["building"], region, data["from_region"])

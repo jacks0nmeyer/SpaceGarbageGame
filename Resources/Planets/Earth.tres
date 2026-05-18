@@ -9,6 +9,6 @@
 
 [resource]
 script = ExtResource("2_wgmh2")
-planetName = "Earth"
+planet_name = "Earth"
 regions = Array[ExtResource("1_t1e64")]([ExtResource("2_3b5oi"), ExtResource("3_2np2a"), ExtResource("4_v8yay"), ExtResource("5_gybpx")])
 metadata/_custom_type_script = "uid://d0kll1plixqtp"

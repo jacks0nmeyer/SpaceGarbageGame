@@ -40,7 +40,7 @@ mouse_filter = 0
 texture = SubResource("AtlasTexture_760yj")
 script = ExtResource("4_hw0da")
 planet = ExtResource("2_h53k6")
-pollutionAtlas = ExtResource("1_hw0da")
+pollution_atlas = ExtResource("1_hw0da")
 
 [node name="PollutionPopup" type="Panel" parent="MarginContainer/Trash&Pollution/PollutionLevel" unique_id=351346754]
 visible = false

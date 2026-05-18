@@ -2,7 +2,7 @@ extends Node
 
 ## JSON save/load under `user://`. Autoload order: after TechTree.
 
-const SAVE_VERSION: int = 2
+const SAVE_VERSION: int = 3
 const DEFAULT_SAVE_PATH: String = "user://save.json"
 const SOLAR_SYSTEM_PATH: String = "res://Resources/SolarSystem/SolarSystem.tres"
 const ROBOTS_PATH: String = "res://Resources/Robots/Robots.tres"
@@ -31,14 +31,14 @@ func _capture_pristine_template() -> void:
 	_pristine_robot_amounts.clear()
 	_pristine_building_amounts.clear()
 
-	var ss: SolarSystemData = GlobalResources.solarSystem
+	var ss: SolarSystemData = GlobalResources.solar_system
 	if ss != null:
 		for planet in ss.planets:
 			var ppath: String = planet.resource_path
 			if not ppath.is_empty():
 				_pristine_planet_meta[ppath] = {
-					"cumulativeTrashCleaned": planet.cumulativeTrashCleaned,
-					"cumulativeMilestonesAwarded": planet.cumulativeMilestonesAwarded,
+					"cumulative_trash_cleaned": planet.cumulative_trash_cleaned,
+					"cumulative_milestones_awarded": planet.cumulative_milestones_awarded,
 				}
 			for region in planet.regions:
 				var rpath: String = region.resource_path
@@ -101,7 +101,7 @@ func load_from_user(path: String = DEFAULT_SAVE_PATH) -> bool:
 
 func reset_to_new_game() -> void:
 	_delete_save_file()
-	TechTree.unlockedLevels.clear()
+	TechTree.unlocked_levels.clear()
 	GameManager.production_paused = false
 	GameManager.clear_carry_state()
 	GlobalResources.apply_new_game_inventory()
@@ -127,8 +127,8 @@ func _delete_save_file() -> void:
 
 func _build_snapshot() -> Dictionary:
 	var pinned_path: String = ""
-	if GlobalResources.pinnedRegion != null:
-		pinned_path = GlobalResources.pinnedRegion.resource_path
+	if GlobalResources.pinned_region != null:
+		pinned_path = GlobalResources.pinned_region.resource_path
 
 	var robots_arr: Array = []
 	var coll: RobotCollection = GlobalResources.robots
@@ -147,10 +147,10 @@ func _build_snapshot() -> Dictionary:
 			buildings_arr.append({"path": b.resource_path, "amount": int(b.amount)})
 
 	var tech_unlocks: Dictionary = {}
-	for tech in TechTree.unlockedLevels:
+	for tech in TechTree.unlocked_levels:
 		if tech == null:
 			continue
-		var lvl: int = int(TechTree.unlockedLevels[tech])
+		var lvl: int = int(TechTree.unlocked_levels[tech])
 		if lvl <= 0:
 			continue
 		var tid: String = tech.id
@@ -161,8 +161,8 @@ func _build_snapshot() -> Dictionary:
 	return {
 		"save_version": SAVE_VERSION,
 		"globals": {
-			"playerResources": GlobalResources.playerResources.duplicate(),
-			"globalMultiplier": GlobalResources.globalMultiplier,
+			"player_resources": GlobalResources.player_resources.duplicate(),
+			"global_multiplier": GlobalResources.global_multiplier,
 			"multipliers": GlobalResources.multipliers.duplicate(),
 			"pinned_region_path": pinned_path,
 		},
@@ -176,55 +176,55 @@ func _build_snapshot() -> Dictionary:
 
 func _collect_planets_array() -> Array:
 	var out: Array = []
-	var ss: SolarSystemData = GlobalResources.solarSystem
+	var ss: SolarSystemData = GlobalResources.solar_system
 	if ss == null:
 		return out
 	for planet in ss.planets:
 		var reg_arr: Array = []
 		for region in planet.regions:
 			var assigned: Dictionary = {}
-			for robot in region.assignedRobots:
+			for robot in region.assigned_robots:
 				if robot.resource_path.is_empty():
 					continue
-				assigned[robot.resource_path] = int(region.assignedRobots[robot])
+				assigned[robot.resource_path] = int(region.assigned_robots[robot])
 			var assigned_buildings: Dictionary = {}
-			for b in region.assignedBuildings:
+			for b in region.assigned_buildings:
 				if b.resource_path.is_empty():
 					continue
-				assigned_buildings[b.resource_path] = int(region.assignedBuildings[b])
+				assigned_buildings[b.resource_path] = int(region.assigned_buildings[b])
 			var building_storage: Dictionary = {}
-			for b in region.buildingStorage:
+			for b in region.building_storage:
 				if b.resource_path.is_empty():
 					continue
 				var inner: Dictionary = {}
-				for res_key in region.buildingStorage[b]:
-					inner[str(res_key)] = int(region.buildingStorage[b][res_key])
+				for res_key in region.building_storage[b]:
+					inner[str(res_key)] = int(region.building_storage[b][res_key])
 				building_storage[b.resource_path] = inner
 			var building_workers: Dictionary = {}
-			for b in region.buildingWorkers:
+			for b in region.building_workers:
 				if b.resource_path.is_empty():
 					continue
 				var winner: Dictionary = {}
-				for robot in region.buildingWorkers[b]:
+				for robot in region.building_workers[b]:
 					if robot.resource_path.is_empty():
 						continue
-					winner[robot.resource_path] = int(region.buildingWorkers[b][robot])
+					winner[robot.resource_path] = int(region.building_workers[b][robot])
 				building_workers[b.resource_path] = winner
 			reg_arr.append({
 				"path": region.resource_path,
 				"locked": region.locked,
 				"trash": region.trash,
 				"pollution": region.pollution,
-				"researchMilestonesAwarded": region.researchMilestonesAwarded,
+				"research_milestones_awarded": region.research_milestones_awarded,
 				"assigned": assigned,
-				"assignedBuildings": assigned_buildings,
-				"buildingStorage": building_storage,
-				"buildingWorkers": building_workers,
+				"assigned_buildings": assigned_buildings,
+				"building_storage": building_storage,
+				"building_workers": building_workers,
 			})
 		out.append({
 			"path": planet.resource_path,
-			"cumulativeTrashCleaned": planet.cumulativeTrashCleaned,
-			"cumulativeMilestonesAwarded": planet.cumulativeMilestonesAwarded,
+			"cumulative_trash_cleaned": planet.cumulative_trash_cleaned,
+			"cumulative_milestones_awarded": planet.cumulative_milestones_awarded,
 			"regions": reg_arr,
 		})
 	return out
@@ -242,7 +242,7 @@ func _apply_snapshot(root: Dictionary) -> bool:
 	var g: Dictionary = globals_raw
 
 	# Tech first (affects costs / multipliers used elsewhere)
-	TechTree.unlockedLevels.clear()
+	TechTree.unlocked_levels.clear()
 	var tech_raw: Variant = root.get("tech", {})
 	if typeof(tech_raw) == TYPE_DICTIONARY:
 		var id_to_tech: Dictionary = _build_tech_id_map()
@@ -252,15 +252,15 @@ func _apply_snapshot(root: Dictionary) -> bool:
 				continue
 			var lvl: int = int(tech_raw[tid])
 			if lvl > 0:
-				TechTree.unlockedLevels[tech] = lvl
+				TechTree.unlocked_levels[tech] = lvl
 
-	var pr: Variant = g.get("playerResources", {})
+	var pr: Variant = g.get("player_resources", {})
 	if typeof(pr) == TYPE_DICTIONARY:
-		GlobalResources.playerResources.clear()
+		GlobalResources.player_resources.clear()
 		for k in pr:
-			GlobalResources.playerResources[str(k).to_lower()] = int(pr[k])
+			GlobalResources.player_resources[str(k).to_lower()] = int(pr[k])
 
-	GlobalResources.globalMultiplier = int(g.get("globalMultiplier", 1))
+	GlobalResources.global_multiplier = int(g.get("global_multiplier", 1))
 	var mult: Variant = g.get("multipliers", {})
 	if typeof(mult) == TYPE_DICTIONARY:
 		GlobalResources.multipliers.clear()
@@ -268,8 +268,8 @@ func _apply_snapshot(root: Dictionary) -> bool:
 			GlobalResources.multipliers[str(k).to_lower()] = int(mult[k])
 
 	for k in GlobalResources.DEFAULT_PLAYER_RESOURCES:
-		if not GlobalResources.playerResources.has(k):
-			GlobalResources.playerResources[k] = int(GlobalResources.DEFAULT_PLAYER_RESOURCES[k])
+		if not GlobalResources.player_resources.has(k):
+			GlobalResources.player_resources[k] = int(GlobalResources.DEFAULT_PLAYER_RESOURCES[k])
 
 	_apply_planets_array(root.get("planets", []))
 	_apply_robots_array(root.get("robots", []))
@@ -281,9 +281,9 @@ func _apply_snapshot(root: Dictionary) -> bool:
 
 	var pin_path: String = str(g.get("pinned_region_path", ""))
 	if pin_path.is_empty():
-		GlobalResources.pinnedRegion = null
+		GlobalResources.pinned_region = null
 	else:
-		GlobalResources.pinnedRegion = _find_region_by_path(pin_path)
+		GlobalResources.pinned_region = _find_region_by_path(pin_path)
 
 	return true
 
@@ -300,8 +300,8 @@ func _apply_template_from_disk() -> void:
 		var meta: Variant = _pristine_planet_meta[ppath]
 		if typeof(meta) == TYPE_DICTIONARY:
 			var md: Dictionary = meta
-			live_p.cumulativeTrashCleaned = int(md.get("cumulativeTrashCleaned", 0))
-			live_p.cumulativeMilestonesAwarded = int(md.get("cumulativeMilestonesAwarded", 0))
+			live_p.cumulative_trash_cleaned = int(md.get("cumulative_trash_cleaned", 0))
+			live_p.cumulative_milestones_awarded = int(md.get("cumulative_milestones_awarded", 0))
 
 	for rpath: String in _pristine_regions:
 		var pr: RegionData = _pristine_regions[rpath] as RegionData
@@ -313,11 +313,11 @@ func _apply_template_from_disk() -> void:
 		live_r.locked = pr.locked
 		live_r.trash = pr.trash
 		live_r.pollution = pr.pollution
-		live_r.researchMilestonesAwarded = pr.researchMilestonesAwarded
-		live_r.assignedRobots.clear()
-		live_r.assignedBuildings.clear()
-		live_r.buildingStorage.clear()
-		live_r.buildingWorkers.clear()
+		live_r.research_milestones_awarded = pr.research_milestones_awarded
+		live_r.assigned_robots.clear()
+		live_r.assigned_buildings.clear()
+		live_r.building_storage.clear()
+		live_r.building_workers.clear()
 
 	for bpath: String in _pristine_robot_amounts:
 		var live_bot: RobotData = _find_robot_by_path(bpath)
@@ -342,8 +342,8 @@ func _apply_planets_array(arr: Variant) -> void:
 		var planet: PlanetData = _find_planet_by_path(str(d.get("path", "")))
 		if planet == null:
 			continue
-		planet.cumulativeTrashCleaned = int(d.get("cumulativeTrashCleaned", 0))
-		planet.cumulativeMilestonesAwarded = int(d.get("cumulativeMilestonesAwarded", 0))
+		planet.cumulative_trash_cleaned = int(d.get("cumulative_trash_cleaned", 0))
+		planet.cumulative_milestones_awarded = int(d.get("cumulative_milestones_awarded", 0))
 		var regs: Variant = d.get("regions", [])
 		if typeof(regs) != TYPE_ARRAY:
 			continue
@@ -357,8 +357,8 @@ func _apply_planets_array(arr: Variant) -> void:
 			region.locked = bool(rd.get("locked", false))
 			region.trash = int(rd.get("trash", 0))
 			region.pollution = int(rd.get("pollution", 0))
-			region.researchMilestonesAwarded = int(rd.get("researchMilestonesAwarded", 0))
-			region.assignedRobots.clear()
+			region.research_milestones_awarded = int(rd.get("research_milestones_awarded", 0))
+			region.assigned_robots.clear()
 			var asg: Variant = rd.get("assigned", {})
 			if typeof(asg) == TYPE_DICTIONARY:
 				for bot_path in asg:
@@ -367,13 +367,13 @@ func _apply_planets_array(arr: Variant) -> void:
 						continue
 					var cnt: int = int(asg[bot_path])
 					if cnt > 0:
-						region.assignedRobots[bot] = cnt
+						region.assigned_robots[bot] = cnt
 
-			region.assignedBuildings.clear()
-			region.buildingStorage.clear()
-			region.buildingWorkers.clear()
+			region.assigned_buildings.clear()
+			region.building_storage.clear()
+			region.building_workers.clear()
 
-			var asgb: Variant = rd.get("assignedBuildings", {})
+			var asgb: Variant = rd.get("assigned_buildings", {})
 			if typeof(asgb) == TYPE_DICTIONARY:
 				for bpath in asgb:
 					var b: BuildingData = _find_building_by_path(str(bpath))
@@ -381,9 +381,9 @@ func _apply_planets_array(arr: Variant) -> void:
 						continue
 					var bcnt: int = int(asgb[bpath])
 					if bcnt > 0:
-						region.assignedBuildings[b] = bcnt
+						region.assigned_buildings[b] = bcnt
 
-			var stg: Variant = rd.get("buildingStorage", {})
+			var stg: Variant = rd.get("building_storage", {})
 			if typeof(stg) == TYPE_DICTIONARY:
 				for bpath in stg:
 					var b2: BuildingData = _find_building_by_path(str(bpath))
@@ -396,9 +396,9 @@ func _apply_planets_array(arr: Variant) -> void:
 					for res_key in inner_raw:
 						inner[str(res_key).to_lower()] = int(inner_raw[res_key])
 					if not inner.is_empty():
-						region.buildingStorage[b2] = inner
+						region.building_storage[b2] = inner
 
-			var wrk: Variant = rd.get("buildingWorkers", {})
+			var wrk: Variant = rd.get("building_workers", {})
 			if typeof(wrk) == TYPE_DICTIONARY:
 				for bpath in wrk:
 					var b3: BuildingData = _find_building_by_path(str(bpath))
@@ -416,7 +416,7 @@ func _apply_planets_array(arr: Variant) -> void:
 						if wcnt > 0:
 							winner[bot2] = wcnt
 					if not winner.is_empty():
-						region.buildingWorkers[b3] = winner
+						region.building_workers[b3] = winner
 
 
 func _apply_robots_array(arr: Variant) -> void:
@@ -460,7 +460,7 @@ func _find_building_by_path(path: String) -> BuildingData:
 func _find_planet_by_path(path: String) -> PlanetData:
 	if path.is_empty():
 		return null
-	var ss: SolarSystemData = GlobalResources.solarSystem
+	var ss: SolarSystemData = GlobalResources.solar_system
 	if ss == null:
 		return null
 	for p in ss.planets:
@@ -472,7 +472,7 @@ func _find_planet_by_path(path: String) -> PlanetData:
 func _find_region_by_path(path: String) -> RegionData:
 	if path.is_empty():
 		return null
-	var ss: SolarSystemData = GlobalResources.solarSystem
+	var ss: SolarSystemData = GlobalResources.solar_system
 	if ss == null:
 		return null
 	for p in ss.planets:
@@ -507,21 +507,21 @@ func _build_tech_id_map() -> Dictionary:
 
 
 func _emit_refresh_after_load() -> void:
-	GlobalSignals.resourcesUpdated.emit(GlobalResources.playerResources)
-	var ss: SolarSystemData = GlobalResources.solarSystem
+	GlobalSignals.resources_updated.emit(GlobalResources.player_resources)
+	var ss: SolarSystemData = GlobalResources.solar_system
 	if ss != null:
 		for planet in ss.planets:
 			for region in planet.regions:
-				GlobalSignals.regionTrashUpdated.emit(region)
-				GlobalSignals.regionPollutionUpdated.emit(region)
-			GlobalSignals.planetTrashUpdated.emit(planet)
-			GlobalSignals.planetPollutionUpdated.emit(planet)
+				GlobalSignals.region_trash_updated.emit(region)
+				GlobalSignals.region_pollution_updated.emit(region)
+			GlobalSignals.planet_trash_updated.emit(planet)
+			GlobalSignals.planet_pollution_updated.emit(planet)
 	var coll: RobotCollection = GlobalResources.robots
 	if coll != null:
 		for bot in coll.robots:
-			GlobalSignals.robotPurchased.emit(bot)
+			GlobalSignals.robot_purchased.emit(bot)
 	var bcoll: BuildingCollection = GlobalResources.buildings
 	if bcoll != null:
 		for b in bcoll.buildings:
-			GlobalSignals.buildingPurchased.emit(b)
-	GlobalSignals.saveLoaded.emit()
+			GlobalSignals.building_purchased.emit(b)
+	GlobalSignals.save_loaded.emit()

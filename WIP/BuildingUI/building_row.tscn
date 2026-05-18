@@ -4,22 +4,25 @@
 
 [node name="BuildingRow" type="PanelContainer"]
 custom_minimum_size = Vector2(0, 96)
+size_flags_horizontal = 3
 script = ExtResource("1_row")
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 24
+theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 8
 
 [node name="HBox" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="IconHolder" type="Control" parent="Margin/HBox"]
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(58, 34)
 layout_mode = 2
+clip_contents = true
 
 [node name="Info" type="VBoxContainer" parent="Margin/HBox"]
 layout_mode = 2
@@ -31,13 +34,14 @@ layout_mode = 2
 
 [node name="DescLabel" type="Label" parent="Margin/HBox/Info"]
 layout_mode = 2
+size_flags_horizontal = 3
 autowrap_mode = 3
 
 [node name="OwnedLabel" type="Label" parent="Margin/HBox/Info"]
 layout_mode = 2
 
 [node name="Buy" type="VBoxContainer" parent="Margin/HBox"]
-custom_minimum_size = Vector2(128, 0)
+custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 alignment = 1
 theme_override_constants/separation = 8

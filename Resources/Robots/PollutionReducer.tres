@@ -23,12 +23,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [resource]
 script = ExtResource("1_robot")
-robotName = "Pollution Reducer"
+robot_name = "Pollution Reducer"
 description = "Industrial scrubber — slow throughput but powerfully draws down regional pollution per unit cleared."
-unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2"), SubResource("Resource_cost3")])
-costIncrease = 1.2
+unlock_cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2"), SubResource("Resource_cost3")])
+cost_increase = 1.2
 size = 2
-productionRate = 0.2
-resourceReturn = 1.5
-pollutionEffect = -10.0
+production_rate = 0.2
+resource_return = 1.5
+pollution_effect = -10.0
 metadata/_custom_type_script = "uid://8cstlrx4ytgo"

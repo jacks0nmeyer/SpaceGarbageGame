@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "overdrive"
-displayName = "Overdrive"
+display_name = "Overdrive"
 description = "Global robot production rate x1.15."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 1
-effectKey = ""
-effectAmount = 1.15
+effect_kind = 1
+effect_key = ""
+effect_amount = 1.15
 position = Vector2(720, 140)

@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "compact_frames"
-displayName = "Compact Frames"
+display_name = "Compact Frames"
 description = "Robots take up 1 less slot (minimum 1)."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 3
-effectKey = ""
-effectAmount = -1.0
+effect_kind = 3
+effect_key = ""
+effect_amount = -1.0
 position = Vector2(660, 300)

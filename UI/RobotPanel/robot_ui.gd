@@ -5,11 +5,11 @@ extends Control
 # - Owned: one card per robot with amount > 0; supports drag-to-region to
 #   assign and accepts drag-from-region to unassign.
 
-const ROBOT_ROW_SCENE: PackedScene = preload("res://WIP/RobotUI/robot_row.tscn")
-const OWNED_CARD_SCENE: PackedScene = preload("res://WIP/RobotUI/owned_robot_card.tscn")
+const ROBOT_ROW_SCENE: PackedScene = preload("res://UI/RobotPanel/robot_row.tscn")
+const OWNED_CARD_SCENE: PackedScene = preload("res://UI/RobotPanel/owned_robot_card.tscn")
 
-signal panelOpened
-signal panelClosed
+signal panel_opened
+signal panel_closed
 
 @onready var buy_rows: VBoxContainer = $Panel/Margin/Vbox/Tabs/Buy/Scroll/Rows
 @onready var owned_rows: VBoxContainer = $Panel/Margin/Vbox/Tabs/Owned/Scroll/Rows
@@ -30,7 +30,7 @@ func _ready():
 func toggle():
 	if visible:
 		hide()
-		panelClosed.emit()
+		panel_closed.emit()
 	else:
 		show()
-		panelOpened.emit()
+		panel_opened.emit()

@@ -1,76 +1,85 @@
 extends Node
 
 @warning_ignore("unused_signal")
-signal regionUnlocked(region: RegionData)
+signal region_unlocked(region: RegionData)
 
 @warning_ignore("unused_signal")
-signal resourcesUpdated(resources: Dictionary)
+signal resources_updated(resources: Dictionary)
 
 @warning_ignore("unused_signal")
-signal regionTrashUpdated(region: RegionData)
+signal region_trash_updated(region: RegionData)
 
 @warning_ignore("unused_signal")
-signal planetTrashUpdated(planet: PlanetData)
+signal planet_trash_updated(planet: PlanetData)
 
 @warning_ignore("unused_signal")
-signal TotalTrashUpdated(total: int)
+signal total_trash_updated(total: int)
 
 @warning_ignore("unused_signal")
-signal regionHovered(region: RegionData)
+signal region_hovered(region: RegionData)
 
 @warning_ignore("unused_signal")
-signal robotPurchased(robot: RobotData)
+signal robot_purchased(robot: RobotData)
 
 @warning_ignore("unused_signal")
-signal robotAssigned(robot: RobotData, region: RegionData)
+signal robot_assigned(robot: RobotData, region: RegionData)
 
 @warning_ignore("unused_signal")
-signal robotUnassigned(robot: RobotData, region: RegionData)
+signal robot_unassigned(robot: RobotData, region: RegionData)
 
 @warning_ignore("unused_signal")
-signal regionPinToggled(region: RegionData)
+signal region_pin_toggled(region: RegionData)
 
 @warning_ignore("unused_signal")
-signal regionPollutionUpdated(region: RegionData)
+signal region_pollution_updated(region: RegionData)
 
 @warning_ignore("unused_signal")
-signal planetPollutionUpdated(planet: PlanetData)
+signal planet_pollution_updated(planet: PlanetData)
 
 @warning_ignore("unused_signal")
-signal techUnlocked(tech: TechData)
+signal tech_unlocked(tech: TechData)
 
 @warning_ignore("unused_signal")
-signal researchMilestoneAwarded(region: RegionData, points: int, planet: PlanetData)
+signal save_loaded
 
 @warning_ignore("unused_signal")
-signal saveLoaded
+signal region_clicked(position: Vector2)
 
 @warning_ignore("unused_signal")
-signal regionClicked(position: Vector2)
+signal robot_panel_requested
 
 @warning_ignore("unused_signal")
-signal robotPanelRequested
+signal building_panel_requested
 
 @warning_ignore("unused_signal")
-signal buildingPanelRequested
+signal building_purchased(building: BuildingData)
 
 @warning_ignore("unused_signal")
-signal buildingPurchased(building: BuildingData)
+signal building_assigned(building: BuildingData, region: RegionData)
 
 @warning_ignore("unused_signal")
-signal buildingAssigned(building: BuildingData, region: RegionData)
+signal building_unassigned(building: BuildingData, region: RegionData)
 
 @warning_ignore("unused_signal")
-signal buildingUnassigned(building: BuildingData, region: RegionData)
+signal building_storage_updated(region: RegionData, building: BuildingData)
 
 @warning_ignore("unused_signal")
-signal buildingStorageUpdated(region: RegionData, building: BuildingData)
+signal building_worker_assigned(robot: RobotData, region: RegionData, building: BuildingData)
 
 @warning_ignore("unused_signal")
-signal buildingWorkerAssigned(robot: RobotData, region: RegionData, building: BuildingData)
+signal building_worker_unassigned(robot: RobotData, region: RegionData, building: BuildingData)
 
 @warning_ignore("unused_signal")
-signal buildingWorkerUnassigned(robot: RobotData, region: RegionData, building: BuildingData)
+signal purchase_alert_changed(category: String, active: bool)
 
 @warning_ignore("unused_signal")
-signal purchaseAlertChanged(category: String, active: bool)
+signal asteroid_spawned(asteroid: AsteroidData)
+
+@warning_ignore("unused_signal")
+signal asteroid_hit(asteroid: AsteroidData, position: Vector2, damage: int)
+
+@warning_ignore("unused_signal")
+signal asteroid_deflected(asteroid: AsteroidData, position: Vector2)
+
+@warning_ignore("unused_signal")
+signal asteroid_broken(asteroid: AsteroidData, drops: Dictionary)

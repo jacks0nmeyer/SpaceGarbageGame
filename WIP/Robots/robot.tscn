@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://jafeep5ovbyo"]
-
-[ext_resource type="Script" uid="uid://ryjtlipfddsr" path="res://WIP/Robots/robot.gd" id="1_xjmjl"]
-
-[node name="Robot" type="Node2D" unique_id=1959581307]
-script = ExtResource("1_xjmjl")
-
-[node name="RobotSprite" type="Sprite2D" parent="." unique_id=173703229]

@@ -5,11 +5,12 @@
 [ext_resource type="PackedScene" uid="uid://nas23o6yox7c" path="res://UI/PlanetUIs/EarthUI.tscn" id="3_vhxei"]
 [ext_resource type="PackedScene" uid="uid://b31cvtpmig7ec" path="res://WIP/PlanetProgressUI/planet_progress_ui.tscn" id="4_uqj38"]
 [ext_resource type="PackedScene" uid="uid://vuibaalpvnnq" path="res://WIP/ResourceUI/resource_ui.tscn" id="5_rsogr"]
-[ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://WIP/RobotUI/robot_ui.tscn" id="6_robotui"]
+[ext_resource type="PackedScene" uid="uid://csspqfobi52eo" path="res://UI/RobotPanel/robot_ui.tscn" id="6_robotui"]
 [ext_resource type="PackedScene" uid="uid://cwqdac8yngpi8" path="res://WIP/TechTree/tech_tree.tscn" id="7_techtree"]
 [ext_resource type="Script" uid="uid://bgrn6bq8w2vei" path="res://UI/Main/main.gd" id="8_main"]
 [ext_resource type="PackedScene" path="res://WIP/BuildingUI/building_ui.tscn" id="9_buildingui"]
 [ext_resource type="Script" uid="uid://dkkw85r2dv4qo" path="res://UI/Main/click_effect.gd" id="10_click"]
+[ext_resource type="PackedScene" path="res://UI/Asteroids/asteroid_spawner.tscn" id="11_spawn"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i7s6n"]
 texture = ExtResource("1_fbkrl")
@@ -52,12 +53,15 @@ layout_mode = 1
 [node name="PlanetProgressUI(Temp)" parent="." unique_id=421246737 instance=ExtResource("4_uqj38")]
 layout_mode = 1
 
-[node name="RobotUI" parent="." unique_id=1500000001 instance=ExtResource("6_robotui")]
-layout_mode = 1
+[node name="AsteroidSpawner" parent="." unique_id=359284471 instance=ExtResource("11_spawn")]
+
+[node name="PanelLayer" type="CanvasLayer" parent="." unique_id=2019951002]
+layer = 10
+
+[node name="RobotUI" parent="PanelLayer" unique_id=1500000001 instance=ExtResource("6_robotui")]
 offset_left = 0.0
 
-[node name="RobotsButton" type="Button" parent="." unique_id=1500000002]
-layout_mode = 1
+[node name="RobotsButton" type="Button" parent="PanelLayer" unique_id=1500000002]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -68,11 +72,9 @@ offset_bottom = 40.0
 grow_horizontal = 0
 text = "Robots"
 
-[node name="TechTree" parent="." unique_id=1500000003 instance=ExtResource("7_techtree")]
-layout_mode = 1
+[node name="TechTree" parent="PanelLayer" unique_id=1500000003 instance=ExtResource("7_techtree")]
 
-[node name="ResearchButton" type="Button" parent="." unique_id=1500000004]
-layout_mode = 1
+[node name="ResearchButton" type="Button" parent="PanelLayer" unique_id=1500000004]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -83,11 +85,9 @@ offset_bottom = 120.0
 grow_horizontal = 0
 text = "Research"
 
-[node name="BuildingUI" parent="." unique_id=1500000020 instance=ExtResource("9_buildingui")]
-layout_mode = 1
+[node name="BuildingUI" parent="PanelLayer" unique_id=1500000020 instance=ExtResource("9_buildingui")]
 
-[node name="BuildingsButton" type="Button" parent="." unique_id=1500000021]
-layout_mode = 1
+[node name="BuildingsButton" type="Button" parent="PanelLayer" unique_id=1500000021]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -139,6 +139,6 @@ process_mode = 3
 ok_button_text = "Reset"
 dialog_text = "Start a new game? This will delete your save file and reset all progress."
 
-[connection signal="pressed" from="RobotsButton" to="RobotUI" method="toggle"]
-[connection signal="pressed" from="ResearchButton" to="TechTree" method="toggle"]
-[connection signal="pressed" from="BuildingsButton" to="BuildingUI" method="toggle"]
+[connection signal="pressed" from="PanelLayer/RobotsButton" to="PanelLayer/RobotUI" method="toggle"]
+[connection signal="pressed" from="PanelLayer/ResearchButton" to="PanelLayer/TechTree" method="toggle"]
+[connection signal="pressed" from="PanelLayer/BuildingsButton" to="PanelLayer/BuildingUI" method="toggle"]

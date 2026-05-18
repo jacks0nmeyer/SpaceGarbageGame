@@ -11,11 +11,11 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [resource]
 script = ExtResource("1_robot")
-robotName = "Basic Cleaner"
+robot_name = "Basic Cleaner"
 description = "Steady, all-purpose harvester."
-unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
-costIncrease = 1.15
+unlock_cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
+cost_increase = 1.15
 size = 1
-productionRate = 1.0
-resourceReturn = 1.0
+production_rate = 1.0
+resource_return = 1.0
 metadata/_custom_type_script = "uid://8cstlrx4ytgo"

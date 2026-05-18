@@ -13,12 +13,12 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 [resource]
 script = ExtResource("1_tech")
 id = "region_engineering"
-displayName = "Region Engineering"
+display_name = "Region Engineering"
 description = "Every region's robot capacity increases by 2."
 cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1")])
 levels = 1
 prerequisites = Array[ExtResource("1_tech")]([ExtResource("3_prereq")])
-effectKind = 4
-effectKey = ""
-effectAmount = 2.0
+effect_kind = 4
+effect_key = ""
+effect_amount = 2.0
 position = Vector2(780, 300)

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AsteroidCollection" format=3]
+
+[ext_resource type="Script" path="res://Resources/Scripts/asteroid_collection.gd" id="1_coll"]
+[ext_resource type="Script" path="res://Resources/Scripts/asteroid_data.gd" id="2_ast"]
+[ext_resource type="Resource" path="res://Resources/Asteroids/Trashteroid.tres" id="3_trash"]
+[ext_resource type="Resource" path="res://Resources/Asteroids/Glassteroid.tres" id="4_glass"]
+
+[resource]
+script = ExtResource("1_coll")
+asteroids = Array[ExtResource("2_ast")]([ExtResource("3_trash"), ExtResource("4_glass")])

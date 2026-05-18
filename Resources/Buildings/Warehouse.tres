@@ -15,9 +15,9 @@ amount = 100
 
 [resource]
 script = ExtResource("1_building")
-buildingName = "Warehouse"
+building_name = "Warehouse"
 description = "Larger storage with bulk processing. Holds and processes more per action."
-unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
+unlock_cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
 size = 2
 storage_capacity = 5000
 process_amount = 50

@@ -6,13 +6,13 @@ extends Node
 # robot costs scale with `amount`. (Buildings/techs have flat costs anyway.)
 #
 # Categories: "robot", "building", "tech". Buttons subscribe via
-# GlobalSignals.purchaseAlertChanged(category, active).
+# GlobalSignals.purchase_alert_changed(category, active).
 #
 # Suppression: while the matching panel is open, new tiers are still recorded
 # as seen but the dirty flag is not raised — the player is already looking at
 # the catalog, so a button-pulse on close would be noise.
 #
-# Save/load: state is session-local. On saveLoaded (which fires from both
+# Save/load: state is session-local. On save_loaded (which fires from both
 # load-from-file and reset_to_new_game) all currently-affordable tiers are
 # pre-seeded as "seen" so loading a mature save does not blare alerts.
 
@@ -36,11 +36,11 @@ var _suppressed: Dictionary = {
 
 
 func _ready() -> void:
-	GlobalSignals.resourcesUpdated.connect(_on_resources_updated)
-	GlobalSignals.robotPurchased.connect(_on_robot_purchased)
-	GlobalSignals.buildingPurchased.connect(_on_building_purchased)
-	GlobalSignals.techUnlocked.connect(_on_tech_unlocked)
-	GlobalSignals.saveLoaded.connect(_on_save_loaded)
+	GlobalSignals.resources_updated.connect(_on_resources_updated)
+	GlobalSignals.robot_purchased.connect(_on_robot_purchased)
+	GlobalSignals.building_purchased.connect(_on_building_purchased)
+	GlobalSignals.tech_unlocked.connect(_on_tech_unlocked)
+	GlobalSignals.save_loaded.connect(_on_save_loaded)
 
 
 # --- Public API ---------------------------------------------------------------
@@ -181,26 +181,23 @@ func _set_alert(category: String, active: bool) -> void:
 			has_new_tech = active
 		_:
 			return
-	GlobalSignals.purchaseAlertChanged.emit(category, active)
+	GlobalSignals.purchase_alert_changed.emit(category, active)
 
 
-# Mirrors WIP/RobotUI/robot_row.gd::current_cost — kept inline rather than
+# Mirrors UI/RobotPanel/robot_row.gd::current_cost — kept inline rather than
 # extracted to RobotData so the Resource layer doesn't gain a hard dependency
 # on the TechTree autoload.
 func _robot_cost(bot: RobotData) -> Dictionary:
 	var dict: Dictionary = {}
-	var multiplier: float = pow(bot.costIncrease, bot.amount)
+	var multiplier: float = pow(bot.cost_increase, bot.amount)
 	var tech_scalar: float = TechTree.get_robot_cost_scalar()
-	for entry in bot.unlockCost:
+	for entry in bot.unlock_cost:
 		dict[entry.resource] = max(1, int(round(entry.amount * multiplier * tech_scalar)))
 	return dict
 
 
 func _building_cost(b: BuildingData) -> Dictionary:
-	var dict: Dictionary = {}
-	for entry in b.unlockCost:
-		dict[entry.resource] = int(entry.amount)
-	return dict
+	return CostHelper.to_dict(b.unlock_cost)
 
 
 func _prereqs_met(tech: TechData) -> bool:

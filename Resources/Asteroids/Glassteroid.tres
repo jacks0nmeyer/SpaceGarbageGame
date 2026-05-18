@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="AsteroidData" format=3 uid="uid://cg5w1wh4pm21x"]
+
+[ext_resource type="Script" uid="uid://dia6c520up0ij" path="res://Resources/Scripts/asteroid_data.gd" id="1_ast"]
+[ext_resource type="Script" uid="uid://fqpmooiymym6" path="res://UI/PlanetUIs/RegionLogic/Entries/resource_entry.gd" id="2_entry"]
+[ext_resource type="Texture2D" uid="uid://dhdx141os8les" path="res://Art/Asteroids/asteroid_circle.png" id="3_circle"]
+[ext_resource type="Texture2D" uid="uid://d06rj04qea1h4" path="res://Art/Asteroids/damage_dot.png" id="4_dot"]
+
+[sub_resource type="Resource" id="Resource_glass"]
+script = ExtResource("2_entry")
+resource = "glass"
+chance = 1.0
+
+[resource]
+script = ExtResource("1_ast")
+display_name = "Glassteroid"
+texture = ExtResource("3_circle")
+damage_dot_texture = ExtResource("4_dot")
+max_hp = 16
+min_strength_to_crack = 2
+spawn_weight = 0.05
+speed_min = 40.0
+speed_max = 80.0
+resource_chances = Array[ExtResource("2_entry")]([SubResource("Resource_glass")])
+yield_min = 3
+yield_max = 6

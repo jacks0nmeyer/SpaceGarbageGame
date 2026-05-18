@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://8cstlrx4ytgo" path="res://Resources/Scripts/robot_data.gd" id="1_robot"]
 [ext_resource type="Script" uid="uid://byqf8c0xdc0yv" path="res://UI/PlanetUIs/RegionLogic/Entries/cost_entry.gd" id="2_cost"]
+[ext_resource type="Texture2D" uid="uid://duaatcagakklv" path="res://Art/Robots/incinerator.png" id="3_tex"]
 
 [sub_resource type="Resource" id="Resource_cost1"]
 script = ExtResource("2_cost")
@@ -17,13 +18,14 @@ metadata/_custom_type_script = "uid://byqf8c0xdc0yv"
 
 [resource]
 script = ExtResource("1_robot")
-robotName = "Incinerator"
+robot_name = "Incinerator"
+texture = ExtResource("3_tex")
 description = "Maximum throughput burner. Extremely polluting — cannot operate in aquatic regions."
-unlockCost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
-costIncrease = 1.2
+unlock_cost = Array[ExtResource("2_cost")]([SubResource("Resource_cost1"), SubResource("Resource_cost2")])
+cost_increase = 1.2
 size = 2
-productionRate = 8.0
-resourceReturn = 0.3
-pollutionEffect = 14.0
-worksInWater = false
+production_rate = 8.0
+resource_return = 0.3
+pollution_effect = 14.0
+works_in_water = false
 metadata/_custom_type_script = "uid://8cstlrx4ytgo"

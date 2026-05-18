@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://UI/Asteroids/asteroid_spawner.gd" id="1_spawn"]
+[ext_resource type="Resource" path="res://Resources/Asteroids/Asteroids.tres" id="2_coll"]
+
+[node name="AsteroidSpawner" type="CanvasLayer"]
+layer = 2
+script = ExtResource("1_spawn")
+collection = ExtResource("2_coll")
