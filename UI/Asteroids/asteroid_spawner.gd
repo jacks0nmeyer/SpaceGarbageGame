@@ -11,9 +11,8 @@ const ASTEROID_SCENE := preload("res://UI/Asteroids/asteroid.tscn")
 @export var collection: AsteroidCollection
 @export var spawn_interval_min: float = 12.0
 @export var spawn_interval_max: float = 30.0
-# Fraction of vertical screen height around the centre that asteroids will
-# never spawn into, so they don't fly over the planet/regions and steal clicks.
-@export var planet_center_avoid_band: float = 0.35
+# Fraction of viewport height (centred) where asteroid centres may spawn.
+@export_range(0.1, 1.0) var spawn_y_screen_fraction: float = 0.85
 
 var _time_to_next: float = 0.0
 
@@ -43,22 +42,37 @@ func _spawn_one() -> void:
 	ast.data = data
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	var tex_size: Vector2 = data.texture.get_size() if data.texture else Vector2(32, 32)
-	# Pick side and velocity sign.
+	var half: Vector2 = tex_size * 0.5
+	var path_y_min: float = half.y
+	var path_y_max: float = max(half.y, vp.y - half.y)
+	var band_inset: float = (1.0 - clampf(spawn_y_screen_fraction, 0.1, 1.0)) * 0.5
+	var spawn_center_y_min: float = maxf(path_y_min, vp.y * band_inset)
+	var spawn_center_y_max: float = minf(path_y_max, vp.y * (1.0 - band_inset))
+	if spawn_center_y_min > spawn_center_y_max:
+		spawn_center_y_min = path_y_min
+		spawn_center_y_max = path_y_max
 	var from_left: bool = randf() < 0.5
-	var speed: float = randf_range(data.speed_min, data.speed_max)
-	var vx: float = speed if from_left else -speed
-	var start_x: float = -tex_size.x - 4.0 if from_left else vp.x + 4.0
-	# Pick Y outside the planet-avoidance band.
-	var band: float = clamp(planet_center_avoid_band, 0.0, 0.9)
-	var top_band_h: float = vp.y * (1.0 - band) * 0.5
-	var bottom_band_top: float = vp.y - top_band_h
-	var y: float
-	if randf() < 0.5:
-		y = randf_range(0.0, max(0.0, top_band_h - tex_size.y))
+	var off_margin: float = 4.0
+	var center_x: float
+	var exit_center_x: float
+	if from_left:
+		center_x = -half.x - off_margin
+		exit_center_x = vp.x + Asteroid.EDGE_MARGIN + half.x
 	else:
-		y = randf_range(bottom_band_top, max(bottom_band_top, vp.y - tex_size.y))
-	ast.position = Vector2(start_x, y)
-	ast.velocity = Vector2(vx, 0.0)
+		center_x = vp.x + half.x + off_margin
+		exit_center_x = -Asteroid.EDGE_MARGIN - half.x
+	var cross_width: float = absf(exit_center_x - center_x)
+	var center_y: float = randf_range(spawn_center_y_min, spawn_center_y_max)
+	var viewport_mid_y: float = vp.y * 0.5
+	ast.position = Vector2(center_x - half.x, center_y - half.y)
+	ast.velocity = data.compute_spawn_velocity(
+		from_left,
+		center_y,
+		cross_width,
+		path_y_min,
+		path_y_max,
+		viewport_mid_y,
+	)
 	add_child(ast)
 	GlobalSignals.asteroid_spawned.emit(data)
 
