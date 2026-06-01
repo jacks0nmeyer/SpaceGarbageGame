@@ -1,7 +1,7 @@
 extends TextureButton
 class_name Asteroid
 
-# A single in-flight asteroid. Drifts horizontally; each click subtracts the
+# A single in-flight asteroid. Drifts across the screen on an angled path; each click subtracts the
 # player's mining_strength from hp. Below the asteroid's min_strength_to_crack
 # clicks emit asteroid_deflected and do no damage. Breaking awards a bundle of
 # drops via AsteroidData.roll_drops().
@@ -11,6 +11,7 @@ class_name Asteroid
 var velocity: Vector2 = Vector2.ZERO
 var hp: int = 0
 var _dot_parent: Control = null
+var _allow_vertical_despawn: bool = false
 const EDGE_MARGIN: float = 64.0
 
 
@@ -20,12 +21,13 @@ func _ready() -> void:
 		return
 	hp = data.max_hp
 	texture_normal = data.texture
+	modulate = data.tint
 	if texture_normal:
 		var img := texture_normal.get_image()
 		var bm := BitMap.new()
 		bm.create_from_image_alpha(img)
 		texture_click_mask = bm
-		# Pivot/size so position is treated as the asteroid's centre.
+		# Size the control to the texture; pivot is centre for rotation only.
 		var tex_size: Vector2 = texture_normal.get_size()
 		custom_minimum_size = tex_size
 		size = tex_size
@@ -38,6 +40,8 @@ func _ready() -> void:
 	_dot_parent.anchor_bottom = 1.0
 	add_child(_dot_parent)
 	pressed.connect(_on_pressed)
+	if velocity != Vector2.ZERO:
+		rotation = velocity.angle()
 
 
 func _process(delta: float) -> void:
@@ -45,10 +49,18 @@ func _process(delta: float) -> void:
 		return
 	position += velocity * delta
 	var vp: Vector2 = get_viewport_rect().size
-	# Free once fully off either side.
-	if velocity.x > 0 and position.x > vp.x + EDGE_MARGIN:
+	var m: float = EDGE_MARGIN
+	var center_x: float = position.x + size.x * 0.5
+	if not _allow_vertical_despawn:
+		if velocity.x > 0.0 and center_x >= vp.x * 0.5:
+			_allow_vertical_despawn = true
+		elif velocity.x < 0.0 and center_x <= vp.x * 0.5:
+			_allow_vertical_despawn = true
+	# Free once fully off a horizontal edge (position is top-left).
+	if position.x + size.x < -m or position.x > vp.x + m:
 		queue_free()
-	elif velocity.x < 0 and position.x + size.x < -EDGE_MARGIN:
+		return
+	if _allow_vertical_despawn and (position.y + size.y < -m or position.y > vp.y + m):
 		queue_free()
 
 
